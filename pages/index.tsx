@@ -14,7 +14,6 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
-import { CardanoWallet } from '@meshsdk/react';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -36,6 +35,8 @@ const OverviewWrapper = styled(Box)(
 );
 
 function Overview() {
+
+  
   return (
     <>
       <OverviewWrapper>
@@ -53,7 +54,6 @@ function Overview() {
                 flex={1}
               >
                 <Box />
-                <CardanoWallet />
                 <Box>
                   <Button
                     component={Link}
