@@ -31,7 +31,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 
-interface RecentOrdersTableProps {
+interface IssuedCertsOrdersTableProps {
   className?: string;
   cryptoOrders: CryptoOrder[];
 }
@@ -84,7 +84,7 @@ const applyPagination = (
   return cryptoOrders.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
+const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders }) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
     []
   );
@@ -202,7 +202,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               </FormControl>
             </Box>
           }
-          title="Recent Orders"
+          title="Issued Certs"
         />
       )}
       <Divider />
@@ -218,12 +218,13 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Order Details</TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Date signed</TableCell>
+              <TableCell>Code</TableCell>
+              <TableCell>Received name</TableCell>
+              <TableCell align="right">Type</TableCell>
+              <TableCell align="right">Contact status</TableCell>
+              <TableCell align="right">Certificate status</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -307,6 +308,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                     {getStatusLabel(cryptoOrder.status)}
                   </TableCell>
                   <TableCell align="right">
+                    {getStatusLabel(cryptoOrder.status)}
+                  </TableCell>
+                  <TableCell align="right">
                     <Tooltip title="Edit Order" arrow>
                       <IconButton
                         sx={{
@@ -355,12 +359,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
+IssuedCertsOrdersTable.propTypes = {
   cryptoOrders: PropTypes.array.isRequired
 };
 
-RecentOrdersTable.defaultProps = {
+IssuedCertsOrdersTable.defaultProps = {
   cryptoOrders: []
 };
 
-export default RecentOrdersTable;
+export default IssuedCertsOrdersTable;

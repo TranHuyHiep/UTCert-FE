@@ -16,7 +16,7 @@ function DashboardCrypto() {
   return (
     <>
       <Head>
-        <title>Crypto Dashboard</title>
+        <title>Dashboard</title>
       </Head>
       <PageTitleWrapper>
         <PageHeader />

@@ -183,30 +183,12 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-        <List component="div">
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                <NextLink href="/" passHref>
-                  <Button
-                    className={currentRoute === '="/' ? 'active' : ''}
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<DesignServicesTwoToneIcon />}
-                  >
-                    Overview
-                  </Button>
-                </NextLink>
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
+       
         <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Dashboards
+              Home
             </ListSubheader>
           }
         >
@@ -223,22 +205,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<BrightnessLowTwoToneIcon />}
                   >
-                    Cryptocurrency
-                  </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/applications/messenger" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/applications/messenger' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<MmsTwoToneIcon />}
-                  >
-                    Messenger
+                    Dashboard
                   </Button>
                 </NextLink>
               </ListItem>
@@ -256,10 +223,10 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/transactions" passHref>
+                <NextLink href="/management/IssuedCerts" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/transactions'
+                      currentRoute === '/management/IssuedCerts'
                         ? 'active'
                         : ''
                     }
@@ -268,7 +235,24 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<TableChartTwoToneIcon />}
                   >
-                    Transactions List
+                    Issued Certs
+                  </Button>
+                </NextLink>
+              </ListItem>
+              <ListItem component="div">
+                <NextLink href="/management/ReceivedCerts" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/ReceivedCerts'
+                        ? 'active'
+                        : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Received Certs
                   </Button>
                 </NextLink>
               </ListItem>

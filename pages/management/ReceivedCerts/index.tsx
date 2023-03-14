@@ -5,17 +5,14 @@ import PageTitleWrapper from '@/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 
-import RecentOrders from '@/content/Management/Transactions/RecentOrders';
+import ReceivedCertsOrders from '@/content/Management/Transactions/ReceivedCertsOrders';
 
 function ApplicationsTransactions() {
   return (
     <>
       <Head>
-        <title>Transactions - Applications</title>
+        <title>ReceivedCerts</title>
       </Head>
-      <PageTitleWrapper>
-        <PageHeader />
-      </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
           container
@@ -25,7 +22,7 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <RecentOrders />
+            <ReceivedCertsOrders />
           </Grid>
         </Grid>
       </Container>
