@@ -1,9 +1,11 @@
 import { Typography, Avatar, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import GetCookie from '@/hooks/getCookie';
 
 function PageHeader() {
+  const username = GetCookie('policyId');
   const user = {
-    name: 'Catherine Pike',
+    name: username,
     avatar: '/static/images/avatars/1.jpg'
   };
   const theme = useTheme();

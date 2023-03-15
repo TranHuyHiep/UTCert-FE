@@ -11,6 +11,7 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import { useWallet } from '@meshsdk/react';
 import { CardanoWallet } from '@meshsdk/react';
+import SetCookie from '@/hooks/setCookie';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -107,6 +108,8 @@ function Hero() {
     if (wallet) {
       setLoading(true);
       const _assets = await wallet.getAssets();
+      const policyId = await wallet.getPolicyIds();
+      SetCookie('policyId', policyId);
       setAssets(_assets);
       setLoading(false);
     }
