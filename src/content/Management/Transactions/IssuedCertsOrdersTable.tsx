@@ -26,21 +26,21 @@ import {
 } from '@mui/material';
 
 import Label from '@/components/Label';
-import { CryptoOrder, CryptoOrderStatus } from '@/models/crypto_order';
+import { Certificate, CertificateStatus } from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 
 interface IssuedCertsOrdersTableProps {
   className?: string;
-  cryptoOrders: CryptoOrder[];
+  certificates: Certificate[];
 }
 
 interface Filters {
-  status?: CryptoOrderStatus;
+  status?: CertificateStatus;
 }
 
-const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
+const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
     failed: {
       text: 'Failed',
@@ -56,16 +56,16 @@ const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
     }
   };
 
-  const { text, color }: any = map[cryptoOrderStatus];
+  const { text, color }: any = map[certificateStatus];
 
   return <Label color={color}>{text}</Label>;
 };
 
 const applyFilters = (
-  cryptoOrders: CryptoOrder[],
+  certificates: Certificate[],
   filters: Filters
-): CryptoOrder[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
+): Certificate[] => {
+  return certificates.filter((cryptoOrder) => {
     let matches = true;
 
     if (filters.status && cryptoOrder.status !== filters.status) {
@@ -77,17 +77,20 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  cryptoOrders: CryptoOrder[],
+  certificates: Certificate[],
   page: number,
   limit: number
-): CryptoOrder[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
+): Certificate[] => {
+  return certificates.slice(page * limit, page * limit + limit);
 };
 
-const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders }) => {
+const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
+  certificates
+}) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
     []
   );
+  
   const selectedBulkActions = selectedCryptoOrders.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
@@ -132,7 +135,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
   ): void => {
     setSelectedCryptoOrders(
       event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
+        ? certificates.map((certificate) => certificate.id)
         : []
     );
   };
@@ -161,17 +164,17 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
+  const filteredCertificates = applyFilters(certificates, filters);
   const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
+    filteredCertificates,
     page,
     limit
   );
   const selectedSomeCryptoOrders =
     selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
+    selectedCryptoOrders.length < certificates.length;
   const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
+    selectedCryptoOrders.length === certificates.length;
   const theme = useTheme();
 
   return (
@@ -256,10 +259,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
+                      {cryptoOrder.certificateName}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
+                      {format(cryptoOrder.signedDate, 'MMMM dd yyyy')}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -270,7 +273,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderID}
+                      {cryptoOrder.certificateCode}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -281,10 +284,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.sourceName}
+                      {cryptoOrder.receivedName}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
+                      {cryptoOrder.ipfsLink}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -295,13 +298,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
+                      {cryptoOrder.receivedDoB}
+                      {cryptoOrder.classification}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {numeral(cryptoOrder.amount).format(
-                        `${cryptoOrder.currency}0,0.00`
-                      )}
+                      {cryptoOrder.classification}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -347,7 +348,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCryptoOrders.length}
+          count={filteredCertificates.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -360,11 +361,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({ cryptoOrders 
 };
 
 IssuedCertsOrdersTable.propTypes = {
-  cryptoOrders: PropTypes.array.isRequired
+  certificates: PropTypes.array.isRequired
 };
 
 IssuedCertsOrdersTable.defaultProps = {
-  cryptoOrders: []
+  certificates: []
 };
 
 export default IssuedCertsOrdersTable;
