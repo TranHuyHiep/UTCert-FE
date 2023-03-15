@@ -109,7 +109,9 @@ function Hero() {
       setLoading(true);
       const _assets = await wallet.getAssets();
       const policyId = await wallet.getPolicyIds();
-      SetCookie('policyId', policyId);
+      const myWallet = await wallet;
+      console.log(myWallet)
+      SetCookie('policyId', policyId[0]);
       setAssets(_assets);
       setLoading(false);
     }
