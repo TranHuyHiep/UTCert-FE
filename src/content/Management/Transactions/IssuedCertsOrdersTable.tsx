@@ -2,6 +2,8 @@ import { FC, ChangeEvent, useState } from 'react';
 import { format } from 'date-fns';
 import numeral from 'numeral';
 import PropTypes from 'prop-types';
+import GetCookie from '@/hooks/getCookie';
+
 import {
   Tooltip,
   Divider,
@@ -37,7 +39,7 @@ interface IssuedCertsOrdersTableProps {
 }
 
 interface Filters {
-  status?: CertificateStatus;
+  certificateStatus?: CertificateStatus;
 }
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
@@ -109,7 +111,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
-    status: null
+    certificateStatus: null
   });
 
   const statusOptions = [

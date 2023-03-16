@@ -2,6 +2,7 @@ import { Card } from '@mui/material';
 import IssuedCertsOrdersTable from './IssuedCertsOrdersTable';
 import { useState, useEffect  } from 'react';
 import axios from 'axios';
+import GetCookie from '@/hooks/getCookie';
 
 function IssuedCertsOrders() {
   const [issuedCert, setIssuedCert] = useState([]);
@@ -10,7 +11,8 @@ function IssuedCertsOrders() {
     const fetchData = async () => {
       try {
         const url = 'https://localhost:44325/api/v1/Certificates/certificate-issued';
-        const payload = '"146d28b014f87920fa81c3b91007606d03ce0376c365befb5a3df1f7"';
+        // const payload = '"146d28b014f87920fa81c3b91007606d03ce0376c365befb5a3df1f7"';
+        const payload = GetCookie("policyId");
         const headers = {
           Accept: '*/*',
           'Content-Type': 'application/json'
@@ -25,7 +27,6 @@ function IssuedCertsOrders() {
 
     fetchData();
   }, []);
-  console.log(issuedCert)
   return (
     <Card>
       <IssuedCertsOrdersTable certificates={issuedCert} />
