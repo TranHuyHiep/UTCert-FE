@@ -42,22 +42,21 @@ interface Filters {
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
-    failed: {
+    '2': {
       text: 'Failed',
       color: 'error'
     },
-    completed: {
+    '1': {
       text: 'Completed',
       color: 'success'
     },
-    pending: {
+    '0': {
       text: 'Pending',
       color: 'warning'
     }
   };
-
   const { text, color }: any = map[certificateStatus];
-
+  console.log(certificateStatus)
   return <Label color={color}>{text}</Label>;
 };
 
@@ -65,10 +64,10 @@ const applyFilters = (
   certificates: Certificate[],
   filters: Filters
 ): Certificate[] => {
-  return certificates.filter((cryptoOrder) => {
+  return certificates.filter((certificate) => {
     let matches = true;
 
-    if (filters.status && cryptoOrder.status !== filters.status) {
+    if (filters.certificateStatus && certificate.certificateStatus !== filters.certificateStatus) {
       matches = false;
     }
 
@@ -87,11 +86,11 @@ const applyPagination = (
 const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   certificates
 }) => {
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
+  const [selectedCertifiates, setSelectedCertificates] = useState<string[]>(
     []
   );
-  
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
+
+  const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
@@ -133,7 +132,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const handleSelectAllCryptoOrders = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedCryptoOrders(
+    setSelectedCertificates(
       event.target.checked
         ? certificates.map((certificate) => certificate.id)
         : []
@@ -142,16 +141,16 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   const handleSelectOneCryptoOrder = (
     _event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
+    certificateId: string
   ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
+    if (!selectedCertifiates.includes(certificateId)) {
+      setSelectedCertificates((prevSelected) => [
         ...prevSelected,
-        cryptoOrderId
+        certificateId
       ]);
     } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
+      setSelectedCertificates((prevSelected) =>
+        prevSelected.filter((id) => id !== certificateId)
       );
     }
   };
@@ -171,10 +170,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     limit
   );
   const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < certificates.length;
+    selectedCertifiates.length > 0 &&
+    selectedCertifiates.length < certificates.length;
   const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === certificates.length;
+    selectedCertifiates.length === certificates.length;
   const theme = useTheme();
 
   return (
@@ -191,7 +190,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
               <FormControl fullWidth variant="outlined">
                 <InputLabel>Status</InputLabel>
                 <Select
-                  value={filters.status || 'all'}
+                  value={filters.certificateStatus || 'all'}
                   onChange={handleStatusChange}
                   label="Status"
                   autoWidth
@@ -221,24 +220,24 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Date signed</TableCell>
               <TableCell>Code</TableCell>
               <TableCell>Received name</TableCell>
-              <TableCell align="right">Type</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Date signed</TableCell>
               <TableCell align="right">Contact status</TableCell>
               <TableCell align="right">Certificate status</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
+            {paginatedCryptoOrders.map((certificate) => {
+              const isCryptoOrderSelected = selectedCertifiates.includes(
+                certificate.id
               );
               return (
                 <TableRow
                   hover
-                  key={cryptoOrder.id}
+                  key={certificate.id}
                   selected={isCryptoOrderSelected}
                 >
                   <TableCell padding="checkbox">
@@ -246,7 +245,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       color="primary"
                       checked={isCryptoOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
+                        handleSelectOneCryptoOrder(event, certificate.id)
                       }
                       value={isCryptoOrderSelected}
                     />
@@ -259,10 +258,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.certificateName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.signedDate, 'MMMM dd yyyy')}
+                      {certificate.certificateCode}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -273,7 +269,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.certificateCode}
+                      {certificate.receivedName}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -284,10 +280,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.receivedName}
+                      {certificate.certificateName}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.ipfsLink}
+                      {certificate.classification}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -298,18 +294,14 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.receivedDoB}
-                      {cryptoOrder.classification}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.classification}
+                      {certificate.receivedDoB}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
+                    {getStatusLabel(certificate.certificateStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
+                    {getStatusLabel(certificate.certificateStatus)}
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edit Order" arrow>

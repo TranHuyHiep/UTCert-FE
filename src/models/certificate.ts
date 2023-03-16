@@ -1,11 +1,11 @@
-export type CertificateStatus = 'completed' | 'pending' | 'failed';
+export type CertificateStatus = '0' | '1' | '2';
 
 export interface Certificate {
     id: string;
     certificateCode: number;
     certificateID: string;
     certificateName: string;
-    certificateStatus: number;
+    certificateStatus: CertificateStatus;
     certificateType: string;
     classification: string;
     contactStatus: number;
@@ -13,8 +13,7 @@ export interface Certificate {
     receivedAddressWallet: string;
     receivedDoB: string;
     receivedName: string;
-    signedDate: Date;
+    signedDate: number;
     yearOfGraduation: number;
-    status: CertificateStatus;
   }
   
