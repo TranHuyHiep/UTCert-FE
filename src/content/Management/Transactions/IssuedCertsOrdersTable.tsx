@@ -28,7 +28,11 @@ import {
 } from '@mui/material';
 
 import Label from '@/components/Label';
-import { Certificate, CertificateStatus, ContactStatus } from '@/models/certificate';
+import {
+  Certificate,
+  CertificateStatus,
+  ContactStatus
+} from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
@@ -76,7 +80,6 @@ const getStatusContactLabel = (contactStatus: ContactStatus): JSX.Element => {
   return <Label color={color}>{text}</Label>;
 };
 
-
 const applyFilters = (
   certificates: Certificate[],
   filters: Filters
@@ -84,7 +87,10 @@ const applyFilters = (
   return certificates.filter((certificate) => {
     let matches = true;
 
-    if (filters.certificateStatus && certificate.certificateStatus !== filters.certificateStatus) {
+    if (
+      filters.certificateStatus &&
+      certificate.certificateStatus !== filters.certificateStatus
+    ) {
       matches = false;
     }
 
@@ -103,9 +109,7 @@ const applyPagination = (
 const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   certificates
 }) => {
-  const [selectedCertifiates, setSelectedCertificates] = useState<string[]>(
-    []
-  );
+  const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
 
   const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -262,7 +266,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       color="primary"
                       checked={isCryptoOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, certificate.certificateID)
+                        handleSelectOneCryptoOrder(
+                          event,
+                          certificate.certificateID
+                        )
                       }
                       value={isCryptoOrderSelected}
                     />
@@ -321,21 +328,22 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     {getStatusContactLabel(certificate.contactStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {(certificate.certificateStatus === '0') || <Tooltip title="Sign" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>}
-                    
+                    {certificate.certificateStatus === '0' || (
+                      <Tooltip title="Sign" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': {
+                              background: theme.colors.primary.lighter
+                            },
+                            color: theme.palette.primary.main
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <EditTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                     <Tooltip title="View" arrow>
                       <IconButton
                         sx={{

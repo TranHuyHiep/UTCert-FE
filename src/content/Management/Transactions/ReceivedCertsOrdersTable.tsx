@@ -292,6 +292,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
+                      align="left"
                       gutterBottom
                       noWrap
                     >
@@ -316,6 +317,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       color="text.primary"
                       gutterBottom
                       noWrap
+                      align='center'
                     > 
                       {cryptoOrder.yearOfGraduation}
                     </Typography>
