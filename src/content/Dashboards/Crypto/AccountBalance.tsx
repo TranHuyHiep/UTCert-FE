@@ -38,11 +38,10 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
   margin-right: ${theme.spacing(1)};
   padding: ${theme.spacing(0.5)};
   border-radius: 60px;
-  background: ${
-    theme.palette.mode === 'dark'
+  background: ${theme.palette.mode === 'dark'
       ? theme.colors.alpha.trueWhite[30]
       : alpha(theme.colors.alpha.black[100], 0.07)
-  };
+    };
 
   img {
     background: ${theme.colors.alpha.trueWhite[100]};
@@ -73,7 +72,7 @@ function AccountBalance() {
         }
       }
     },
-    colors: ['#ff9900', '#1c81c2', '#5c6ac0'],
+    colors: ['#ff9900', '#1c81c2', '#5c6ac0', "#f6abb6"],
     dataLabels: {
       enabled: true,
       formatter: function (val) {
@@ -110,7 +109,7 @@ function AccountBalance() {
     fill: {
       opacity: 1
     },
-    labels: ['Bitcoin', 'Ripple', 'Cardano', 'Ethereum'],
+    labels: ['Draft', 'Signed', 'Sent', 'Received'],
     legend: {
       labels: {
         colors: theme.colors.alpha.trueWhite[100]
@@ -125,7 +124,8 @@ function AccountBalance() {
     }
   };
 
-  const chartSeries = [10, 20, 70];
+  const contactSeries = [9, 1];
+  const certificateSeries = [10, 20, 60, 10];
 
   return (
     <Card>
@@ -154,7 +154,7 @@ function AccountBalance() {
                   <Chart
                     height={250}
                     options={chartOptions}
-                    series={chartSeries}
+                    series={contactSeries}
                     type="donut"
                   />
                 </Grid>
@@ -211,29 +211,6 @@ function AccountBalance() {
                         <Text color="error">-1.22%</Text>
                       </Box>
                     </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemAvatarWrapper>
-                        <img
-                          alt="View Details"
-                          src="/static/images/placeholders/logo/cardano.png"
-                        />
-                      </ListItemAvatarWrapper>
-                      <ListItemText
-                        primary="View Details"
-                        primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="View Details"
-                        secondaryTypographyProps={{
-                          variant: 'subtitle2',
-                          noWrap: true
-                        }}
-                      />
-                      <Box>
-                        <Typography align="right" variant="h4" noWrap>
-                          40%
-                        </Typography>
-                        <Text color="success">+10.50%</Text>
-                      </Box>
-                    </ListItem>
                   </List>
                 </Grid>
               </Grid>
@@ -264,7 +241,7 @@ function AccountBalance() {
                   <Chart
                     height={250}
                     options={chartOptions}
-                    series={chartSeries}
+                    series={certificateSeries}
                     type="donut"
                   />
                 </Grid>
@@ -278,14 +255,14 @@ function AccountBalance() {
                     <ListItem disableGutters>
                       <ListItemAvatarWrapper>
                         <img
-                          alt="XRP"
+                          alt="Draft"
                           src="/static/images/placeholders/logo/ripple.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
-                        primary="XRP"
+                        primary="Draft"
                         primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Ripple"
+                        secondary="Draft certificates"
                         secondaryTypographyProps={{
                           variant: 'subtitle2',
                           noWrap: true
@@ -293,22 +270,22 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          10%
+                          10
                         </Typography>
-                        <Text color="error">-1.22%</Text>
+                        <Text color="error">10%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
                       <ListItemAvatarWrapper>
                         <img
-                          alt="ADA"
+                          alt="Signed"
                           src="/static/images/placeholders/logo/cardano.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
-                        primary="ADA"
+                        primary="Signed"
                         primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Cardano"
+                        secondary="Signed certificates"
                         secondaryTypographyProps={{
                           variant: 'subtitle2',
                           noWrap: true
@@ -316,22 +293,22 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          40%
+                          20
                         </Typography>
-                        <Text color="success">+10.50%</Text>
+                        <Text color="success">20%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
                       <ListItemAvatarWrapper>
                         <img
-                          alt="ETH"
+                          alt="Sent"
                           src="/static/images/placeholders/logo/ethereum.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
-                        primary="ETH"
+                        primary="Sent"
                         primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Ethereum"
+                        secondary="Sent certificates"
                         secondaryTypographyProps={{
                           variant: 'subtitle2',
                           noWrap: true
@@ -339,9 +316,32 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          30%
+                          30
                         </Typography>
-                        <Text color="error">-12.38%</Text>
+                        <Text color="error">30%</Text>
+                      </Box>
+                    </ListItem>
+                    <ListItem disableGutters>
+                      <ListItemAvatarWrapper>
+                        <img
+                          alt="Received"
+                          src="/static/images/placeholders/logo/ethereum.png"
+                        />
+                      </ListItemAvatarWrapper>
+                      <ListItemText
+                        primary="Received"
+                        primaryTypographyProps={{ variant: 'h5', noWrap: true }}
+                        secondary="Received certificates"
+                        secondaryTypographyProps={{
+                          variant: 'subtitle2',
+                          noWrap: true
+                        }}
+                      />
+                      <Box>
+                        <Typography align="right" variant="h4" noWrap>
+                          40
+                        </Typography>
+                        <Text color="error">40%</Text>
                       </Box>
                     </ListItem>
                   </List>

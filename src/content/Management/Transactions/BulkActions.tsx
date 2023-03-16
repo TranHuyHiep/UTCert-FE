@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import CreateIcon from '@mui/icons-material/Create';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 
 const ButtonError = styled(Button)(
@@ -47,10 +47,10 @@ function BulkActions() {
           </Typography>
           <ButtonError
             sx={{ ml: 1 }}
-            startIcon={<DeleteTwoToneIcon />}
+            startIcon={<CreateIcon />}
             variant="contained"
           >
-            Delete
+            Sign
           </ButtonError>
         </Box>
         <IconButton

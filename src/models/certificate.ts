@@ -1,4 +1,5 @@
 export type CertificateStatus = '0' | '1' | '2';
+export type ContactStatus = '0' | '1';
 
 export interface Certificate {
     id: string;
@@ -8,7 +9,7 @@ export interface Certificate {
     certificateStatus: CertificateStatus;
     certificateType: string;
     classification: string;
-    contactStatus: number;
+    contactStatus: ContactStatus;
     ipfsLink: string;
     receivedAddressWallet: string;
     receivedDoB: string;

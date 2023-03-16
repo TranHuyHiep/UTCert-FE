@@ -26,7 +26,7 @@ import {
 } from '@mui/material';
 
 import Label from '@/components/Label';
-import { Certificate, CertificateStatus } from '@/models/certificate';
+import { Certificate, CertificateStatus, ContactStatus } from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
@@ -42,23 +42,38 @@ interface Filters {
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
-    '2': {
-      text: 'Failed',
-      color: 'error'
+    '0': {
+      text: 'Draft',
+      color: 'secondary'
     },
     '1': {
+      text: 'Signed',
+      color: 'primary'
+    },
+    '2': {
       text: 'Completed',
       color: 'success'
-    },
-    '0': {
-      text: 'Pending',
-      color: 'warning'
     }
   };
   const { text, color }: any = map[certificateStatus];
-  console.log(certificateStatus)
   return <Label color={color}>{text}</Label>;
 };
+
+const getStatusContactLabel = (contactStatus: ContactStatus): JSX.Element => {
+  const map = {
+    '0': {
+      text: 'Pending',
+      color: 'info'
+    },
+    '1': {
+      text: 'Connected',
+      color: 'success'
+    }
+  };
+  const { text, color }: any = map[contactStatus];
+  return <Label color={color}>{text}</Label>;
+};
+
 
 const applyFilters = (
   certificates: Certificate[],
@@ -222,10 +237,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
               </TableCell>
               <TableCell>Code</TableCell>
               <TableCell>Received name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Date signed</TableCell>
-              <TableCell align="right">Contact status</TableCell>
+              <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Date signed</TableCell>
               <TableCell align="right">Certificate status</TableCell>
+              <TableCell align="right">Contact status</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
@@ -301,10 +316,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     {getStatusLabel(certificate.certificateStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(certificate.certificateStatus)}
+                    {getStatusContactLabel(certificate.contactStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Edit Order" arrow>
+                    {(certificate.certificateStatus === '0') || <Tooltip title="Sign" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -317,8 +332,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       >
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Order" arrow>
+                    </Tooltip>}
+                    
+                    <Tooltip title="View" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
