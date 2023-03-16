@@ -26,49 +26,51 @@ import {
 } from '@mui/material';
 
 import Label from '@/components/Label';
-import { CryptoOrder, CryptoOrderStatus } from '@/models/crypto_order';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
+import {
+  Certificate,
+  CertificateStatus,
+  ContactStatus
+} from '@/models/certificate';
 
 interface ReceivedCertsOrdersTableProps {
   className?: string;
-  cryptoOrders: CryptoOrder[];
+  cryptoOrders: Certificate[];
 }
 
 interface Filters {
-  status?: CryptoOrderStatus;
+  status?: CertificateStatus;
 }
 
-const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
+const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
-    failed: {
-      text: 'Failed',
-      color: 'error'
+    '0': {
+      text: 'Draft',
+      color: 'secondary'
     },
-    completed: {
+    '1': {
+      text: 'Signed',
+      color: 'primary'
+    },
+    '2': {
       text: 'Completed',
       color: 'success'
-    },
-    pending: {
-      text: 'Pending',
-      color: 'warning'
     }
   };
-
-  const { text, color }: any = map[cryptoOrderStatus];
-
+  const { text, color }: any = map[certificateStatus];
   return <Label color={color}>{text}</Label>;
 };
 
 const applyFilters = (
-  cryptoOrders: CryptoOrder[],
+  cryptoOrders: Certificate[],
   filters: Filters
-): CryptoOrder[] => {
+): Certificate[] => {
   return cryptoOrders.filter((cryptoOrder) => {
     let matches = true;
 
-    if (filters.status && cryptoOrder.status !== filters.status) {
+    if (filters.status && cryptoOrder.certificateStatus !== filters.status) {
       matches = false;
     }
 
@@ -77,14 +79,16 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  cryptoOrders: CryptoOrder[],
+  cryptoOrders: Certificate[],
   page: number,
   limit: number
-): CryptoOrder[] => {
+): Certificate[] => {
   return cryptoOrders.slice(page * limit, page * limit + limit);
 };
 
-const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrders }) => {
+const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
+  cryptoOrders
+}) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
     []
   );
@@ -132,7 +136,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
   ): void => {
     setSelectedCryptoOrders(
       event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
+        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.certificateID)
         : []
     );
   };
@@ -218,25 +222,24 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Date signed</TableCell>
               <TableCell>Code</TableCell>
               <TableCell>Certificate name</TableCell>
               <TableCell>Organization name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Year Of Graduation</TableCell>
-              <TableCell>Classification</TableCell>
               <TableCell>Mode of study</TableCell>
+              <TableCell>Classification</TableCell>
+              <TableCell>Year Of Graduation</TableCell>
+              <TableCell>Date signed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedCryptoOrders.map((cryptoOrder) => {
               const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
+                cryptoOrder.certificateID
               );
               return (
                 <TableRow
                   hover
-                  key={cryptoOrder.id}
+                  key={cryptoOrder.certificateID}
                   selected={isCryptoOrderSelected}
                 >
                   <TableCell padding="checkbox">
@@ -244,7 +247,10 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                       color="primary"
                       checked={isCryptoOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
+                        handleSelectOneCryptoOrder(
+                          event,
+                          cryptoOrder.certificateID
+                        )
                       }
                       value={isCryptoOrderSelected}
                     />
@@ -257,10 +263,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
+                      {cryptoOrder.certificateCode}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -271,7 +274,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderID}
+                      {cryptoOrder.certificateType}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -280,12 +283,8 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                       fontWeight="bold"
                       color="text.primary"
                       gutterBottom
-                      noWrap
                     >
-                      {cryptoOrder.sourceName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
+                      {cryptoOrder.oganizationName}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -296,26 +295,41 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({ cryptoOrd
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {numeral(cryptoOrder.amount).format(
-                        `${cryptoOrder.currency}0,0.00`
-                      )}
+                      {cryptoOrder.modeOfStudy}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {cryptoOrder.classification}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    > 
+                      {cryptoOrder.yearOfGraduation}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
-                  </TableCell>
-                  <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {cryptoOrder.receivedDate}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               );

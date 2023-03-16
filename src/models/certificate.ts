@@ -2,7 +2,6 @@ export type CertificateStatus = '0' | '1' | '2';
 export type ContactStatus = '0' | '1';
 
 export interface Certificate {
-    id: string;
     certificateCode: number;
     certificateID: string;
     certificateName: string;
@@ -14,7 +13,10 @@ export interface Certificate {
     receivedAddressWallet: string;
     receivedDoB: string;
     receivedName: string;
-    signedDate: number;
+    signedDate: Date;
     yearOfGraduation: number;
+    oganizationName: string;
+    modeOfStudy: string;
+    receivedDate: string;
   }
   

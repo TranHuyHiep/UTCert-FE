@@ -120,16 +120,16 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       name: 'All'
     },
     {
-      id: 'completed',
-      name: 'Completed'
+      id: '0',
+      name: 'Draft'
     },
     {
-      id: 'pending',
+      id: '1',
       name: 'Pending'
     },
     {
-      id: 'failed',
-      name: 'Failed'
+      id: '2',
+      name: 'Completed'
     }
   ];
 
@@ -151,7 +151,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   ): void => {
     setSelectedCertificates(
       event.target.checked
-        ? certificates.map((certificate) => certificate.id)
+        ? certificates.map((certificate) => certificate.certificateID)
         : []
     );
   };
@@ -249,12 +249,12 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           <TableBody>
             {paginatedCryptoOrders.map((certificate) => {
               const isCryptoOrderSelected = selectedCertifiates.includes(
-                certificate.id
+                certificate.certificateID
               );
               return (
                 <TableRow
                   hover
-                  key={certificate.id}
+                  key={certificate.certificateID}
                   selected={isCryptoOrderSelected}
                 >
                   <TableCell padding="checkbox">
@@ -262,7 +262,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       color="primary"
                       checked={isCryptoOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, certificate.id)
+                        handleSelectOneCryptoOrder(event, certificate.certificateID)
                       }
                       value={isCryptoOrderSelected}
                     />
