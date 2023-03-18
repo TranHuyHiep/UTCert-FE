@@ -1,10 +1,4 @@
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  styled
-} from '@mui/material';
+import { Box, Container, Grid, Typography, styled } from '@mui/material';
 
 import Link from 'src/components/Link';
 import { useState } from 'react';
@@ -12,6 +6,7 @@ import type { NextPage } from 'next';
 import { useWallet } from '@meshsdk/react';
 import { CardanoWallet } from '@meshsdk/react';
 import SetCookie from '@/hooks/setCookie';
+import Sign from '@/mesh/sign';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -109,8 +104,8 @@ function Hero() {
       setLoading(true);
       const _assets = await wallet.getAssets();
       const policyId = await wallet.getPolicyIds();
-      const myWallet = await wallet;
-      console.log(myWallet)
+      const myWallet = await wallet.getUsedAddresses();
+      console.log(myWallet[0]);
       SetCookie('policyId', policyId[0]);
       setAssets(_assets);
       setLoading(false);
@@ -125,7 +120,7 @@ function Hero() {
         container
       >
         <div>
-          <h1>Connect Wallet</h1>
+          {/* <h1>Connect Wallet</h1>
           <CardanoWallet />
           {connected && (
             <>
@@ -151,6 +146,8 @@ function Hero() {
               )}
             </>
           )}
+       */}
+          <Sign></Sign>
         </div>
       </Grid>
     </Container>
