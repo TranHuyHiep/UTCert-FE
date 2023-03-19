@@ -18,6 +18,7 @@ import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
 import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
+import GroupsIcon from '@mui/icons-material/Groups';
 import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
 import BeachAccessTwoToneIcon from '@mui/icons-material/BeachAccessTwoTone';
 import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
@@ -148,9 +149,9 @@ const SubMenuWrapper = styled(Box)(
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
                 transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
-                ])};
+    'transform',
+    'opacity'
+  ])};
                 width: 6px;
                 height: 6px;
                 transform: scale(0);
@@ -183,7 +184,7 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-       
+
         <List
           component="div"
           subheader={
@@ -212,6 +213,7 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
+        
         <List
           component="div"
           subheader={
@@ -263,6 +265,34 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
+              Contact
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
+              <ListItem component="div">
+                <NextLink href="/management/Contacts" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/Contacts' ? 'active' : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<GroupsIcon />}
+                  >
+                    Contacts
+                  </Button>
+                </NextLink>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
               Accounts
             </ListSubheader>
           }
@@ -304,7 +334,8 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
-        <List
+
+        {/* <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
@@ -520,7 +551,7 @@ function SidebarMenu() {
               </ListItem>
             </List>
           </SubMenuWrapper>
-        </List>
+        </List> */}
       </MenuWrapper>
     </>
   );

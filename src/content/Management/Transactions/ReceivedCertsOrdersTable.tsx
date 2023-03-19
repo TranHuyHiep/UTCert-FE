@@ -55,7 +55,7 @@ const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
       color: 'primary'
     },
     '2': {
-      text: 'Completed',
+      text: 'Sent',
       color: 'success'
     }
   };
@@ -105,8 +105,8 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
       name: 'All'
     },
     {
-      id: 'completed',
-      name: 'Completed'
+      id: '2',
+      name: 'Sent'
     },
     {
       id: 'pending',

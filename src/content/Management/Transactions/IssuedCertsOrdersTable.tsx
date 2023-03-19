@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import GetCookie from '@/hooks/getCookie';
+import { BrowserWallet } from '@meshsdk/core';
 
 import {
   Tooltip,
@@ -36,6 +37,7 @@ import {
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
+import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 
 interface IssuedCertsOrdersTableProps {
   className?: string;
@@ -57,9 +59,13 @@ const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
       color: 'primary'
     },
     '2': {
-      text: 'Completed',
+      text: 'Sent',
       color: 'success'
-    }
+    },
+    '3': {
+      text: 'Banned',
+      color: 'error',
+    },
   };
   const { text, color }: any = map[certificateStatus];
   return <Label color={color}>{text}</Label>;
@@ -133,7 +139,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     },
     {
       id: '2',
-      name: 'Completed'
+      name: 'Sent'
+    },
+    {
+      id: '3',
+      name: 'Banned'
     }
   ];
 
@@ -196,6 +206,46 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const selectedAllCryptoOrders =
     selectedCertifiates.length === certificates.length;
   const theme = useTheme();
+
+  async function handleSign(certificate) {
+    const wallet = await BrowserWallet.enable('eternl');
+    // prepare forgingScript
+    if (wallet) {
+      const usedAddress = await wallet.getUsedAddresses();
+      const address = usedAddress[0];
+      const forgingScript = ForgeScript.withOneSignature(address);
+      const tx = new Transaction({ initiator: wallet });
+      // define asset#1 metadata
+      const assetMetadata1: AssetMetadata = {
+        "certificateName": certificate.certificateName,
+        "classification": certificate.classification,
+        "image": certificate.ipfsLink,
+        "mediaType": "image/jpg",
+        "receivedName": certificate.receivedName,
+        "yearOfGraduation": certificate.yearOfGraduation,
+      };
+      const asset1: Mint = {
+        assetName: certificate.certificateType+certificate.certificateCode,
+        assetQuantity: '1',
+        metadata: assetMetadata1,
+        label: '721',
+        recipient: certificate.receivedAddressWallet,
+      };
+      console.log(asset1);
+      console.log(assetMetadata1);
+      
+      tx.mintAsset(
+        forgingScript,
+        asset1,
+      );
+
+      const unsignedTx = await tx.build();
+      const signedTx = await wallet.signTx(unsignedTx);
+      const txHash = await wallet.submitTx(signedTx);
+      console.log(txHash);
+      
+    }
+  }
 
   return (
     <Card>
@@ -340,6 +390,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                           }}
                           color="inherit"
                           size="small"
+                          onClick={() => handleSign(certificate)}
                         >
                           <EditTwoToneIcon fontSize="small" />
                         </IconButton>
