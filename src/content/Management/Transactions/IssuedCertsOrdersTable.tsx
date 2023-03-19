@@ -242,8 +242,8 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                 />
               </TableCell>
               <TableCell>Code</TableCell>
+              <TableCell>Certificate Name</TableCell>
               <TableCell>Received name</TableCell>
-              <TableCell align="center">Type</TableCell>
               <TableCell align="center">Date signed</TableCell>
               <TableCell align="right">Certificate status</TableCell>
               <TableCell align="right">Contact status</TableCell>
@@ -293,7 +293,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {certificate.receivedName}
+                      {certificate.certificateName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {certificate.classification}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -304,12 +307,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {certificate.certificateName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {certificate.classification}
+                      {certificate.receivedName}
                     </Typography>
                   </TableCell>
+
                   <TableCell align="right">
                     <Typography
                       variant="body1"

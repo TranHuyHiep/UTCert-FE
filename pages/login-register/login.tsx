@@ -86,17 +86,6 @@ function Login() {
                       id="outlined-required"
                       label="First name"
                     />
-                    <TextField
-                      required
-                      id="outlined-required"
-                      label="Last name"
-                    />
-                    <TextField
-                      id="outlined-password-input"
-                      label="Password*"
-                      type="password"
-                      autoComplete="current-password"
-                    />
                   </div>
                 </Box>
               </CardContent>

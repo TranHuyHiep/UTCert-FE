@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import GetCookie from '@/hooks/getCookie';
 
 function PageHeader() {
-  const username = GetCookie('policyId');
+  const username = GetCookie('stakeId');
   const user = {
     name: username,
     avatar: '/static/images/avatars/1.jpg'

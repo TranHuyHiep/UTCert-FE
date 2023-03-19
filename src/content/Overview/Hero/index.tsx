@@ -103,10 +103,10 @@ function Hero() {
     if (wallet) {
       setLoading(true);
       const _assets = await wallet.getAssets();
-      const policyId = await wallet.getPolicyIds();
+      const stakeId = await wallet.getRewardAddresses();
       const myWallet = await wallet.getUsedAddresses();
       console.log(myWallet[0]);
-      SetCookie('policyId', policyId[0]);
+      SetCookie('stakeId', stakeId);
       setAssets(_assets);
       setLoading(false);
     }
@@ -120,7 +120,7 @@ function Hero() {
         container
       >
         <div>
-          {/* <h1>Connect Wallet</h1>
+          <h1>Connect Wallet</h1>
           <CardanoWallet />
           {connected && (
             <>
@@ -146,8 +146,8 @@ function Hero() {
               )}
             </>
           )}
-       */}
-          <Sign></Sign>
+      
+          {/* <Sign></Sign> */}
         </div>
       </Grid>
     </Container>

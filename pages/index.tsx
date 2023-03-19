@@ -66,7 +66,7 @@ function Overview() {
                   </Button>
                   <Button
                     component={Link}
-                    href="/dashboards/crypto"
+                    href="https://eternl.io/app/mainnet/welcome"
                     variant="contained"
                     sx={{ ml: 2 }}
                   >
@@ -77,8 +77,8 @@ function Overview() {
             </Box>
           </Container>
         </HeaderWrapper>
-        {/* <Hero /> */}
-        <Login></Login>
+        <Hero />
+        {/* <Login></Login> */}
         
       </OverviewWrapper>
     </>
