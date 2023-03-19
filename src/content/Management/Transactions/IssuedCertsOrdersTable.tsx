@@ -28,6 +28,7 @@ import {
   CardHeader
 } from '@mui/material';
 
+import SendIcon from '@mui/icons-material/Send';
 import Label from '@/components/Label';
 import {
   Certificate,
@@ -38,7 +39,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
-
+import BlockIcon from '@mui/icons-material/Block';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -207,7 +208,15 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     selectedCertifiates.length === certificates.length;
   const theme = useTheme();
 
-  async function handleSign(certificate) {
+  function handleSign(certificate) {
+    // TODO viet ham ki
+  }
+
+  function handleBan(certificateId) {
+    // TODO
+  }
+
+  async function handleSend(certificate) {
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
     if (wallet) {
@@ -225,7 +234,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         "yearOfGraduation": certificate.yearOfGraduation,
       };
       const asset1: Mint = {
-        assetName: certificate.certificateType+certificate.certificateCode,
+        assetName: certificate.certificateType + certificate.certificateCode,
         assetQuantity: '1',
         metadata: assetMetadata1,
         label: '721',
@@ -233,7 +242,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       };
       console.log(asset1);
       console.log(assetMetadata1);
-      
+
       tx.mintAsset(
         forgingScript,
         asset1,
@@ -243,7 +252,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       const signedTx = await wallet.signTx(unsignedTx);
       const txHash = await wallet.submitTx(signedTx);
       console.log(txHash);
-      
+
     }
   }
 
@@ -379,7 +388,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     {getStatusContactLabel(certificate.contactStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {certificate.certificateStatus === '0' || (
+                    {certificate.certificateStatus == "0" ? (
                       <Tooltip title="Sign" arrow>
                         <IconButton
                           sx={{
@@ -395,6 +404,44 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                           <EditTwoToneIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
+                    ) : (
+                      certificate.certificateStatus == "1" ? (
+                        <Tooltip title="Send" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': {
+                                background: theme.colors.primary.lighter
+                              },
+                              color: theme.palette.primary.main
+                            }}
+                            color="inherit"
+                            size="small"
+                            onClick={() => handleSend(certificate)}
+                          >
+                            <SendIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>) : (
+                        certificate.certificateStatus == "2" ? (
+                          <Tooltip title="Ban" arrow>
+                            <IconButton
+                              sx={{
+                                '&:hover': {
+                                  background: theme.colors.primary.lighter
+                                },
+                                color: theme.palette.primary.main
+                              }}
+                              color="error"
+                              size="small"
+                              onClick={() => handleBan(certificate.certificateID)}
+                            >
+                              <BlockIcon 
+                                color='error'
+                                fontSize="small" 
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (<></>)
+                      )
                     )}
                     <Tooltip title="View" arrow>
                       <IconButton
