@@ -169,7 +169,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Pending"
-                          src="/static/images/placeholders/logo/bitcoin.png"
+                          src="/static/images/placeholders/logo/wall-clock.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -192,7 +192,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Connected"
-                          src="/static/images/placeholders/logo/ripple.png"
+                          src="/static/images/placeholders/logo/connection.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -256,7 +256,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Draft"
-                          src="/static/images/placeholders/logo/ripple.png"
+                          src="/static/images/placeholders/logo/draft.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -279,7 +279,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Signed"
-                          src="/static/images/placeholders/logo/cardano.png"
+                          src="/static/images/placeholders/logo/edit-2.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -302,7 +302,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Sent"
-                          src="/static/images/placeholders/logo/ethereum.png"
+                          src="/static/images/placeholders/logo/sent-3.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -325,7 +325,7 @@ function AccountBalance() {
                       <ListItemAvatarWrapper>
                         <img
                           alt="Received"
-                          src="/static/images/placeholders/logo/ethereum.png"
+                          src="/static/images/placeholders/logo/email.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText

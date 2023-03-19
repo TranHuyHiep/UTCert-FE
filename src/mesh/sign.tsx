@@ -43,7 +43,6 @@ function Sign() {
       };
       tx.mintAsset(forgingScript, asset1);
 
-
       const assetMetadata2: AssetMetadata = {
         name: input1,
         image: input2,
