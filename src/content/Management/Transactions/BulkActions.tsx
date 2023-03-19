@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import CreateIcon from '@mui/icons-material/Create';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
-import { Certificate } from 'crypto';
+import { Certificate } from '@/models/certificate';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -85,6 +85,7 @@ function BulkActions(props) {
       const txHash = await wallet.submitTx(signedTx);
       console.log(txHash);
     }
+    // TODO: viet ham gui api
   }
 
   return (

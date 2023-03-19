@@ -215,7 +215,6 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const theme = useTheme();
 
   function handleSign(certificateId) {
-    // TODO viet ham ki
     fetch('https://localhost:44325/api/v1/Certificates/issued/sign', {
       method: 'POST',
       headers: {
@@ -235,6 +234,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         // Xử lý lỗi ở đây
         alert("Ký thất bại!")
       });
+
   }
 
   function handleBan(certificateId) {
@@ -277,8 +277,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       const signedTx = await wallet.signTx(unsignedTx);
       const txHash = await wallet.submitTx(signedTx);
       console.log(txHash);
-
     }
+    // TODO viet ham gui api
+
   }
 
   return (
