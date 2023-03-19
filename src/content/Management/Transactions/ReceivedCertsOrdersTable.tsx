@@ -318,7 +318,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                       align='center'
-                    > 
+                    >
                       {cryptoOrder.yearOfGraduation}
                     </Typography>
                   </TableCell>

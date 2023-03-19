@@ -40,6 +40,7 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import BlockIcon from '@mui/icons-material/Block';
+import { Filter } from '@mui/icons-material';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -51,19 +52,19 @@ interface Filters {
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
-    '0': {
+    0: {
       text: 'Draft',
       color: 'secondary'
     },
-    '1': {
+    1: {
       text: 'Signed',
       color: 'primary'
     },
-    '2': {
+    2: {
       text: 'Sent',
       color: 'success'
     },
-    '3': {
+    3: {
       text: 'Banned',
       color: 'error',
     },
@@ -100,7 +101,7 @@ const applyFilters = (
     ) {
       matches = false;
     }
-
+    
     return matches;
   });
 };
@@ -128,38 +129,40 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   const statusOptions = [
     {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: '0',
+      id: 0,
       name: 'Draft'
     },
     {
-      id: '1',
+      id: 1,
       name: 'Pending'
     },
     {
-      id: '2',
+      id: 2,
       name: 'Sent'
     },
     {
-      id: '3',
+      id: 3,
       name: 'Banned'
-    }
+    },
+    {
+      id: 'all',
+      name: 'All'
+    },
   ];
 
   const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
     let value = null;
-
+    console.log(e.target.value);
+    
     if (e.target.value !== 'all') {
       value = e.target.value;
     }
-
+    
     setFilters((prevFilters) => ({
       ...prevFilters,
-      status: value
+      certificateStatus: value
     }));
+    
   };
 
   const handleSelectAllCryptoOrders = (
@@ -224,13 +227,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       body: JSON.stringify(certificateId)
     })
       .then(response => {
-        console.log('Response:', response);
         // Xử lý phản hồi ở đây
         alert("Ký thành công!");
         location.reload();
       })
       .catch(error => {
-        console.error('Error:', error);
         // Xử lý lỗi ở đây
         alert("Ký thất bại!")
       });
@@ -417,7 +418,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     {getStatusContactLabel(certificate.contactStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {certificate.certificateStatus == "0" ? (
+                    {certificate.certificateStatus == 0 ? (
                       <Tooltip title="Sign" arrow>
                         <IconButton
                           sx={{
@@ -434,7 +435,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         </IconButton>
                       </Tooltip>
                     ) : (
-                      certificate.certificateStatus == "1" ? (
+                      certificate.certificateStatus == 1 ? (
                         <Tooltip title="Send" arrow>
                           <IconButton
                             sx={{
@@ -450,7 +451,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                             <SendIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>) : (
-                        certificate.certificateStatus == "2" ? (
+                        certificate.certificateStatus == 2 ? (
                           <Tooltip title="Ban" arrow>
                             <IconButton
                               sx={{

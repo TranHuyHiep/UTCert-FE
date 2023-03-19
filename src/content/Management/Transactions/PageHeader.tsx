@@ -14,8 +14,6 @@ import {
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import PersonIcon from '@mui/icons-material/Person';
-import { blue } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import GetCookie from '@/hooks/getCookie';
 
@@ -93,7 +91,7 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired
+  // selectedValue: PropTypes.string.isRequireds
 };
 
 function PageHeader() {
@@ -103,7 +101,7 @@ function PageHeader() {
     setOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = () => {
     setOpen(false);
   };
 
