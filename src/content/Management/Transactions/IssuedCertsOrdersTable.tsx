@@ -152,7 +152,6 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
     let value = null;
-    console.log(e.target.value);
     
     if (e.target.value !== 'all') {
       value = e.target.value;
