@@ -117,6 +117,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   certificates
 }) => {
   const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
+  const [selectedCertifiatesInformation, setSelectedCertificatesInformation] = useState<Certificate[]>([]);
 
   const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -173,13 +174,18 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   const handleSelectOneCryptoOrder = (
     _event: ChangeEvent<HTMLInputElement>,
-    certificateId: string
+    certificateId: string,
+    certificate: Certificate
   ): void => {
     if (!selectedCertifiates.includes(certificateId)) {
       setSelectedCertificates((prevSelected) => [
         ...prevSelected,
         certificateId
       ]);
+      setSelectedCertificatesInformation((prevSelectedInformation) => [
+        ...prevSelectedInformation,
+        certificate
+      ])
     } else {
       setSelectedCertificates((prevSelected) =>
         prevSelected.filter((id) => id !== certificateId)
@@ -208,8 +214,27 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     selectedCertifiates.length === certificates.length;
   const theme = useTheme();
 
-  function handleSign(certificate) {
+  function handleSign(certificateId) {
     // TODO viet ham ki
+    fetch('https://localhost:44325/api/v1/Certificates/issued/sign', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certificateId)
+    })
+      .then(response => {
+        console.log('Response:', response);
+        // Xử lý phản hồi ở đây
+        alert("Ký thành công!");
+        location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Xử lý lỗi ở đây
+        alert("Ký thất bại!")
+      });
   }
 
   function handleBan(certificateId) {
@@ -260,7 +285,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     <Card>
       {selectedBulkActions && (
         <Box flex={1} p={2}>
-          <BulkActions />
+          <BulkActions 
+            certificates={selectedCertifiatesInformation}
+          />
         </Box>
       )}
       {!selectedBulkActions && (
@@ -327,7 +354,8 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
                         handleSelectOneCryptoOrder(
                           event,
-                          certificate.certificateID
+                          certificate.certificateID,
+                          certificate
                         )
                       }
                       value={isCryptoOrderSelected}
@@ -399,7 +427,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                           }}
                           color="inherit"
                           size="small"
-                          onClick={() => handleSign(certificate)}
+                          onClick={() => handleSign(certificate.certificateID)}
                         >
                           <EditTwoToneIcon fontSize="small" />
                         </IconButton>
@@ -434,9 +462,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                               size="small"
                               onClick={() => handleBan(certificate.certificateID)}
                             >
-                              <BlockIcon 
+                              <BlockIcon
                                 color='error'
-                                fontSize="small" 
+                                fontSize="small"
                               />
                             </IconButton>
                           </Tooltip>
