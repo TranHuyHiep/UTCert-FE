@@ -15,6 +15,8 @@ import Head from 'next/head';
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import Login from './login-register/login';
+import Register from './login-register/map';
+import MapBox from './login-register/map';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -78,7 +80,7 @@ function Overview() {
           </Container>
         </HeaderWrapper>
         <Hero />
-        {/* <Login></Login> */}
+        <MapBox></MapBox>
         
       </OverviewWrapper>
     </>

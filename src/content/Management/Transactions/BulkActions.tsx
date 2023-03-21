@@ -48,21 +48,24 @@ function BulkActions(props) {
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
     if (wallet) {
+      
+
       const usedAddress = await wallet.getUsedAddresses();
       const address = usedAddress[0];
       const forgingScript = ForgeScript.withOneSignature(address);
       const tx = new Transaction({ initiator: wallet });
       // define asset#1 metadata
       var assets: Mint[] = [];
-
+      var certificatesId: string[] = [];
       for (let index = 0; index < certificates.length; index++) {
+        certificatesId.push(certificates[index].certificateID)
         const assetMetadata: AssetMetadata = {
           "certificateName": certificates[index].certificateName,
           "classification": certificates[index].classification,
           "image": certificates[index].ipfsLink,
           "mediaType": "image/jpg",
           "receivedName": certificates[index].receivedName,
-          "yearOfGraduation": ""+certificates[index].yearOfGraduation,
+          "yearOfGraduation": "" + certificates[index].yearOfGraduation,
         };
 
         const asset1: Mint = {
@@ -79,13 +82,31 @@ function BulkActions(props) {
         );
       }
 
-      console.log(assets);
+      // console.log(assets);
       const unsignedTx = await tx.build();
       const signedTx = await wallet.signTx(unsignedTx);
       const txHash = await wallet.submitTx(signedTx);
       console.log(txHash);
+      console.log(JSON.stringify(certificatesId));
+
+      fetch('https://localhost:44325/api/v1/Certificates/issued/send-multiple', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(certificatesId)
+      })
+        .then(response => {
+          // Xử lý phản hồi ở đây
+          alert("Gửi thành công!");
+        })
+        .catch(error => {
+          // Xử lý lỗi ở đây
+          console.log(error);
+          alert("Gửi thất bại!")
+        });
     }
-    // TODO: viet ham gui api
   }
 
   return (
