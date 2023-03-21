@@ -41,22 +41,21 @@ function BulkActions(props) {
     menuOpen(false);
   };
 
+  var certificatesId: string[] = [];
   async function SendAllCertificateSelected(certs) {
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
 
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
-    if (wallet) {
-      
-
+    let myPromise = new Promise<void>(async function (myResolve, myReject) {
+      // "Producing Code" (May take some time)
       const usedAddress = await wallet.getUsedAddresses();
       const address = usedAddress[0];
       const forgingScript = ForgeScript.withOneSignature(address);
       const tx = new Transaction({ initiator: wallet });
       // define asset#1 metadata
       var assets: Mint[] = [];
-      var certificatesId: string[] = [];
       for (let index = 0; index < certificates.length; index++) {
         certificatesId.push(certificates[index].certificateID)
         const assetMetadata: AssetMetadata = {
@@ -80,33 +79,43 @@ function BulkActions(props) {
           forgingScript,
           assets[index],
         );
+        console.log(assets);
+        const unsignedTx = await tx.build();
+        const signedTx = await wallet.signTx(unsignedTx);
+        const txHash = await wallet.submitTx(signedTx);
       }
+      myResolve(); // when successful
+      myReject();  // when error
+    });
 
-      // console.log(assets);
-      const unsignedTx = await tx.build();
-      const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
-      console.log(txHash);
-      console.log(JSON.stringify(certificatesId));
-
-      fetch('https://localhost:44325/api/v1/Certificates/issued/send-multiple', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(certificatesId)
-      })
-        .then(response => {
-          // Xử lý phản hồi ở đây
-          alert("Gửi thành công!");
+    // "Consuming Code" (Must wait for a fulfilled Promise)
+    myPromise.then(
+      function () {
+        /* code if successful */
+        fetch('https://localhost:44325/api/v1/Certificates/issued/send-multiple', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(certificatesId)
         })
-        .catch(error => {
-          // Xử lý lỗi ở đây
-          console.log(error);
-          alert("Gửi thất bại!")
-        });
-    }
+          .then(response => {
+            // Xử lý phản hồi ở đây
+            alert("Gửi thành công!");
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây
+            console.log(error);
+            alert("Gửi thất bại!")
+          });
+      }
+    ).catch(function() {
+      alert("Gửi thất bại!")
+    }) 
+    // console.log(txHash);
+    // console.log(JSON.stringify(certificatesId));
+
   }
 
   return (
