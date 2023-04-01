@@ -1,8 +1,5 @@
 import { FC, ChangeEvent, useState } from 'react';
-import { format } from 'date-fns';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
-import GetCookie from '@/hooks/getCookie';
 import { BrowserWallet } from '@meshsdk/core';
 
 import {
@@ -52,19 +49,19 @@ interface Filters {
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
-    0: {
+    1: {
       text: 'Draft',
       color: 'secondary'
     },
-    1: {
+    2: {
       text: 'Signed',
       color: 'primary'
     },
-    2: {
+    3: {
       text: 'Sent',
       color: 'success'
     },
-    3: {
+    4: {
       text: 'Banned',
       color: 'error',
     },
@@ -75,11 +72,11 @@ const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
 
 const getStatusContactLabel = (contactStatus: ContactStatus): JSX.Element => {
   const map = {
-    '0': {
+    '1': {
       text: 'Pending',
       color: 'info'
     },
-    '1': {
+    '2': {
       text: 'Connected',
       color: 'success'
     }
@@ -92,6 +89,7 @@ const applyFilters = (
   certificates: Certificate[],
   filters: Filters
 ): Certificate[] => {
+  
   return certificates.filter((certificate) => {
     let matches = true;
 
@@ -129,25 +127,26 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   const statusOptions = [
     {
-      id: 0,
-      name: 'Draft'
-    },
-    {
-      id: 1,
-      name: 'Pending'
-    },
-    {
-      id: 2,
-      name: 'Sent'
-    },
-    {
-      id: 3,
-      name: 'Banned'
-    },
-    {
       id: 'all',
       name: 'All'
     },
+    {
+      id: 1,
+      name: 'Draft'
+    },
+    {
+      id: 2,
+      name: 'Signed'
+    },
+    {
+      id: 3,
+      name: 'Sent'
+    },
+    {
+      id: 4,
+      name: 'Banned'
+    },
+    
   ];
 
   const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -417,7 +416,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     {getStatusContactLabel(certificate.contactStatus)}
                   </TableCell>
                   <TableCell align="right">
-                    {certificate.certificateStatus == 0 ? (
+                    {certificate.certificateStatus == 1 ? (
                       <Tooltip title="Sign" arrow>
                         <IconButton
                           sx={{
@@ -434,7 +433,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         </IconButton>
                       </Tooltip>
                     ) : (
-                      certificate.certificateStatus == 1 ? (
+                      certificate.certificateStatus == 2 ? (
                         <Tooltip title="Send" arrow>
                           <IconButton
                             sx={{
@@ -450,7 +449,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                             <SendIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>) : (
-                        certificate.certificateStatus == 2 ? (
+                        certificate.certificateStatus == 3 ? (
                           <Tooltip title="Ban" arrow>
                             <IconButton
                               sx={{

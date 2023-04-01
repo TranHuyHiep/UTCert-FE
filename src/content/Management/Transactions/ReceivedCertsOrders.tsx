@@ -12,8 +12,8 @@ function ReceivedCertsOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'https://localhost:44325/api/v1/Certificates/certificate-received';
-        const payload = 'bf1f5570841b4ee812dc49e6111ba402813d19b3e1f8ec1e94ca9e35';
+        const url = 'https://localhost:44325/api/v1/Certificate/certificate-received';
+        const payload = 'stake_test1uqmw4ydawakkjwasf94w5f5frcrkt3t56taafgydh2wdkwqw3nksu';
         const headers = {
           Accept: '*/*',
           'Content-Type': 'application/json'
