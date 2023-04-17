@@ -5,5 +5,5 @@ export interface Contact {
     contactCode: number;
     contactName: string;
     createdDate: string;
-    contactStatus: number;
+    contactStatus: ContactStatus;
   }

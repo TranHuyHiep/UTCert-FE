@@ -26,8 +26,7 @@ import Label from '@/components/Label';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
-import { Contact, ContactStatus } from '@/models/Contact';
-
+import { Contact, ContactStatus } from '@/models/contact';
 interface ContactsOrdersTableProps {
   className?: string;
   contactOrders: Contact[];

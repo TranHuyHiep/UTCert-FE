@@ -39,7 +39,7 @@ function SimpleDialog(props) {
 
         try {
           const response = await fetch(
-            'https://localhost:44325/api/v1/Certificates/issuer',
+            'tamperproofcerts.somee.com/api/v1/Certificates/issuer',
             {
               method: 'POST',
               body: formData

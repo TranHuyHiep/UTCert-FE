@@ -79,11 +79,20 @@ function BulkActions(props) {
           forgingScript,
           assets[index],
         );
-        console.log(assets);
-        const unsignedTx = await tx.build();
-        const signedTx = await wallet.signTx(unsignedTx);
-        const txHash = await wallet.submitTx(signedTx);
       }
+      console.log("assets");
+      console.log(assets);
+      const unsignedTx = await tx.build();
+      console.log("transaction");
+      console.log(tx);
+      console.log("unsignedtx");
+      console.log(unsignedTx);
+      const signedTx = await wallet.signTx(unsignedTx);
+      console.log("signedTx");
+      console.log(signedTx);
+      const txHash = await wallet.submitTx(signedTx);
+      console.log("txHash");
+      console.log(txHash);
       myResolve(); // when successful
       myReject();  // when error
     });
@@ -92,7 +101,7 @@ function BulkActions(props) {
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('https://localhost:44325/api/v1/Certificates/issued/send-multiple', {
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send-multiple', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -110,9 +119,9 @@ function BulkActions(props) {
             alert("Gửi thất bại!")
           });
       }
-    ).catch(function() {
+    ).catch(function () {
       alert("Gửi thất bại!")
-    }) 
+    })
     // console.log(txHash);
     // console.log(JSON.stringify(certificatesId));
 

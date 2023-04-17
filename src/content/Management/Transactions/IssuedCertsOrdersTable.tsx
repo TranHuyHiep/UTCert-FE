@@ -216,7 +216,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const theme = useTheme();
 
   function handleSign(certificateId) {
-    fetch('https://localhost:44325/api/v1/Certificates/issued/sign', {
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
