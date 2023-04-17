@@ -115,7 +115,7 @@ function Wallets() {
           pb: 3
         }}
       >
-        <Typography variant="h3">Issued</Typography>
+        <Typography variant="h3">Issued Credential</Typography>
       </Box>
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3} item>
