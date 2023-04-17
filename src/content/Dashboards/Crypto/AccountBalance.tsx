@@ -14,10 +14,12 @@ import {
   List,
   ListItemAvatar
 } from '@mui/material';
-import TrendingUp from '@mui/icons-material/TrendingUp';
 import Text from 'src/components/Text';
 import { Chart } from 'src/components/Chart';
 import type { ApexOptions } from 'apexcharts';
+import GetCookie from '@/hooks/getCookie';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -55,9 +57,34 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
 );
 
 function AccountBalance() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+      GetCookie("stakeId"),
+      {
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }
+    ).then(response => {
+      setData(response.data);
+      setIsLoading(false); // set isLoading to false when the response is received
+    }).catch(error => {
+      console.log(error);
+      setIsLoading(false); // set isLoading to false when there's an error
+    });
+  }, []);
+  if (isLoading) {
+    return (
+      <Typography>Loading...</Typography>
+    );
+  }
   const theme = useTheme();
 
-  const chartOptions: ApexOptions = {
+  const chartContactOptions: ApexOptions = {
     chart: {
       background: 'transparent',
       stacked: false,
@@ -72,11 +99,11 @@ function AccountBalance() {
         }
       }
     },
-    colors: ['#ff9900', '#1c81c2', '#5c6ac0', "#f6abb6"],
+    colors: ['#FFCC00', '#9ACD32'],
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return val + '%';
+        return Number(val).toFixed(2) + '%';
       },
       style: {
         colors: [theme.colors.alpha.trueWhite[100]]
@@ -109,7 +136,7 @@ function AccountBalance() {
     fill: {
       opacity: 1
     },
-    labels: ['Draft', 'Signed', 'Sent', 'Received'],
+    labels: ['Pending', 'Connected'],
     legend: {
       labels: {
         colors: theme.colors.alpha.trueWhite[100]
@@ -124,8 +151,76 @@ function AccountBalance() {
     }
   };
 
-  const contactSeries = [9, 1];
-  const certificateSeries = [10, 20, 60, 10];
+
+  const chartCertificateOptions: ApexOptions = {
+    chart: {
+      background: 'transparent',
+      stacked: false,
+      toolbar: {
+        show: false
+      }
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '60%'
+        }
+      }
+    },
+    colors: ['#ff9900', '#1c81c2'],
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return Number(val).toFixed(2) + '%';
+      },
+      style: {
+        colors: [theme.colors.alpha.trueWhite[100]]
+      },
+      background: {
+        enabled: true,
+        foreColor: theme.colors.alpha.trueWhite[100],
+        padding: 8,
+        borderRadius: 4,
+        borderWidth: 0,
+        opacity: 0.3,
+        dropShadow: {
+          enabled: true,
+          top: 1,
+          left: 1,
+          blur: 1,
+          color: theme.colors.alpha.black[70],
+          opacity: 0.5
+        }
+      },
+      dropShadow: {
+        enabled: true,
+        top: 1,
+        left: 1,
+        blur: 1,
+        color: theme.colors.alpha.black[50],
+        opacity: 0.5
+      }
+    },
+    fill: {
+      opacity: 1
+    },
+    labels: ['Issued', 'Received'],
+    legend: {
+      labels: {
+        colors: theme.colors.alpha.trueWhite[100]
+      },
+      show: false
+    },
+    stroke: {
+      width: 0
+    },
+    theme: {
+      mode: theme.palette.mode
+    }
+  };
+
+  const contactSeries = [data.pending, data.connected];
+  const certificateSeries = [(data.draft + data.signed + data.sent + data.banned), data.received];
 
   return (
     <Card>
@@ -153,7 +248,7 @@ function AccountBalance() {
                 >
                   <Chart
                     height={250}
-                    options={chartOptions}
+                    options={chartContactOptions}
                     series={contactSeries}
                     type="donut"
                   />
@@ -175,7 +270,7 @@ function AccountBalance() {
                       <ListItemText
                         primary="Pending"
                         primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Pending Connection"
+                        secondary="Pending percents"
                         secondaryTypographyProps={{
                           variant: 'subtitle2',
                           noWrap: true
@@ -183,9 +278,9 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          20%
+                          {data.pending}
                         </Typography>
-                        <Text color="success">+2.54%</Text>
+                        <Text color="error">{((data.pending/data.total)*100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
@@ -206,9 +301,9 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          10%
+                          {data.connected}
                         </Typography>
-                        <Text color="error">-1.22%</Text>
+                        <Text color="success">{((data.connected/data.total)*100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                   </List>
@@ -240,7 +335,7 @@ function AccountBalance() {
                 >
                   <Chart
                     height={250}
-                    options={chartOptions}
+                    options={chartCertificateOptions}
                     series={certificateSeries}
                     type="donut"
                   />
@@ -255,14 +350,14 @@ function AccountBalance() {
                     <ListItem disableGutters>
                       <ListItemAvatarWrapper>
                         <img
-                          alt="Draft"
+                          alt="Issued"
                           src="/static/images/placeholders/logo/draft.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
-                        primary="Draft"
+                        primary="Issued"
                         primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Draft certificates"
+                        secondary="Issued certificates"
                         secondaryTypographyProps={{
                           variant: 'subtitle2',
                           noWrap: true
@@ -270,62 +365,16 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          10
+                          {(data.draft+data.signed+data.sent+data.banned)}
                         </Typography>
-                        <Text color="error">10%</Text>
-                      </Box>
-                    </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemAvatarWrapper>
-                        <img
-                          alt="Signed"
-                          src="/static/images/placeholders/logo/edit-2.png"
-                        />
-                      </ListItemAvatarWrapper>
-                      <ListItemText
-                        primary="Signed"
-                        primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Signed certificates"
-                        secondaryTypographyProps={{
-                          variant: 'subtitle2',
-                          noWrap: true
-                        }}
-                      />
-                      <Box>
-                        <Typography align="right" variant="h4" noWrap>
-                          20
-                        </Typography>
-                        <Text color="success">20%</Text>
-                      </Box>
-                    </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemAvatarWrapper>
-                        <img
-                          alt="Sent"
-                          src="/static/images/placeholders/logo/sent-3.png"
-                        />
-                      </ListItemAvatarWrapper>
-                      <ListItemText
-                        primary="Sent"
-                        primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                        secondary="Sent certificates"
-                        secondaryTypographyProps={{
-                          variant: 'subtitle2',
-                          noWrap: true
-                        }}
-                      />
-                      <Box>
-                        <Typography align="right" variant="h4" noWrap>
-                          30
-                        </Typography>
-                        <Text color="error">30%</Text>
+                        <Text color="error">{((data.draft+data.signed+data.sent+data.banned)/(data.draft+data.signed+data.sent+data.banned + data.received)*100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
                       <ListItemAvatarWrapper>
                         <img
                           alt="Received"
-                          src="/static/images/placeholders/logo/email.png"
+                          src="/static/images/placeholders/logo/edit-2.png"
                         />
                       </ListItemAvatarWrapper>
                       <ListItemText
@@ -339,9 +388,9 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          40
+                          {data.received}
                         </Typography>
-                        <Text color="error">40%</Text>
+                        <Text color="success">{(data.received/(data.draft+data.signed+data.sent+data.banned + data.received)*100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                   </List>

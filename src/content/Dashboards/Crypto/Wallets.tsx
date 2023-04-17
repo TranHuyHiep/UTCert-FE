@@ -12,6 +12,9 @@ import {
   styled
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import GetCookie from '@/hooks/getCookie';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -24,10 +27,9 @@ const AvatarWrapper = styled(Avatar)(
     border-radius: 60px;
     height: ${theme.spacing(5.5)};
     width: ${theme.spacing(5.5)};
-    background: ${
-      theme.palette.mode === 'dark'
-        ? theme.colors.alpha.trueWhite[30]
-        : alpha(theme.colors.alpha.black[100], 0.07)
+    background: ${theme.palette.mode === 'dark'
+      ? theme.colors.alpha.trueWhite[30]
+      : alpha(theme.colors.alpha.black[100], 0.07)
     };
   
     img {
@@ -75,6 +77,34 @@ const CardAddAction = styled(Card)(
 );
 
 function Wallets() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+      GetCookie("stakeId"),
+      {
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }
+    ).then(response => {
+      setData(response.data);
+      console.log(response.data);
+      setIsLoading(false); // set isLoading to false when the response is received
+    }).catch(error => {
+      console.log(error);
+      setIsLoading(false); // set isLoading to false when there's an error
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Typography>Loading...</Typography>
+    );
+  }
+
   return (
     <>
       <Box
@@ -85,14 +115,7 @@ function Wallets() {
           pb: 3
         }}
       >
-        <Typography variant="h3">Wallets</Typography>
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<AddTwoToneIcon fontSize="small" />}
-        >
-          Add new wallet
-        </Button>
+        <Typography variant="h3">Issued</Typography>
       </Box>
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3} item>
@@ -104,15 +127,12 @@ function Wallets() {
             <CardContent>
               <AvatarWrapper>
                 <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
+                  alt="Draft"
+                  src="/static/images/placeholders/logo/draft.png"
                 />
               </AvatarWrapper>
               <Typography variant="h5" noWrap>
-                Bitcoin
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                BTC
+                Draft
               </Typography>
               <Box
                 sx={{
@@ -120,10 +140,10 @@ function Wallets() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  $3,586.22
+                  {data.draft}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  1.25843 BTC
+                  {(data.draft / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2)}%
                 </Typography>
               </Box>
             </CardContent>
@@ -138,15 +158,12 @@ function Wallets() {
             <CardContent>
               <AvatarWrapper>
                 <img
-                  alt="Ripple"
-                  src="/static/images/placeholders/logo/ripple.png"
+                  alt="Signed"
+                  src="/static/images/placeholders/logo/edit-2.png"
                 />
               </AvatarWrapper>
               <Typography variant="h5" noWrap>
-                Ripple
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                XRP
+                Signed
               </Typography>
               <Box
                 sx={{
@@ -154,10 +171,10 @@ function Wallets() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  $586.83
+                  {data.signed}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  5,783 XRP
+                  {(data.signed / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2)}%
                 </Typography>
               </Box>
             </CardContent>
@@ -172,15 +189,12 @@ function Wallets() {
             <CardContent>
               <AvatarWrapper>
                 <img
-                  alt="Cardano"
-                  src="/static/images/placeholders/logo/cardano.png"
+                  alt="Sent"
+                  src="/static/images/placeholders/logo/sent-3.png"
                 />
               </AvatarWrapper>
               <Typography variant="h5" noWrap>
-                Cardano
-              </Typography>
-              <Typography variant="subtitle1" noWrap>
-                ADA
+                Sent
               </Typography>
               <Box
                 sx={{
@@ -188,31 +202,45 @@ function Wallets() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  $54,985.00
+                  {data.sent}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  34,985 ADA
+                  {(data.sent / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2)}%
                 </Typography>
               </Box>
             </CardContent>
           </Card>
         </Grid>
         <Grid xs={12} sm={6} md={3} item>
-          <Tooltip arrow title="Click to add a new wallet">
-            <CardAddAction>
-              <CardActionArea
+          <Card
+            sx={{
+              px: 1
+            }}
+          >
+            <CardContent>
+              <AvatarWrapper>
+                <img
+                  alt="Banned"
+                  src="/static/images/placeholders/logo/edit-2.png"
+                />
+              </AvatarWrapper>
+              <Typography variant="h5" noWrap>
+                Banned
+              </Typography>
+              <Box
                 sx={{
-                  px: 1
+                  pt: 3
                 }}
               >
-                <CardContent>
-                  <AvatarAddWrapper>
-                    <AddTwoToneIcon fontSize="large" />
-                  </AvatarAddWrapper>
-                </CardContent>
-              </CardActionArea>
-            </CardAddAction>
-          </Tooltip>
+                <Typography variant="h3" gutterBottom noWrap>
+                  {data.banned}
+                </Typography>
+                <Typography variant="subtitle2" noWrap>
+                  {(data.banned / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2)}%
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </>
