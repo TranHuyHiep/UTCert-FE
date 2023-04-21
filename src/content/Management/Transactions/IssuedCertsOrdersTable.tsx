@@ -22,7 +22,9 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  Dialog,
+  DialogContent
 } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -33,12 +35,10 @@ import {
   ContactStatus
 } from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BulkActions from './BulkActions';
-import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import BlockIcon from '@mui/icons-material/Block';
-import { Filter } from '@mui/icons-material';
+import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -113,10 +113,31 @@ const applyPagination = (
   return certificates.slice(page * limit, page * limit + limit);
 };
 
+// modal view cert
+function SimpleDialog(props) {
+  const { open, onClose, selectedCertifiate } = props;
+  if(selectedCertifiate == undefined) {
+    return (
+      <>
+      </>
+    )
+  }
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogContent>
+        <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// table certs
 const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   certificates
 }) => {
+  const [open, setOpen] = useState(false);
   const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
+  const [selectedCertifiate, setSelectedCertificate] = useState<Certificate>();
   const [selectedCertifiatesInformation, setSelectedCertificatesInformation] = useState<Certificate[]>([]);
 
   const selectedBulkActions = selectedCertifiates.length > 0;
@@ -125,6 +146,15 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const [filters, setFilters] = useState<Filters>({
     certificateStatus: null
   });
+
+  const handleClickOpen = (certificate) => {
+    setSelectedCertificate(certificate);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const statusOptions = [
     {
@@ -225,11 +255,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       },
       body: JSON.stringify(certificateId)
     })
-      .then(response => {
+      .then(() => {
         // Xử lý phản hồi ở đây
         alert("Ký thành công!");
       })
-      .catch(error => {
+      .catch(() => {
         // Xử lý lỗi ở đây
         alert("Ký thất bại!")
       });
@@ -245,11 +275,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       },
       body: JSON.stringify(certificateId)
     })
-      .then(response => {
+      .then(() => {
         // Xử lý phản hồi ở đây
         alert("Ban thành công!");
       })
-      .catch(error => {
+      .catch(() => {
         // Xử lý lỗi ở đây
         alert("Ban thất bại!")
       });
@@ -257,70 +287,70 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   async function handleSend(certificate) {
     let myPromise = new Promise<void>(async function (myResolve, myReject) {
-    const wallet = await BrowserWallet.enable('eternl');
-    // prepare forgingScript
-    const usedAddress = await wallet.getUsedAddresses();
-    const address = usedAddress[0];
-    const forgingScript = ForgeScript.withOneSignature(address);
-    const tx = new Transaction({ initiator: wallet });
-    // define asset#1 metadata
-    const assetMetadata1: AssetMetadata = {
-      "certificateName": certificate.certificateName,
-      "classification": certificate.classification,
-      "image": certificate.ipfsLink,
-      "mediaType": "image/jpg",
-      "receivedName": certificate.receivedName,
-      "yearOfGraduation": certificate.yearOfGraduation,
-    };
-    const asset1: Mint = {
-      assetName: certificate.certificateType + certificate.certificateCode,
-      assetQuantity: '1',
-      metadata: assetMetadata1,
-      label: '721',
-      recipient: certificate.receivedAddressWallet,
-    };
-    console.log(asset1);
-    console.log(assetMetadata1);
+      const wallet = await BrowserWallet.enable('eternl');
+      // prepare forgingScript
+      const usedAddress = await wallet.getUsedAddresses();
+      const address = usedAddress[0];
+      const forgingScript = ForgeScript.withOneSignature(address);
+      const tx = new Transaction({ initiator: wallet });
+      // define asset#1 metadata
+      const assetMetadata1: AssetMetadata = {
+        "certificateName": certificate.certificateName,
+        "classification": certificate.classification,
+        "image": certificate.ipfsLink,
+        "mediaType": "image/jpg",
+        "receivedName": certificate.receivedName,
+        "yearOfGraduation": certificate.yearOfGraduation,
+      };
+      const asset1: Mint = {
+        assetName: certificate.certificateType + certificate.certificateCode,
+        assetQuantity: '1',
+        metadata: assetMetadata1,
+        label: '721',
+        recipient: certificate.receivedAddressWallet,
+      };
+      console.log(asset1);
+      console.log(assetMetadata1);
 
-    tx.mintAsset(
-      forgingScript, 
+      tx.mintAsset(
+        forgingScript,
         asset1,
-    );
-    const unsignedTx = await tx.build();
-    const signedTx = await wallet.signTx(unsignedTx);
-    const txHash = await wallet.submitTx(signedTx);
-    console.log("txHash");
-    console.log(txHash);
-    myResolve(); // when successful
-    myReject();  // when error
-  });
+      );
+      const unsignedTx = await tx.build();
+      const signedTx = await wallet.signTx(unsignedTx);
+      const txHash = await wallet.submitTx(signedTx);
+      console.log("txHash");
+      console.log(txHash);
+      myResolve(); // when successful
+      myReject();  // when error
+    });
 
-  // "Consuming Code" (Must wait for a fulfilled Promise)
-  myPromise.then(
-    function () {
-      /* code if successful */
-      fetch('https://localhost:7077/api/v1/Certificate/issued/send', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(certificate.certificateID)
-      })
-        .then(response => {
-          // Xử lý phản hồi ở đây
-          alert("Gửi thành công!");
+    // "Consuming Code" (Must wait for a fulfilled Promise)
+    myPromise.then(
+      function () {
+        /* code if successful */
+        fetch('https://localhost:7077/api/v1/Certificate/issued/send', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(certificate.certificateID)
         })
-        .catch(error => {
-          // Xử lý lỗi ở đây
-          console.log(error);
-          alert("Gửi thất bại!")
-        });
-    }
-  ).catch(function () {
-    alert("Gửi thất bại!")
-  })
-}
+          .then(() => {
+            // Xử lý phản hồi ở đây
+            alert("Gửi thành công!");
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây
+            console.log(error);
+            alert("Gửi thất bại!")
+          });
+      }
+    ).catch(function () {
+      alert("Gửi thất bại!")
+    })
+  }
 
   return (
     <Card>
@@ -520,6 +550,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => handleClickOpen(certificate)}
                       >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
@@ -542,6 +573,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
+      <SimpleDialog
+        open={open}
+        onClose={handleClose}
+        selectedCertifiate={selectedCertifiate}
+      />
     </Card>
   );
 };

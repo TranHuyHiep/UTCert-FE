@@ -5,6 +5,7 @@ export interface Certificate {
     certificateCode: number;
     certificateID: string;
     certificateName: string;
+    imageLink: string;
     certificateStatus: CertificateStatus;
     certificateType: string;
     classification: string;
