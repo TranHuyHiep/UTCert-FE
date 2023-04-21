@@ -19,8 +19,6 @@ function IssuedCertsOrders() {
         };
 
         const response = await axios.post(url, payload, { headers });
-        console.log(response.data);
-        
         setIssuedCert(response.data);
       } catch (error) {
         console.error(error);
@@ -28,7 +26,7 @@ function IssuedCertsOrders() {
     };
 
     fetchData();
-  }, []);
+  });
   return (
     <Card>
       <IssuedCertsOrdersTable certificates={issuedCert} />

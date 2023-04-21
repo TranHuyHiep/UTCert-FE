@@ -124,12 +124,9 @@ function Hero() {
           <CardanoWallet />
           {connected && (
             <>
-              <h1>Get Wallet Assets</h1>
               {assets ? (
                 <pre>
-                  <code className="language-js">
-                    {JSON.stringify(assets, null, 2)}
-                  </code>
+                  
                 </pre>
               ) : (
                 <button
@@ -141,13 +138,12 @@ function Hero() {
                     backgroundColor: loading ? 'orange' : 'grey'
                   }}
                 >
-                  Get Wallet Assets
+                  Login
                 </button>
               )}
             </>
           )}
       
-          {/* <Sign></Sign> */}
         </div>
       </Grid>
     </Container>

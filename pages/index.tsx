@@ -6,7 +6,7 @@ import {
   Button,
   styled
 } from '@mui/material';
-import type { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import Link from 'src/components/Link';
@@ -17,6 +17,8 @@ import Hero from 'src/content/Overview/Hero';
 import Login from './login-register/login';
 import Register from './login-register/map';
 import MapBox from './login-register/map';
+import { CardanoWallet, useWallet } from '@meshsdk/react';
+import SetCookie from '@/hooks/setCookie';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -38,8 +40,23 @@ const OverviewWrapper = styled(Box)(
 );
 
 function Overview() {
+  const { connected, wallet } = useWallet();
+  const [assets, setAssets] = useState<null | any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  
+  async function getAssets() {
+    if (wallet) {
+      setLoading(true);
+      const _assets = await wallet.getAssets();
+      const stakeId = await wallet.getRewardAddresses();
+      const myWallet = await wallet.getUsedAddresses();
+      console.log(myWallet[0]);
+      SetCookie('stakeId', stakeId);
+      setAssets(_assets);
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <OverviewWrapper>
@@ -66,6 +83,35 @@ function Overview() {
                   >
                     Login
                   </Button>
+                  {/* <CardanoWallet />
+                  {connected && (
+                    <>
+                      {assets ? (
+                        <pre>
+                          <Button
+                            component={Link}
+                            href="/dashboards/crypto"
+                            variant="contained"
+                            sx={{ ml: 2 }}
+                          >
+                            Login
+                          </Button>
+                        </pre>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => getAssets()}
+                          disabled={loading}
+                          style={{
+                            margin: '8px',
+                            backgroundColor: loading ? 'orange' : 'grey'
+                          }}
+                        >
+                          Login
+                        </button>
+                      )}
+                    </>
+                  )} */}
                   <Button
                     component={Link}
                     href="https://eternl.io/app/mainnet/welcome"
@@ -81,7 +127,7 @@ function Overview() {
         </HeaderWrapper>
         <Hero />
         <MapBox></MapBox>
-        
+
       </OverviewWrapper>
     </>
   );

@@ -89,7 +89,7 @@ const applyFilters = (
   certificates: Certificate[],
   filters: Filters
 ): Certificate[] => {
-  
+
   return certificates.filter((certificate) => {
     let matches = true;
 
@@ -99,7 +99,7 @@ const applyFilters = (
     ) {
       matches = false;
     }
-    
+
     return matches;
   });
 };
@@ -146,21 +146,21 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       id: 4,
       name: 'Banned'
     },
-    
+
   ];
 
   const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
     let value = null;
-    
+
     if (e.target.value !== 'all') {
       value = e.target.value;
     }
-    
+
     setFilters((prevFilters) => ({
       ...prevFilters,
       certificateStatus: value
     }));
-    
+
   };
 
   const handleSelectAllCryptoOrders = (
@@ -227,7 +227,6 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       .then(response => {
         // Xử lý phản hồi ở đây
         alert("Ký thành công!");
-        location.reload();
       })
       .catch(error => {
         // Xử lý lỗi ở đây
@@ -285,7 +284,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     <Card>
       {selectedBulkActions && (
         <Box flex={1} p={2}>
-          <BulkActions 
+          <BulkActions
             certificates={selectedCertifiatesInformation}
           />
         </Box>
@@ -406,7 +405,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {certificate.receivedDoB}
+                      {new Date(certificate.receivedDoB).toLocaleDateString('en-GB')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
