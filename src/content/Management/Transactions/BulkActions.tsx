@@ -43,9 +43,10 @@ function BulkActions(props) {
 
   var certificatesId: string[] = [];
   async function SendAllCertificateSelected(certs) {
+    console.log(certs);
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
-
+    
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
     let myPromise = new Promise<void>(async function (myResolve, myReject) {

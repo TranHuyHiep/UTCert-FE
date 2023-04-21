@@ -34,6 +34,7 @@ import {
 } from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import BulkActions from './BulkActions';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import BlockIcon from '@mui/icons-material/Block';
@@ -520,7 +521,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         color="inherit"
                         size="small"
                       >
-                        <DeleteTwoToneIcon fontSize="small" />
+                        <VisibilityIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
