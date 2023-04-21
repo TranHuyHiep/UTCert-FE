@@ -80,16 +80,8 @@ function BulkActions(props) {
           assets[index],
         );
       }
-      console.log("assets");
-      console.log(assets);
       const unsignedTx = await tx.build();
-      console.log("transaction");
-      console.log(tx);
-      console.log("unsignedtx");
-      console.log(unsignedTx);
       const signedTx = await wallet.signTx(unsignedTx);
-      console.log("signedTx");
-      console.log(signedTx);
       const txHash = await wallet.submitTx(signedTx);
       console.log("txHash");
       console.log(txHash);
@@ -122,9 +114,6 @@ function BulkActions(props) {
     ).catch(function () {
       alert("Gửi thất bại!")
     })
-    // console.log(txHash);
-    // console.log(JSON.stringify(certificatesId));
-
   }
 
   return (

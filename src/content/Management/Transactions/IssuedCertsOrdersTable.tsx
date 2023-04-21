@@ -236,49 +236,90 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   }
 
   function handleBan(certificateId) {
-    // TODO
+    fetch('https://localhost:7077/api/v1/Certificate/issued/ban', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certificateId)
+    })
+      .then(response => {
+        // Xử lý phản hồi ở đây
+        alert("Ban thành công!");
+      })
+      .catch(error => {
+        // Xử lý lỗi ở đây
+        alert("Ban thất bại!")
+      });
   }
 
   async function handleSend(certificate) {
+    let myPromise = new Promise<void>(async function (myResolve, myReject) {
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
-    if (wallet) {
-      const usedAddress = await wallet.getUsedAddresses();
-      const address = usedAddress[0];
-      const forgingScript = ForgeScript.withOneSignature(address);
-      const tx = new Transaction({ initiator: wallet });
-      // define asset#1 metadata
-      const assetMetadata1: AssetMetadata = {
-        "certificateName": certificate.certificateName,
-        "classification": certificate.classification,
-        "image": certificate.ipfsLink,
-        "mediaType": "image/jpg",
-        "receivedName": certificate.receivedName,
-        "yearOfGraduation": certificate.yearOfGraduation,
-      };
-      const asset1: Mint = {
-        assetName: certificate.certificateType + certificate.certificateCode,
-        assetQuantity: '1',
-        metadata: assetMetadata1,
-        label: '721',
-        recipient: certificate.receivedAddressWallet,
-      };
-      console.log(asset1);
-      console.log(assetMetadata1);
+    const usedAddress = await wallet.getUsedAddresses();
+    const address = usedAddress[0];
+    const forgingScript = ForgeScript.withOneSignature(address);
+    const tx = new Transaction({ initiator: wallet });
+    // define asset#1 metadata
+    const assetMetadata1: AssetMetadata = {
+      "certificateName": certificate.certificateName,
+      "classification": certificate.classification,
+      "image": certificate.ipfsLink,
+      "mediaType": "image/jpg",
+      "receivedName": certificate.receivedName,
+      "yearOfGraduation": certificate.yearOfGraduation,
+    };
+    const asset1: Mint = {
+      assetName: certificate.certificateType + certificate.certificateCode,
+      assetQuantity: '1',
+      metadata: assetMetadata1,
+      label: '721',
+      recipient: certificate.receivedAddressWallet,
+    };
+    console.log(asset1);
+    console.log(assetMetadata1);
 
-      tx.mintAsset(
-        forgingScript,
+    tx.mintAsset(
+      forgingScript, 
         asset1,
-      );
+    );
+    const unsignedTx = await tx.build();
+    const signedTx = await wallet.signTx(unsignedTx);
+    const txHash = await wallet.submitTx(signedTx);
+    console.log("txHash");
+    console.log(txHash);
+    myResolve(); // when successful
+    myReject();  // when error
+  });
 
-      const unsignedTx = await tx.build();
-      const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
-      console.log(txHash);
+  // "Consuming Code" (Must wait for a fulfilled Promise)
+  myPromise.then(
+    function () {
+      /* code if successful */
+      fetch('https://localhost:7077/api/v1/Certificate/issued/send', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(certificate.certificateID)
+      })
+        .then(response => {
+          // Xử lý phản hồi ở đây
+          alert("Gửi thành công!");
+        })
+        .catch(error => {
+          // Xử lý lỗi ở đây
+          console.log(error);
+          alert("Gửi thất bại!")
+        });
     }
-    // TODO viet ham gui api
-
-  }
+  ).catch(function () {
+    alert("Gửi thất bại!")
+  })
+}
 
   return (
     <Card>
