@@ -61,7 +61,7 @@ function AccountBalance() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.post('http://localhost:7077/api/v1/Home',
+    axios.post('https://localhost:7077/api/v1/Home',
       GetCookie("stakeId"),
       {
         headers: {

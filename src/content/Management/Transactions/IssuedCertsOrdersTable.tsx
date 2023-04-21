@@ -216,7 +216,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const theme = useTheme();
 
   function handleSign(certificateId) {
-    fetch('http://localhost:7077/api/v1/Certificate/issued/sign', {
+    fetch('https://localhost:7077/api/v1/Certificate/issued/sign', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

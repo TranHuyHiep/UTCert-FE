@@ -10,7 +10,7 @@ function ContactOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'http://localhost:7077/api/v1/Home';
+        const url = 'https://localhost:7077/api/v1/Contact';
         const payload = GetCookie("stakeId");
         const headers = {
           Accept: '*/*',
