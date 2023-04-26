@@ -10,7 +10,7 @@ function ContactOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'https://localhost:7077/api/v1/Contact';
+        const url = 'http://tamperproofcerts.somee.com/api/v1/Contact';
         const payload = GetCookie("stakeId");
         const headers = {
           Accept: '*/*',

@@ -247,7 +247,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const theme = useTheme();
 
   function handleSign(certificateId) {
-    fetch('https://localhost:7077/api/v1/Certificate/issued/sign', {
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -267,7 +267,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   }
 
   function handleBan(certificateId) {
-    fetch('https://localhost:7077/api/v1/Certificate/issued/ban', {
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -329,7 +329,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('https://localhost:7077/api/v1/Certificate/issued/send', {
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

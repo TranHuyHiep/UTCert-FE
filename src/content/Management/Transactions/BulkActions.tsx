@@ -94,7 +94,7 @@ function BulkActions(props) {
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('https://localhost:7077/api/v1/Certificate/issued/send-multiple', {
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send-multiple', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
