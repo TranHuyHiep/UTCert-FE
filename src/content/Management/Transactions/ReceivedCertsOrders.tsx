@@ -12,7 +12,7 @@ function ReceivedCertsOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'http://localhost:7077/api/v1/Certificate/certificate-received';
+        const url = 'http://tamperproofcerts.somee.com/api/v1/Certificate/certificate-received';
         const payload = 'stake_test1uqmw4ydawakkjwasf94w5f5frcrkt3t56taafgydh2wdkwqw3nksu';
         const headers = {
           Accept: '*/*',

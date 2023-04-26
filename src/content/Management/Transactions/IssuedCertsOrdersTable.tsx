@@ -22,7 +22,9 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  Dialog,
+  DialogContent
 } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -33,11 +35,10 @@ import {
   ContactStatus
 } from '@/models/certificate';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import BulkActions from './BulkActions';
-import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import BlockIcon from '@mui/icons-material/Block';
-import { Filter } from '@mui/icons-material';
+import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -89,7 +90,7 @@ const applyFilters = (
   certificates: Certificate[],
   filters: Filters
 ): Certificate[] => {
-  
+
   return certificates.filter((certificate) => {
     let matches = true;
 
@@ -99,7 +100,7 @@ const applyFilters = (
     ) {
       matches = false;
     }
-    
+
     return matches;
   });
 };
@@ -112,10 +113,31 @@ const applyPagination = (
   return certificates.slice(page * limit, page * limit + limit);
 };
 
+// modal view cert
+function SimpleDialog(props) {
+  const { open, onClose, selectedCertifiate } = props;
+  if(selectedCertifiate == undefined) {
+    return (
+      <>
+      </>
+    )
+  }
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogContent>
+        <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// table certs
 const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   certificates
 }) => {
+  const [open, setOpen] = useState(false);
   const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
+  const [selectedCertifiate, setSelectedCertificate] = useState<Certificate>();
   const [selectedCertifiatesInformation, setSelectedCertificatesInformation] = useState<Certificate[]>([]);
 
   const selectedBulkActions = selectedCertifiates.length > 0;
@@ -124,6 +146,15 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const [filters, setFilters] = useState<Filters>({
     certificateStatus: null
   });
+
+  const handleClickOpen = (certificate) => {
+    setSelectedCertificate(certificate);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const statusOptions = [
     {
@@ -146,21 +177,21 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       id: 4,
       name: 'Banned'
     },
-    
+
   ];
 
   const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
     let value = null;
-    
+
     if (e.target.value !== 'all') {
       value = e.target.value;
     }
-    
+
     setFilters((prevFilters) => ({
       ...prevFilters,
       certificateStatus: value
     }));
-    
+
   };
 
   const handleSelectAllCryptoOrders = (
@@ -216,7 +247,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const theme = useTheme();
 
   function handleSign(certificateId) {
-    fetch('http://localhost:7077/api/v1/Certificate/issued/sign', {
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -224,12 +255,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       },
       body: JSON.stringify(certificateId)
     })
-      .then(response => {
+      .then(() => {
         // Xử lý phản hồi ở đây
         alert("Ký thành công!");
-        location.reload();
       })
-      .catch(error => {
+      .catch(() => {
         // Xử lý lỗi ở đây
         alert("Ký thất bại!")
       });
@@ -237,13 +267,28 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   }
 
   function handleBan(certificateId) {
-    // TODO
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certificateId)
+    })
+      .then(() => {
+        // Xử lý phản hồi ở đây
+        alert("Ban thành công!");
+      })
+      .catch(() => {
+        // Xử lý lỗi ở đây
+        alert("Ban thất bại!")
+      });
   }
 
   async function handleSend(certificate) {
-    const wallet = await BrowserWallet.enable('eternl');
-    // prepare forgingScript
-    if (wallet) {
+    let myPromise = new Promise<void>(async function (myResolve, myReject) {
+      const wallet = await BrowserWallet.enable('eternl');
+      // prepare forgingScript
       const usedAddress = await wallet.getUsedAddresses();
       const address = usedAddress[0];
       const forgingScript = ForgeScript.withOneSignature(address);
@@ -271,21 +316,47 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         forgingScript,
         asset1,
       );
-
       const unsignedTx = await tx.build();
       const signedTx = await wallet.signTx(unsignedTx);
       const txHash = await wallet.submitTx(signedTx);
+      console.log("txHash");
       console.log(txHash);
-    }
-    // TODO viet ham gui api
+      myResolve(); // when successful
+      myReject();  // when error
+    });
 
+    // "Consuming Code" (Must wait for a fulfilled Promise)
+    myPromise.then(
+      function () {
+        /* code if successful */
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(certificate.certificateID)
+        })
+          .then(() => {
+            // Xử lý phản hồi ở đây
+            alert("Gửi thành công!");
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây
+            console.log(error);
+            alert("Gửi thất bại!")
+          });
+      }
+    ).catch(function () {
+      alert("Gửi thất bại!")
+    })
   }
 
   return (
     <Card>
       {selectedBulkActions && (
         <Box flex={1} p={2}>
-          <BulkActions 
+          <BulkActions
             certificates={selectedCertifiatesInformation}
           />
         </Box>
@@ -406,7 +477,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {certificate.receivedDoB}
+                      {new Date(certificate.receivedDoB).toLocaleDateString('en-GB')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -479,8 +550,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => handleClickOpen(certificate)}
                       >
-                        <DeleteTwoToneIcon fontSize="small" />
+                        <VisibilityIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -501,6 +573,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
+      <SimpleDialog
+        open={open}
+        onClose={handleClose}
+        selectedCertifiate={selectedCertifiate}
+      />
     </Card>
   );
 };

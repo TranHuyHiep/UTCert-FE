@@ -8,22 +8,25 @@ import {
   Button,
   Divider,
   Hidden,
+  IconButton,
   lighten,
   List,
   ListItem,
   ListItemText,
   Popover,
+  Tooltip,
   Typography
 } from '@mui/material';
 
 import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import axios from 'axios';
 import GetCookie from '@/hooks/getCookie';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -61,6 +64,7 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
+  const theme = useTheme();
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [user, setUser] = useState(null);
@@ -91,7 +95,7 @@ function HeaderUserbox() {
     );
   }
 
-  
+
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -100,6 +104,17 @@ function HeaderUserbox() {
   const handleClose = (): void => {
     setOpen(false);
   };
+  const formatUsername = (username) => {
+    const words = username.split(" ");
+    const formattedWords = words.map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    });
+    return formattedWords.join(" ");
+  };
+  const truncateString = (str, maxLength) => {
+    console.log(str.substring(0, maxLength))
+    return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
+  }
 
   return (
     <>
@@ -107,9 +122,26 @@ function HeaderUserbox() {
         <Avatar variant="rounded" alt={user.username} src={user.logo} />
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.username}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.isVerified}
+            <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{truncateString(user.username, 25)}</UserBoxLabel>
+            <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
+              {user.isVerified == 0 ? (
+                <Tooltip title="Tài khoản đã được xác minh" arrow>
+                  <IconButton
+                    sx={{
+                      '&:hover': {
+                        background: theme.colors.primary.lighter
+                      },
+                      color: theme.palette.primary.main
+                    }}
+                    color="inherit"
+                    size="small"
+                  >
+                    <VerifiedIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <div>Tài khoản chưa được xác minh</div>
+              )}
             </UserBoxDescription>
           </UserBoxText>
         </Hidden>
@@ -133,9 +165,26 @@ function HeaderUserbox() {
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
           <Avatar variant="rounded" alt={user.username} src={user.logo} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.username}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.isVerified}
+            <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{user.username}</UserBoxLabel>
+            <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
+              {user.isVerified == 0 ? (
+                <Tooltip title="Tài khoản đã được xác minh" arrow>
+                  <IconButton
+                    sx={{
+                      '&:hover': {
+                        background: theme.colors.primary.lighter
+                      },
+                      color: theme.palette.primary.main
+                    }}
+                    color="inherit"
+                    size="small"
+                  >
+                    <VerifiedIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <div>Tài khoản chưa được xác minh</div>
+              )}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
@@ -162,7 +211,7 @@ function HeaderUserbox() {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button color="primary" fullWidth href="/">
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>

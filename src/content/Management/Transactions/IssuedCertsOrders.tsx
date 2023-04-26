@@ -10,7 +10,7 @@ function IssuedCertsOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'http://localhost:7077/api/v1/Certificate/certificate-issued';
+        const url = 'http://tamperproofcerts.somee.com/api/v1/Certificate/certificate-issued';
         // const payload = '"146d28b014f87920fa81c3b91007606d03ce0376c365befb5a3df1f7"';
         const payload = GetCookie("stakeId");
         const headers = {
@@ -19,8 +19,6 @@ function IssuedCertsOrders() {
         };
 
         const response = await axios.post(url, payload, { headers });
-        console.log(response.data);
-        
         setIssuedCert(response.data);
       } catch (error) {
         console.error(error);
@@ -28,7 +26,7 @@ function IssuedCertsOrders() {
     };
 
     fetchData();
-  }, []);
+  });
   return (
     <Card>
       <IssuedCertsOrdersTable certificates={issuedCert} />
