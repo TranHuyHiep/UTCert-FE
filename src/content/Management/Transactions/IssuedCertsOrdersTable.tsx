@@ -1,6 +1,7 @@
 import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserWallet } from '@meshsdk/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {
   Tooltip,
@@ -24,7 +25,14 @@ import {
   useTheme,
   CardHeader,
   Dialog,
-  DialogContent
+  DialogContent,
+  AppBar,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Slide,
+  Toolbar
 } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -39,6 +47,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import BulkActions from './BulkActions';
 import BlockIcon from '@mui/icons-material/Block';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
+import React from 'react';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -116,16 +125,31 @@ const applyPagination = (
 // modal view cert
 function SimpleDialog(props) {
   const { open, onClose, selectedCertifiate } = props;
-  if(selectedCertifiate == undefined) {
+  if (selectedCertifiate == undefined) {
     return (
       <>
       </>
     )
   }
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogContent>
-        <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+    <Dialog
+      maxWidth='lg'
+      open={open} onClose={onClose}>
+      <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
+        <div>
+          <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '10px' }}>
+          <p style={{ fontWeight: 'bold' }}>CODE:</p>
+          <p>{selectedCertifiate.certificateCode}</p>
+          <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
+          <p>{selectedCertifiate.certificateName}</p>
+          <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
+          <p>{selectedCertifiate.receivedName}</p>
+          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
+          <p>{selectedCertifiate.dateSigned}</p>
+        </div>
+
       </DialogContent>
     </Dialog>
   );
@@ -574,6 +598,8 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         />
       </Box>
       <SimpleDialog
+        fullWidth={'md'}
+        maxWidth={'800md'}
         open={open}
         onClose={handleClose}
         selectedCertifiate={selectedCertifiate}
