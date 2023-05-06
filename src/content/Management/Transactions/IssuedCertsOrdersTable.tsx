@@ -139,15 +139,27 @@ function SimpleDialog(props) {
         <div>
           <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background'}}>
           <p style={{ fontWeight: 'bold' }}>CODE:</p>
           <p>{selectedCertifiate.certificateCode}</p>
           <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
           <p>{selectedCertifiate.certificateName}</p>
+          <p style={{ fontWeight: 'bold' }}>CERTIFICATE TYPE:</p>
+          <p>{selectedCertifiate.certificateType}</p>
+          <p style={{ fontWeight: 'bold' }}>MODE OF STUDY:</p>
+          <p>{selectedCertifiate.modeOfStudy}</p>
+          <p style={{ fontWeight: 'bold' }}>CLASSIFICATION:</p>
+          <p>{selectedCertifiate.classification}</p>
+          <p style={{ fontWeight: 'bold' }}>YEAR OF GRADUATION:</p>
+          <p>{selectedCertifiate.yearOfGraduation}</p>
+          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
+          <p>{selectedCertifiate.signedDate}</p>
+          <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
+          <p style={{ borderBottom: '1px solid #000' }}>{selectedCertifiate.receivedDoB}</p>
+          <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
+          <p style={{ marginTop: '0px' }}>{selectedCertifiate.receivedIdentityNumber}</p>
           <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
           <p>{selectedCertifiate.receivedName}</p>
-          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
-          <p>{selectedCertifiate.dateSigned}</p>
         </div>
 
       </DialogContent>
@@ -223,9 +235,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   ): void => {
     setSelectedCertificates(
       event.target.checked
-        ? certificates.map((certificate) => certificate.certificateID)
+        ? paginatedCryptoOrders.map((certificate) => certificate.certificateID)
         : []
     );
+    setSelectedCertificatesInformation(paginatedCryptoOrders);
   };
 
   const handleSelectOneCryptoOrder = (

@@ -60,9 +60,34 @@ function SimpleDialog(props) {
   console.log(images);
   
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogContent>
-        <img src={images[currentIndex].imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+    <Dialog open={open} onClose={onClose} maxWidth='lg'>
+      <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
+        <div>
+          <img src={images[currentIndex].imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background'}}>
+          <p style={{ fontWeight: 'bold' }}>CODE:</p>
+          <p>{images[currentIndex].certificateCode}</p>
+          <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
+          <p>{images[currentIndex].certificateName}</p>
+          <p style={{ fontWeight: 'bold' }}>CERTIFICATE TYPE:</p>
+          <p>{images[currentIndex].certificateType}</p>
+          <p style={{ fontWeight: 'bold' }}>MODE OF STUDY:</p>
+          <p>{images[currentIndex].modeOfStudy}</p>
+          <p style={{ fontWeight: 'bold' }}>CLASSIFICATION:</p>
+          <p>{images[currentIndex].classification}</p>
+          <p style={{ fontWeight: 'bold' }}>YEAR OF GRADUATION:</p>
+          <p>{images[currentIndex].yearOfGraduation}</p>
+          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
+          <p>{images[currentIndex].signedDate}</p>
+          <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
+          <p style={{ borderBottom: '1px solid #000' }}>{images[currentIndex].receivedDoB}</p>
+          <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
+          <p style={{ marginTop: '0px' }}>{images[currentIndex].receivedIdentityNumber}</p>
+          <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
+          <p>{images[currentIndex].receivedName}</p>
+        </div>
+
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
           <Button onClick={handlePrevClick}>Prev</Button>
           <Button onClick={handleNextClick}>Next</Button>
