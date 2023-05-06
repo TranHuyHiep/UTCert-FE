@@ -545,8 +545,8 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                     <Tooltip title="View" arrow>
                       <IconButton
                         sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
+                          '&:hover': { background: theme.colors.info.lighter },
+                          color: theme.palette.info.main
                         }}
                         color="inherit"
                         size="small"

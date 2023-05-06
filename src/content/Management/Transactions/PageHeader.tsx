@@ -16,36 +16,40 @@ import PropTypes from 'prop-types';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddIcon from '@mui/icons-material/Add';
 import GetCookie from '@/hooks/getCookie';
+import axios from 'axios';
+
+
 
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
-  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-    handleListItemClick('addAccount');
+    const selectedFile = event.target.files[0];
+    handleListItemClick('addCerts', selectedFile);
   };
   
-  const handleListItemClick = async (destination) => {
-    if (destination === 'addAccount') {
+  const handleListItemClick = async (destination, selectedFile) => {
+    if (destination === 'addCerts') {
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('policyId', GetCookie('policyId'));
+        console.log(selectedFile);
 
         try {
-          const response = await fetch(
-            'tamperproofcerts.somee.com/api/v1/Certificates/issuer',
-            {
-              method: 'POST',
-              body: formData
+          const formData = new FormData();
+          formData.append('UserID', GetCookie('stakeId'));
+          formData.append('fileCSV', selectedFile, selectedFile.name);
+          
+          const response = await fetch('https://localhost:44325/api/v1/Certificate/issuer', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': '*/*'
             }
-          );
-
+          });
+      
           if (response.ok) {
             console.log('File uploaded successfully');
           } else {

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import {
   Box,
@@ -8,7 +8,9 @@ import {
   ListItemText,
   ListItem,
   List,
-  Typography
+  Typography,
+  Dialog,
+  DialogContent
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -16,7 +18,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import { Certificate } from '@/models/certificate';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -28,25 +30,58 @@ const ButtonError = styled(Button)(
     `
 );
 
+const ButtonView = styled(Button)(
+  ({ theme }) => `
+     background: ${theme.colors.info.main};
+     color: ${theme.palette.info.contrastText};
+
+     &:hover {
+        background: ${theme.colors.info.dark};
+     }
+    `
+);
+
+function SimpleDialog(props) {
+  const { open, onClose, images } = props;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrevClick = () => {
+    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
+  };
+
+  const handleNextClick = () => {
+    setCurrentIndex((currentIndex + 1) % images.length);
+  };
+
+  if (!images || images.length === 0) {
+    return null;
+  }
+  
+  console.log(images);
+  
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogContent>
+        <img src={images[currentIndex].imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+          <Button onClick={handlePrevClick}>Prev</Button>
+          <Button onClick={handleNextClick}>Next</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 function BulkActions(props) {
-
-  const [onMenuOpen, menuOpen] = useState<boolean>(false);
-  const moreRef = useRef<HTMLButtonElement | null>(null);
-
-  const openMenu = (): void => {
-    menuOpen(true);
-  };
-
-  const closeMenu = (): void => {
-    menuOpen(false);
-  };
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedCertifiates, setSelectedCertificates] = useState([]);
 
   var certificatesId: string[] = [];
   async function SendAllCertificateSelected(certs) {
-    console.log(certs);
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
-    
+
     const wallet = await BrowserWallet.enable('eternl');
     // prepare forgingScript
     let myPromise = new Promise<void>(async function (myResolve, myReject) {
@@ -90,6 +125,7 @@ function BulkActions(props) {
       myReject();  // when error
     });
 
+
     // "Consuming Code" (Must wait for a fulfilled Promise)
     myPromise.then(
       function () {
@@ -117,6 +153,21 @@ function BulkActions(props) {
     })
   }
 
+  function ViewAllCertificateSelected(certs) {
+    handleClickOpen(certs)
+  }
+
+  const handleClickOpen = (certs) => {
+    let certificates: Certificate[];
+    Object.keys(certs).map((key) => (certificates = props[key]));
+    setSelectedCertificates(certificates);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -132,40 +183,22 @@ function BulkActions(props) {
           >
             Send
           </ButtonError>
+          <ButtonView
+            sx={{ ml: 1 }}
+            startIcon={<VisibilityIcon />}
+            variant="contained"
+            onClick={() => (ViewAllCertificateSelected(props))}
+          >
+            View
+          </ButtonView>
         </Box>
-        <IconButton
-          color="primary"
-          onClick={openMenu}
-          ref={moreRef}
-          sx={{ ml: 2, p: 1 }}
-        >
-          <MoreVertTwoToneIcon />
-        </IconButton>
       </Box>
 
-      <Menu
-        keepMounted
-        anchorEl={moreRef.current}
-        open={onMenuOpen}
-        onClose={closeMenu}
-        anchorOrigin={{
-          vertical: 'center',
-          horizontal: 'center'
-        }}
-        transformOrigin={{
-          vertical: 'center',
-          horizontal: 'center'
-        }}
-      >
-        <List sx={{ p: 1 }} component="nav">
-          <ListItem button>
-            <ListItemText primary="Bulk delete selected" />
-          </ListItem>
-          <ListItem button>
-            <ListItemText primary="Bulk edit selected" />
-          </ListItem>
-        </List>
-      </Menu>
+      <SimpleDialog
+        open={open}
+        onClose={handleClose}
+        images={selectedCertifiates}
+      />
     </>
   );
 }
