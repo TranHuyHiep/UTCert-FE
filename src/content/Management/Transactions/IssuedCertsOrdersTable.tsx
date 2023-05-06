@@ -238,7 +238,11 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         ? paginatedCryptoOrders.map((certificate) => certificate.certificateID)
         : []
     );
-    setSelectedCertificatesInformation(paginatedCryptoOrders);
+    setSelectedCertificatesInformation(
+      event.target.checked
+        ? paginatedCryptoOrders
+        : []
+    );
   };
 
   const handleSelectOneCryptoOrder = (
@@ -278,9 +282,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   );
   const selectedSomeCryptoOrders =
     selectedCertifiates.length > 0 &&
-    selectedCertifiates.length < certificates.length;
+    selectedCertifiates.length < paginatedCryptoOrders.length;
   const selectedAllCryptoOrders =
-    selectedCertifiates.length === certificates.length;
+    selectedCertifiates.length === paginatedCryptoOrders.length;
   const theme = useTheme();
 
   function handleSign(certificateId) {
