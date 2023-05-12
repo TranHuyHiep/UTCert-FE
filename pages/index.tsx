@@ -14,11 +14,10 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
-import Login from './login-register/login';
-import Register from './login-register/map';
-import MapBox from './login-register/map';
 import { CardanoWallet, useWallet } from '@meshsdk/react';
 import SetCookie from '@/hooks/setCookie';
+import MapBox from './login-register/map';
+import Register from './login-register/Register';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -127,6 +126,7 @@ function Overview() {
         </HeaderWrapper>
         <Hero />
         <MapBox></MapBox>
+        <Register></Register>
 
       </OverviewWrapper>
     </>

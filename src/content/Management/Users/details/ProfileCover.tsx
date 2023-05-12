@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Card,
-  Tooltip,
   Avatar,
   CardMedia,
   Button,
@@ -11,7 +10,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
-import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
@@ -121,7 +119,8 @@ const ProfileCover = ({ user }) => {
             </IconButton>
           </label>
         </Typography>
-        {/* <Typography variant="subtitle2">{user.description}</Typography>
+        <Typography variant="subtitle2">{user.stakeId}</Typography>
+        <Typography variant="subtitle2">{user.address}</Typography>
         <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
           {user.jobtitle} | {user.location} | {user.followers} followers
         </Typography>
@@ -149,7 +148,7 @@ const ProfileCover = ({ user }) => {
           >
             See all {user.followers} connections
           </Button>
-        </Box> */}
+        </Box>
       </Box>
     </>
   );

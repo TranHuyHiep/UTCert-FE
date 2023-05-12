@@ -39,38 +39,63 @@ function ManagementUserProfile() {
           'Content-Type': 'application/json'
         }
       }
-    ).then(response => {
-      console.log("Thanh cong");
-      setUser(response.data);
+    ).then(response1 => {
+      setUser(response1.data);
+
+      fetch('https://cardano-preprod.blockfrost.io/api/v0/accounts/' + GetCookie('stakeId'), {
+        headers: {
+          'Content-Type': 'application/json',
+          'project_id': 'preproddZ8hPQ8b90t4TcBfnnnx7CPIJ4omEG1H'
+        }
+      })
+        .then(response2 => response2.json())
+        .then(response2 => {
+          let stakeId = GetCookie('stakeId');
+          setUser(prevState => ({
+            ...prevState,
+            stakeId 
+          }));
+          setData(response2);
+
+          fetch('https://cardano-preprod.blockfrost.io/api/v0/accounts/' + GetCookie('stakeId') + '/addresses', {
+            headers: {
+              'Content-Type': 'application/json',
+              'project_id': 'preproddZ8hPQ8b90t4TcBfnnnx7CPIJ4omEG1H'
+            }
+          })
+            .then(response3 => response3.json())
+            .then(response3 => {
+              console.log(response3[0]);
+              let address = response3[0]["address"];
+              setUser(prevState => ({
+                ...prevState,
+                address
+              }));
+              setIsLoading(false); // set isLoading to false when the response is received
+            })
+            .catch(error => {
+              console.error(error);
+              setIsLoading(false); // set isLoading to false when there's an error
+            });
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }).catch(error => {
       console.log(error);
     });
-    fetch('https://cardano-preprod.blockfrost.io/api/v0/accounts/' + GetCookie('stakeId'), {
-      headers: {
-        'Content-Type': 'application/json',
-        'project_id': 'preproddZ8hPQ8b90t4TcBfnnnx7CPIJ4omEG1H'
-      }
-    })
-    .then(response => response.json())
-    .then(response => {
-      console.log(response);
-      setData(response);
-      setIsLoading(false); // set isLoading to false when the response is received
-    })
-    .catch(error => {
-      console.error(error);
-      setIsLoading(false); // set isLoading to false when there's an error
-    });
-  }, []);
-    
-    
-    // render a loading message while the API is being called
-    if (isLoading) {
-      return (
-        <Typography>Loading...</Typography>
-      );
-    }
 
+  }, []);
+
+
+  // render a loading message while the API is being called
+  if (isLoading) {
+    return (
+      <Typography>Loading...</Typography>
+    );
+  }
+
+  console.log(user);
 
   return (
     <>
@@ -89,7 +114,7 @@ function ManagementUserProfile() {
             <ProfileCover user={user} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <RecentActivity data={data}/>
+            <RecentActivity data={data} />
           </Grid>
           {/* <Grid item xs={12} md={8}>
             <Feed />

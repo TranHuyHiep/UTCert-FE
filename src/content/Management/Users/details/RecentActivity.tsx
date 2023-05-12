@@ -27,7 +27,7 @@ function RecentActivity({ data }) {
 
   return (
     <Card>
-      <CardHeader title="Recent Activity" />
+      <CardHeader title="Detail" />
       <Divider />
       <Box px={2} py={4} display="flex" alignItems="flex-start">
         <AvatarPrimary>
@@ -35,7 +35,6 @@ function RecentActivity({ data }) {
         </AvatarPrimary>
         <Box pl={2} flex={1}>
           <Typography variant="h3">Money</Typography>
-
           <Box pt={2} display="flex">
             <Box pr={8}>
               <Typography
