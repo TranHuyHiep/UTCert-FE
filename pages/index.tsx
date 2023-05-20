@@ -14,6 +14,7 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
+import Search from 'src/content/Overview/Search';
 import { CardanoWallet, useWallet } from '@meshsdk/react';
 import SetCookie from '@/hooks/setCookie';
 import MapBox from './login-register/map';
@@ -32,7 +33,7 @@ const HeaderWrapper = styled(Card)(
 const OverviewWrapper = styled(Box)(
   ({ theme }) => `
     overflow: auto;
-    background: ${theme.palette.common.white};
+    background: ${theme.palette.common.black};
     flex: 1;
     overflow-x: hidden;
 `
@@ -82,35 +83,6 @@ function Overview() {
                   >
                     Login
                   </Button>
-                  {/* <CardanoWallet />
-                  {connected && (
-                    <>
-                      {assets ? (
-                        <pre>
-                          <Button
-                            component={Link}
-                            href="/dashboards/crypto"
-                            variant="contained"
-                            sx={{ ml: 2 }}
-                          >
-                            Login
-                          </Button>
-                        </pre>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => getAssets()}
-                          disabled={loading}
-                          style={{
-                            margin: '8px',
-                            backgroundColor: loading ? 'orange' : 'grey'
-                          }}
-                        >
-                          Login
-                        </button>
-                      )}
-                    </>
-                  )} */}
                   <Button
                     component={Link}
                     href="https://eternl.io/app/mainnet/welcome"
@@ -124,9 +96,10 @@ function Overview() {
             </Box>
           </Container>
         </HeaderWrapper>
-        <Hero />
-        <MapBox></MapBox>
-        <Register></Register>
+        <Search></Search>
+        {/* <Hero /> */}
+        {/* <MapBox></MapBox> */}
+        {/* <Register></Register> */}
 
       </OverviewWrapper>
     </>
