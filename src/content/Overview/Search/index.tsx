@@ -4,20 +4,19 @@ function Search() {
 
     return (
         <Container
-            maxWidth="lg"
+            maxWidth='lg'
             sx={{
                 textAlign: 'center',
             }}
         >
-            <h1 style={{color: 'white'}}>You can find cert in here</h1>
+            <h1 style={{color: 'white'}}>YOU CAN FIND CERTS IN HERE!</h1>
             <Grid
-                spacing={{ xs: 6, md: 10 }}
                 justifyContent="center"
                 alignItems="center"
                 container
                 style={{background: 'rgba(255, 255, 255, 0.8)', padding: '30px', marginTop: '10px'}}
             >
-                <Input type="text" style={{width: '300px'}} />
+                <Input type="text" style={{width: '350px', fontSize: '20px'}} />
                 <Button style={{background: 'purple', color: 'white' }}>Search</Button>
             </Grid>
         </Container>

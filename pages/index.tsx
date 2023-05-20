@@ -41,20 +41,13 @@ const OverviewWrapper = styled(Box)(
 
 function Overview() {
   const { connected, wallet } = useWallet();
-  const [assets, setAssets] = useState<null | any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  async function getAssets() {
-    if (wallet) {
-      setLoading(true);
-      const _assets = await wallet.getAssets();
-      const stakeId = await wallet.getRewardAddresses();
-      const myWallet = await wallet.getUsedAddresses();
-      console.log(myWallet[0]);
-      SetCookie('stakeId', stakeId);
-      setAssets(_assets);
-      setLoading(false);
-    }
+  function login() {
+    // if (wallet) {
+    //   const stakeId = wallet.getRewardAddresses();
+    //   SetCookie('stakeId', stakeId);
+    //   // window.location.href = '/dashboards/crypto';
+    // }
   }
 
   return (
@@ -77,6 +70,7 @@ function Overview() {
                 <Box>
                   <Button
                     component={Link}
+                    onClick={login}
                     href="/dashboards/crypto"
                     variant="contained"
                     sx={{ ml: 2 }}
