@@ -196,10 +196,10 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/dashboards/crypto" passHref>
+                <NextLink href="/dashboards/home" passHref>
                   <Button
                     className={
-                      currentRoute === '/dashboards/crypto' ? 'active' : ''
+                      currentRoute === '/dashboards/home' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
@@ -319,7 +319,7 @@ function SidebarMenu() {
           </SubMenuWrapper>
         </List>
 
-        <List
+        {/* <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
@@ -535,7 +535,7 @@ function SidebarMenu() {
               </ListItem>
             </List>
           </SubMenuWrapper>
-        </List>
+        </List> */}
       </MenuWrapper>
     </>
   );

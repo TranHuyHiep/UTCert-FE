@@ -123,7 +123,7 @@ function Hero() {
           // Xử lý dữ liệu trả về từ API
           alert(data.username)
           if (data.username != undefined) {
-            window.location.href = '/dashboards/crypto'
+            window.location.href = '/dashboards/home'
           }
           else {
             window.location.href = '/login-register/register'
