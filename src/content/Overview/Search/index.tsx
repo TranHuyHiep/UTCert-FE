@@ -14,10 +14,10 @@ function Search() {
                 justifyContent="center"
                 alignItems="center"
                 container
-                style={{background: 'rgba(255, 255, 255, 0.3)', padding: '30px', marginTop: '10px', width: '800px', margin: '0 auto'}}
+                style={{background: 'rgba(255, 255, 255, 0.2)', padding: '30px', marginTop: '10px', width: '800px', margin: '0 auto'}}
             >
-                <Input placeholder="Certificate URL" type="text" style={{width: '550px', fontSize: '20px', backgroundColor: 'white', height:'44px', paddingLeft: '10px'}} />
-                <Button style={{background: '#04794a', color: '#ffffff', borderRadius: '0'}}>Search</Button>
+                <Input placeholder="Certificate URL" type="text" style={{width: '550px', fontSize: '20px', backgroundColor: 'white', height:'40px', paddingLeft: '10px'}} />
+                <Button variant="contained" style={{background: '#26a06e', color: '#ffffff', borderRadius: '0'}}>Search</Button>
             </Grid>
         </Container>
     );

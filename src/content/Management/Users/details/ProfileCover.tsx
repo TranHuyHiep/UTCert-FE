@@ -119,10 +119,18 @@ const ProfileCover = ({ user }) => {
             </IconButton>
           </label>
         </Typography>
-        <Typography variant="subtitle2">{user.stakeId}</Typography>
+        <Typography gutterBottom variant="h5">
+          Your stake:
+        </Typography>
+        <Typography>
+          {user.stakeId}
+        </Typography>
+        <Typography gutterBottom variant="h5" style={{paddingTop: '10px'}}>
+          Your address:
+        </Typography>
         <Typography variant="subtitle2">{user.address}</Typography>
         <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
-          {user.jobtitle} | {user.location} | {user.followers} followers
+          {/* {user.jobtitle} | {user.location} | {user.followers} followers */}
         </Typography>
         <Box
           display={{ xs: 'block', md: 'flex' }}

@@ -2,36 +2,24 @@ import React, { useState } from 'react';
 import bg from '../../public/background.jpg'
 import {
   Card,
-  Spacer,
-  Button,
   Text,
   Input,
   Row,
-  Checkbox,
   Container,
 } from '@nextui-org/react';
-import { CardActions, CardContent, Box } from '@mui/material';
+
+import { CardContent, Checkbox, Box, FormControlLabel, Button } from '@mui/material';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest
-  })
-}));
-
+import GetCookie from '@/hooks/getCookie';
+import axios from 'axios';
+import FormData from 'form-data';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const ButtonUploadWrapper = styled(Box)(
   ({ theme }) => `
@@ -51,31 +39,62 @@ const ButtonUploadWrapper = styled(Box)(
 );
 
 function Register() {
-  const [expanded, setExpanded] = useState(false);
+  const [nameValue, setNameValue] = useState('');
+  const [fileValue, setFileValue] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleNameChange = (event) => {
+    setNameValue(event.target.value);
   };
 
-  const registerAccount = () => {
-    const checkbox = document.getElementById('policy') as HTMLInputElement;
-    if (checkbox.checked) {
-      alert('ok')
-    } else {
-      alert('ko')
-    }
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFileValue(selectedFile);
+  };
 
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const registerAccount = async () => {
+    const checkbox = document.getElementById('policy') as HTMLInputElement;
+    if (nameValue === "" || nameValue === null) {
+      alert("You must enter name!");
+      return;
+    }
+    if (fileValue === "" || fileValue === null) {
+      alert("You select logo name!");
+      return;
+    }
+    if (checkbox.checked) {
+      try {
+        const url = 'http://tamperproofcerts.somee.com/api/v1/Home/add-user';
+
+        const formData = new FormData();
+        formData.append('UserID', GetCookie('stakeId'));
+        formData.append('UserName', nameValue);
+        formData.append('Logo', fileValue);
+
+        const response = await axios.post(url, formData);
+        alert('Register Account Successfully!')
+        window.location.href = '/dashboards/home'
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('You have to confirm policy!')
+    }
   }
 
   return (
     <>
       <div style={{
-      backgroundImage: `url(${bg.src})`,
-      width: '100%',
-      height: '100%',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: `url(${bg.src})`,
+        width: '100%',
+        height: '100%',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <Container
           display="flex"
           alignItems="center"
@@ -100,7 +119,9 @@ function Register() {
               fullWidth
               color="primary"
               size="lg"
-              placeholder="Kim Sao"
+              placeholder="Nguyen Van An"
+              value={nameValue}
+              onChange={handleNameChange}
             />
             <Text size={18} weight="bold">Upload your logo
               <ButtonUploadWrapper>
@@ -109,6 +130,7 @@ function Register() {
                   id="icon-button-file"
                   name="icon-button-file"
                   type="file"
+                  onChange={handleFileChange}
                   hidden
                 />
                 <label htmlFor="icon-button-file">
@@ -119,45 +141,53 @@ function Register() {
                 </label>
               </ButtonUploadWrapper>
             </Text>
-            <CardActions disableSpacing style={{ padding: '0px', margin: '0px' }}>
-              <Text size={14}>Before using our services, please read and agree to the following terms and conditions.</Text>
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
               >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent style={{ padding: '0px', margin: '0px' }}>
-                <Text size={13}>
-                  1. I certify that all the information I provide during the registration process is accurate, complete, and not deceptive.
-                </Text>
-                <Text size={13}>
-                  2. I will keep my password secure and not share my account information with anyone else.
-                </Text>
-                <Text size={13}>
-                  3. I agree that the use of blockchain services will comply with current local and international regulations and laws.
-                </Text>
-                <Text size={13}>
-                  4. I agree that my transactions on the blockchain will be subject to the conditions and regulations specified in the blockchain system.
-                </Text>
-                <Text size={13}>
-                  5. I certify that I am the lawful owner of my blockchain account and will not use the service to engage in illegal or unlawful activities.
-                </Text>
-                <Text size={13}>
-                  6. I agree that blockchain is not responsible for any damages or losses arising from my failure to comply with these terms and conditions or from technical errors or other issues on the blockchain system.
-                </Text>
-              </CardContent>
-            </Collapse>
+                <Typography>Before using our services, please read and agree to the following terms and conditions.</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <CardContent style={{ padding: '0px', margin: '0px' }}> 
+                    <Text size={13}>
+                      1. I certify that all the information I provide during the registration process is accurate, complete, and not deceptive.
+                    </Text>
+                    <Text size={13}>
+                      2. I will keep my password secure and not share my account information with anyone else.
+                    </Text>
+                    <Text size={13}>
+                      3. I agree that the use of blockchain services will comply with current local and international regulations and laws.
+                    </Text>
+                    <Text size={13}>
+                      4. I agree that my transactions on the blockchain will be subject to the conditions and regulations specified in the blockchain system.
+                    </Text>
+                    <Text size={13}>
+                      5. I certify that I am the lawful owner of my blockchain account and will not use the service to engage in illegal or unlawful activities.
+                    </Text>
+                    <Text size={13}>
+                      6. I agree that blockchain is not responsible for any damages or losses arising from my failure to comply with these terms and conditions or from technical errors or other issues on the blockchain system.
+                    </Text>
+                  </CardContent>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
             <Row justify="space-between">
-              <Checkbox id='policy'>
-                <Text size={14}>I Agree </Text>
-              </Checkbox>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                    id="policy"
+                  />
+                }
+                label={<Typography variant="body1">I Agree</Typography>}
+                htmlFor="policy"
+              />
             </Row>
-            <Button onClick={registerAccount}>Confirm</Button>
+            <Button variant="contained" onClick={registerAccount}>Confirm</Button>
           </Card>
         </Container>
       </div>

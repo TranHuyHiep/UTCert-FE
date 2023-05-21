@@ -1,17 +1,13 @@
 import {
-  Typography,
   Box,
   Card,
   Container,
   Button,
   styled,
-  Avatar,
   Dialog,
   DialogTitle,
   List,
   ListItem,
-  ListItemAvatar,
-  ListItemText
 } from '@mui/material';
 import bg from '../public/background.jpg'
 
@@ -24,10 +20,6 @@ import Head from 'next/head';
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import Search from 'src/content/Overview/Search';
-import { CardanoWallet, useWallet } from '@meshsdk/react';
-import SetCookie from '@/hooks/setCookie';
-import MapBox from './login-register/map';
-import Register from './login-register/Register';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
