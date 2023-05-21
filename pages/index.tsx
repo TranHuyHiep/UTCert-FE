@@ -4,11 +4,18 @@ import {
   Card,
   Container,
   Button,
-  styled
+  styled,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
 } from '@mui/material';
 import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
-
+import PropTypes from 'prop-types';
 import Link from 'src/components/Link';
 import Head from 'next/head';
 
@@ -39,22 +46,61 @@ const OverviewWrapper = styled(Box)(
 `
 );
 
-function Overview() {
-  const { connected, wallet } = useWallet();
 
-  function login() {
-    // if (wallet) {
-    //   const stakeId = wallet.getRewardAddresses();
-    //   SetCookie('stakeId', stakeId);
-    //   // window.location.href = '/dashboards/crypto';
-    // }
-  }
+
+function SimpleDialog(props) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    handleListItemClick('addCerts', selectedFile);
+  };
+
+  const handleListItemClick = async (destination, selectedFile) => {
+    if (destination === 'addCerts') {
+
+    }
+  };
+
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle></DialogTitle>
+      <List style={{width: '500px', height: '300px'}}>
+        <ListItem>
+          <Hero />
+        </ListItem>
+      </List>
+    </Dialog>
+  );
+}
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  // selectedValue: PropTypes.string.isRequireds
+};
+
+function Overview() {
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
       <OverviewWrapper>
         <Head>
-          <title>Tokyo Free White NextJS Typescript Admin Dashboard</title>
+          <title>UTCert</title>
         </Head>
         <HeaderWrapper>
           <Container maxWidth="lg">
@@ -69,11 +115,9 @@ function Overview() {
                 <Box />
                 <Box>
                   <Button
-                    component={Link}
-                    onClick={login}
-                    href="/dashboards/crypto"
+                    sx={{ mt: { xs: 2, md: 0 } }}
                     variant="contained"
-                    sx={{ ml: 2 }}
+                    onClick={handleClickOpen}
                   >
                     Login
                   </Button>
@@ -91,10 +135,11 @@ function Overview() {
           </Container>
         </HeaderWrapper>
         <Search></Search>
-        {/* <Hero /> */}
-        {/* <MapBox></MapBox> */}
-        {/* <Register></Register> */}
 
+        <SimpleDialog
+          open={open}
+          onClose={handleClose}
+        />
       </OverviewWrapper>
     </>
   );

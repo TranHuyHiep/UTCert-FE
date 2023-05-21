@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography, styled } from '@mui/material';
+import { Box, Button, Container, Grid, Typography, styled } from '@mui/material';
 
 import Link from 'src/components/Link';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { useWallet } from '@meshsdk/react';
 import { CardanoWallet } from '@meshsdk/react';
 import SetCookie from '@/hooks/setCookie';
 import Sign from '@/mesh/sign';
+import GetCookie from '@/hooks/getCookie';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -105,45 +106,63 @@ function Hero() {
       const _assets = await wallet.getAssets();
       const stakeId = await wallet.getRewardAddresses();
       const myWallet = await wallet.getUsedAddresses();
-      console.log(myWallet[0]);
       SetCookie('stakeId', stakeId);
       setAssets(_assets);
       setLoading(false);
+
+      fetch('http://tamperproofcerts.somee.com/api/v1/Home', {
+        method: 'POST',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(GetCookie('stakeId'))
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Xử lý dữ liệu trả về từ API
+          console.log(data.username);
+          if(data.username) {
+            window.location.href = '/dashboards/crypto'
+          }
+          window.location.href = '/login-register/register'
+        })
+        .catch(error => {
+          // Xử lý lỗi nếu có
+          console.error(error);
+        });
     }
   }
   return (
     <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
       <Grid
-        spacing={{ xs: 6, md: 10 }}
         justifyContent="center"
         alignItems="center"
         container
       >
         <div>
-          <h1>Connect Wallet</h1>
+          <h1>LOGIN</h1>
           <CardanoWallet />
           {connected && (
             <>
               {assets ? (
                 <pre>
-                  
+
                 </pre>
               ) : (
-                <button
-                  type="button"
+                <Button
                   onClick={() => getAssets()}
                   disabled={loading}
                   style={{
-                    margin: '8px',
-                    backgroundColor: loading ? 'orange' : 'grey'
+                    marginTop: '20px',
                   }}
                 >
-                  Login
-                </button>
+                  CONFIRM
+                </Button>
               )}
             </>
           )}
-      
+
         </div>
       </Grid>
     </Container>

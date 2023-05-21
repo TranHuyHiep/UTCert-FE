@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import {
   Card,
   Spacer,
@@ -57,6 +56,16 @@ function Register() {
     setExpanded(!expanded);
   };
 
+  const registerAccount = () => {
+    const checkbox = document.getElementById('policy') as HTMLInputElement;
+    if (checkbox.checked) {
+      alert('ok')
+    } else {
+      alert('ko')
+    }
+
+  }
+
   return (
     <>
       <div>
@@ -87,21 +96,21 @@ function Register() {
               placeholder="Kim Sao"
             />
             <Text size={18} weight="bold">Upload your logo
-            <ButtonUploadWrapper>
-              <Input
-                accept="image/*"
-                id="icon-button-file"
-                name="icon-button-file"
-                type="file"
-                hidden
-              />
-              <label htmlFor="icon-button-file">
-                <IconButton component="span" color="primary" size='small'>
-                  Select file
-                  <UploadTwoToneIcon/>
-                </IconButton>
-              </label>
-            </ButtonUploadWrapper>
+              <ButtonUploadWrapper>
+                <Input
+                  accept="image/*"
+                  id="icon-button-file"
+                  name="icon-button-file"
+                  type="file"
+                  hidden
+                />
+                <label htmlFor="icon-button-file">
+                  <IconButton component="span" color="primary" size='small'>
+                    Select file
+                    <UploadTwoToneIcon />
+                  </IconButton>
+                </label>
+              </ButtonUploadWrapper>
             </Text>
             <CardActions disableSpacing style={{ padding: '0px', margin: '0px' }}>
               <Text size={14}>Before using our services, please read and agree to the following terms and conditions.</Text>
@@ -137,11 +146,11 @@ function Register() {
               </CardContent>
             </Collapse>
             <Row justify="space-between">
-              <Checkbox>
+              <Checkbox id='policy'>
                 <Text size={14}>I Agree </Text>
               </Checkbox>
             </Row>
-            <Button>Confirm</Button>
+            <Button onClick={registerAccount}>Confirm</Button>
           </Card>
         </Container>
       </div>
