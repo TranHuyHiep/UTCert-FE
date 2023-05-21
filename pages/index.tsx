@@ -4,16 +4,26 @@ import {
   Card,
   Container,
   Button,
-  styled
+  styled,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
 } from '@mui/material';
+import bg from '../public/background.jpg'
+
 import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
-
+import PropTypes from 'prop-types';
 import Link from 'src/components/Link';
 import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
+import Search from 'src/content/Overview/Search';
 import { CardanoWallet, useWallet } from '@meshsdk/react';
 import SetCookie from '@/hooks/setCookie';
 import MapBox from './login-register/map';
@@ -32,37 +42,75 @@ const HeaderWrapper = styled(Card)(
 const OverviewWrapper = styled(Box)(
   ({ theme }) => `
     overflow: auto;
-    background: ${theme.palette.common.white};
+    background: ${theme.palette.common.black};
     flex: 1;
     overflow-x: hidden;
 `
 );
 
-function Overview() {
-  const { connected, wallet } = useWallet();
-  const [assets, setAssets] = useState<null | any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  async function getAssets() {
-    if (wallet) {
-      setLoading(true);
-      const _assets = await wallet.getAssets();
-      const stakeId = await wallet.getRewardAddresses();
-      const myWallet = await wallet.getUsedAddresses();
-      console.log(myWallet[0]);
-      SetCookie('stakeId', stakeId);
-      setAssets(_assets);
-      setLoading(false);
+
+function SimpleDialog(props) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    handleListItemClick('addCerts', selectedFile);
+  };
+
+  const handleListItemClick = async (destination, selectedFile) => {
+    if (destination === 'addCerts') {
+
     }
-  }
+  };
+
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle></DialogTitle>
+      <List style={{ width: '500px', height: '300px' }}>
+        <ListItem>
+          <Hero />
+        </ListItem>
+      </List>
+    </Dialog>
+  );
+}
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  // selectedValue: PropTypes.string.isRequireds
+};
+
+function Overview() {
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      <OverviewWrapper>
+      <OverviewWrapper style={{
+      backgroundImage: `url(${bg.src})`,
+      width: '100%',
+      height: '100%',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <Head>
-          <title>Tokyo Free White NextJS Typescript Admin Dashboard</title>
+          <title>UTCert</title>
         </Head>
-        <HeaderWrapper>
+        <HeaderWrapper style={{backgroundColor: 'rgba(0, 0, 0, 20%)', boxShadow: 'none'}}>
           <Container maxWidth="lg">
             <Box display="flex" alignItems="center">
               <Logo />
@@ -71,46 +119,16 @@ function Overview() {
                 alignItems="center"
                 justifyContent="space-between"
                 flex={1}
-              >
+              > 
                 <Box />
                 <Box>
                   <Button
-                    component={Link}
-                    href="/dashboards/crypto"
+                    sx={{ mt: { xs: 2, md: 0 } }}
                     variant="contained"
-                    sx={{ ml: 2 }}
+                    onClick={handleClickOpen}
                   >
                     Login
                   </Button>
-                  {/* <CardanoWallet />
-                  {connected && (
-                    <>
-                      {assets ? (
-                        <pre>
-                          <Button
-                            component={Link}
-                            href="/dashboards/crypto"
-                            variant="contained"
-                            sx={{ ml: 2 }}
-                          >
-                            Login
-                          </Button>
-                        </pre>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => getAssets()}
-                          disabled={loading}
-                          style={{
-                            margin: '8px',
-                            backgroundColor: loading ? 'orange' : 'grey'
-                          }}
-                        >
-                          Login
-                        </button>
-                      )}
-                    </>
-                  )} */}
                   <Button
                     component={Link}
                     href="https://eternl.io/app/mainnet/welcome"
@@ -124,10 +142,11 @@ function Overview() {
             </Box>
           </Container>
         </HeaderWrapper>
-        <Hero />
-        <MapBox></MapBox>
-        <Register></Register>
-
+        <Search></Search>
+        <SimpleDialog
+          open={open}
+          onClose={handleClose}
+        />
       </OverviewWrapper>
     </>
   );

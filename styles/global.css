@@ -1,0 +1,10 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    background-image: url(../public/background.mp4);
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
