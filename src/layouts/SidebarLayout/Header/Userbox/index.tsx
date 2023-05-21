@@ -80,11 +80,9 @@ function HeaderUserbox() {
         }
       }
     ).then(response => {
-      console.log("Thanh cong");
       setUser(response.data);
       setIsLoading(false); // set isLoading to false when the response is received
     }).catch(error => {
-      console.log(error);
       setIsLoading(false); // set isLoading to false when there's an error
     });
   }, []);
@@ -94,8 +92,6 @@ function HeaderUserbox() {
       <Typography>Loading...</Typography>
     );
   }
-
-
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -112,7 +108,6 @@ function HeaderUserbox() {
     return formattedWords.join(" ");
   };
   const truncateString = (str, maxLength) => {
-    console.log(str.substring(0, maxLength))
     return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
   }
 
@@ -124,8 +119,8 @@ function HeaderUserbox() {
           <UserBoxText>
             <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{truncateString(user.username, 25)}</UserBoxLabel>
             <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
-              {user.isVerified == 0 ? (
-                <Tooltip title="Tài khoản đã được xác minh" arrow>
+              {user.isVerified === 1 ? (
+                <Tooltip title="Account is Verified" arrow>
                   <IconButton
                     sx={{
                       '&:hover': {
@@ -140,7 +135,7 @@ function HeaderUserbox() {
                   </IconButton>
                 </Tooltip>
               ) : (
-                <div>Tài khoản chưa được xác minh</div>
+                <div>Account isn't Verified</div>
               )}
             </UserBoxDescription>
           </UserBoxText>
@@ -167,8 +162,8 @@ function HeaderUserbox() {
           <UserBoxText>
             <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{user.username}</UserBoxLabel>
             <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
-              {user.isVerified == 0 ? (
-                <Tooltip title="Tài khoản đã được xác minh" arrow>
+              {user.isVerified === 1 ? (
+                <Tooltip title="Account is Verified" arrow>
                   <IconButton
                     sx={{
                       '&:hover': {
@@ -183,7 +178,7 @@ function HeaderUserbox() {
                   </IconButton>
                 </Tooltip>
               ) : (
-                <div>Tài khoản chưa được xác minh</div>
+                <div>Account isn't Verified</div>
               )}
             </UserBoxDescription>
           </UserBoxText>

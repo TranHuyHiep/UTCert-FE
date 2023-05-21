@@ -1,6 +1,6 @@
 import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserWallet } from '@meshsdk/core';
+import { Asset, BrowserWallet } from '@meshsdk/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {
@@ -139,7 +139,7 @@ function SimpleDialog(props) {
         <div>
           <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background'}}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
           <p style={{ fontWeight: 'bold' }}>CODE:</p>
           <p>{selectedCertifiate.certificateCode}</p>
           <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
@@ -287,110 +287,161 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     selectedCertifiates.length === paginatedCryptoOrders.length;
   const theme = useTheme();
 
-  function handleSign(certificateId) {
-    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(certificateId)
-    })
-      .then(() => {
-        // Xử lý phản hồi ở đây
-        alert("Ký thành công!");
-      })
-      .catch(() => {
-        // Xử lý lỗi ở đây
-        alert("Ký thất bại!")
+  function handleSign(certificate) {
+    try {
+      let myPromise = new Promise<void>(async function (myResolve, myReject) {
+        const wallet = await BrowserWallet.enable('eternl');
+        // prepare forgingScript
+        const usedAddress = await wallet.getUsedAddresses();
+        const address = usedAddress[0];
+        const forgingScript = ForgeScript.withOneSignature(address);
+        const tx = new Transaction({ initiator: wallet });
+        // define asset#1 metadata
+        const assetMetadata1: AssetMetadata = {
+          "certificateName": certificate.certificateName,
+          "classification": certificate.classification,
+          "image": certificate.ipfsLink,
+          "mediaType": "image/jpg",
+          "receivedName": certificate.receivedName,
+          "yearOfGraduation": certificate.yearOfGraduation,
+        };
+        const asset1: Mint = {
+          assetName: certificate.certificateType + certificate.certificateCode,
+          assetQuantity: '1',
+          metadata: assetMetadata1,
+          label: '721',
+          recipient: address,
+        };
+        console.log(asset1);
+        console.log(assetMetadata1);
+
+        tx.mintAsset(
+          forgingScript,
+          asset1,
+        );
+        const unsignedTx = await tx.build();
+        const signedTx = await wallet.signTx(unsignedTx);
+        const txHash = await wallet.submitTx(signedTx);
+        console.log("txHash");
+        console.log(txHash);
+        myResolve(); // when successful
+        myReject();  // when error
       });
 
+      // "Consuming Code" (Must wait for a fulfilled Promise)
+      myPromise.then(
+        function () {
+          /* code if successful */
+          fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(certificate.certificateID)
+          })
+            .then(() => {
+              // Xử lý phản hồi ở đây
+              alert("Ký thành công!");
+            })
+            .catch(() => {
+              // Xử lý lỗi ở đây
+              alert("Ký thất bại!")
+            });
+        }
+      ).catch(function () {
+        alert("Gửi thất bại!")
+      })
+    }
+    catch (error) {
+      alert('Loi');
+    }
+    function handleBan(certificateId) {
+      fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(certificateId)
+      })
+        .then(() => {
+          // Xử lý phản hồi ở đây
+          alert("Ban thành công!");
+        })
+        .catch(() => {
+          // Xử lý lỗi ở đây
+          alert("Ban thất bại!")
+        });
+    }
   }
 
-  function handleBan(certificateId) {
-    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(certificateId)
-    })
-      .then(() => {
-        // Xử lý phản hồi ở đây
-        alert("Ban thành công!");
-      })
-      .catch(() => {
-        // Xử lý lỗi ở đây
-        alert("Ban thất bại!")
-      });
+  function textToHex(text) {
+    let hex = '';
+
+    for (let i = 0; i < text.length; i++) {
+      let charCode = text.charCodeAt(i).toString(16);
+      hex += ('00' + charCode).slice(-2); // Ensure leading zero for single digit
+    }
+
+    return hex;
   }
 
   async function handleSend(certificate) {
-    let myPromise = new Promise<void>(async function (myResolve, myReject) {
-      const wallet = await BrowserWallet.enable('eternl');
-      // prepare forgingScript
-      const usedAddress = await wallet.getUsedAddresses();
-      const address = usedAddress[0];
-      const forgingScript = ForgeScript.withOneSignature(address);
-      const tx = new Transaction({ initiator: wallet });
-      // define asset#1 metadata
-      const assetMetadata1: AssetMetadata = {
-        "certificateName": certificate.certificateName,
-        "classification": certificate.classification,
-        "image": certificate.ipfsLink,
-        "mediaType": "image/jpg",
-        "receivedName": certificate.receivedName,
-        "yearOfGraduation": certificate.yearOfGraduation,
-      };
-      const asset1: Mint = {
-        assetName: certificate.certificateType + certificate.certificateCode,
-        assetQuantity: '1',
-        metadata: assetMetadata1,
-        label: '721',
-        recipient: certificate.receivedAddressWallet,
-      };
-      console.log(asset1);
-      console.log(assetMetadata1);
+      let myPromise = new Promise<void>(async function (myResolve, myReject) {
+        const wallet = await BrowserWallet.enable('eternl');
+        // prepare forgingScript
+        const usedAddress = await wallet.getUsedAddresses();
+        const policyId = await wallet.getPolicyIds();
+        const tx = new Transaction({ initiator: wallet });
+        // define asset#1 metadata
+        const assetName = textToHex(certificate.certificateType + certificate.certificateCode);
+        const asset1: Asset = {
+          unit: policyId[0] + assetName,
+          quantity: '1',
+        };
+        console.log(asset1);
 
-      tx.mintAsset(
-        forgingScript,
-        asset1,
-      );
-      const unsignedTx = await tx.build();
-      const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
-      console.log("txHash");
-      console.log(txHash);
-      myResolve(); // when successful
-      myReject();  // when error
-    });
+        tx.sendAssets(
+          certificate.receivedAddressWallet,
+          [asset1],
+        );
+        const unsignedTx = await tx.build();
+        const signedTx = await wallet.signTx(unsignedTx);
+        const txHash = await wallet.submitTx(signedTx);
+        console.log("txHash");
+        console.log(txHash);
+        myResolve(); // when successful
+        myReject();  // when error
+      });
 
-    // "Consuming Code" (Must wait for a fulfilled Promise)
-    myPromise.then(
-      function () {
-        /* code if successful */
-        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(certificate.certificateID)
-        })
-          .then(() => {
-            // Xử lý phản hồi ở đây
-            alert("Gửi thành công!");
+
+      // "Consuming Code" (Must wait for a fulfilled Promise)
+      myPromise.then(
+        function () {
+          /* code if successful */
+          fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(certificate.certificateID)
           })
-          .catch(error => {
-            // Xử lý lỗi ở đây
-            console.log(error);
-            alert("Gửi thất bại!")
-          });
-      }
-    ).catch(function () {
-      alert("Gửi thất bại!")
-    })
+            .then(() => {
+              // Xử lý phản hồi ở đây
+              alert("Gửi thành công!");
+            })
+            .catch(error => {
+              // Xử lý lỗi ở đây
+              console.log(error);
+              alert("Gửi thất bại!")
+            });
+        }
+      ).catch(function () {
+        alert("Gửi thất bại!")
+      })
+    
   }
 
   return (
@@ -539,7 +590,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                           }}
                           color="inherit"
                           size="small"
-                          onClick={() => handleSign(certificate.certificateID)}
+                          onClick={() => handleSign(certificate)}
                         >
                           <EditTwoToneIcon fontSize="small" />
                         </IconButton>
