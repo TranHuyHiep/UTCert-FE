@@ -121,11 +121,13 @@ function Hero() {
         .then(response => response.json())
         .then(data => {
           // Xử lý dữ liệu trả về từ API
-          console.log(data.username);
-          if(data.username) {
+          alert(data.username)
+          if (data.username != undefined) {
             window.location.href = '/dashboards/crypto'
           }
-          window.location.href = '/login-register/register'
+          else {
+            window.location.href = '/login-register/register'
+          }
         })
         .catch(error => {
           // Xử lý lỗi nếu có

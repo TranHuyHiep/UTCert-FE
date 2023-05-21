@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bg from '../../public/background.jpg'
 import {
   Card,
   Spacer,
@@ -68,7 +69,13 @@ function Register() {
 
   return (
     <>
-      <div>
+      <div style={{
+      backgroundImage: `url(${bg.src})`,
+      width: '100%',
+      height: '100%',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <Container
           display="flex"
           alignItems="center"

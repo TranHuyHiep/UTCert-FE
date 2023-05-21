@@ -13,6 +13,8 @@ import {
   ListItemAvatar,
   ListItemText
 } from '@mui/material';
+import bg from '../public/background.jpg'
+
 import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 import PropTypes from 'prop-types';
@@ -69,7 +71,7 @@ function SimpleDialog(props) {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle></DialogTitle>
-      <List style={{width: '500px', height: '300px'}}>
+      <List style={{ width: '500px', height: '300px' }}>
         <ListItem>
           <Hero />
         </ListItem>
@@ -98,11 +100,17 @@ function Overview() {
 
   return (
     <>
-      <OverviewWrapper>
+      <OverviewWrapper style={{
+      backgroundImage: `url(${bg.src})`,
+      width: '100%',
+      height: '100%',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <Head>
           <title>UTCert</title>
         </Head>
-        <HeaderWrapper>
+        <HeaderWrapper style={{backgroundColor: 'rgba(0, 0, 0, 20%)', boxShadow: 'none'}}>
           <Container maxWidth="lg">
             <Box display="flex" alignItems="center">
               <Logo />
@@ -111,7 +119,7 @@ function Overview() {
                 alignItems="center"
                 justifyContent="space-between"
                 flex={1}
-              >
+              > 
                 <Box />
                 <Box>
                   <Button
@@ -135,7 +143,6 @@ function Overview() {
           </Container>
         </HeaderWrapper>
         <Search></Search>
-
         <SimpleDialog
           open={open}
           onClose={handleClose}
