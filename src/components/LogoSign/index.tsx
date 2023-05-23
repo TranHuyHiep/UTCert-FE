@@ -8,7 +8,7 @@ import {
   useTheme
 } from '@mui/material';
 import Link from 'src/components/Link';
-
+import LogoUTC from 'public/icon-256x256.png'
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
         color: ${theme.palette.text.primary};
@@ -77,6 +77,8 @@ const LogoSignInner = styled(Box)(
 `
 );
 
+
+
 const TooltipWrapper = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -99,7 +101,7 @@ function Logo() {
 
   return (
     <TooltipWrapper
-      title="Tokyo Free White Next.js Typescript Admin Dashboard"
+      title="UTCert"
       arrow
     >
       <LogoWrapper href="/">
@@ -113,9 +115,9 @@ function Logo() {
           }}
           overlap="circular"
           color="success"
-          badgeContent="1.0"
         >
           <LogoSignWrapper>
+            
             <LogoSign>
               <LogoSignInner />
             </LogoSign>
