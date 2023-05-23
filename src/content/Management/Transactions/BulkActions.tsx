@@ -2,12 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import {
   Box,
-  Menu,
-  IconButton,
   Button,
-  ListItemText,
-  ListItem,
-  List,
   Typography,
   Dialog,
   DialogContent
@@ -15,7 +10,6 @@ import {
 import { styled } from '@mui/material/styles';
 
 import CreateIcon from '@mui/icons-material/Create';
-import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import { Certificate } from '@/models/certificate';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -133,7 +127,7 @@ function BulkActions(props) {
           assetQuantity: '1',
           metadata: assetMetadata,
           label: '721',
-          recipient: certificates[index].receivedAddressWallet,
+          recipient: address,
         };
         assets.push(asset1);
         tx.mintAsset(

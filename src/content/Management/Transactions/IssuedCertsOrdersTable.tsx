@@ -1,7 +1,6 @@
 import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Asset, BrowserWallet } from '@meshsdk/core';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {
   Tooltip,
@@ -26,13 +25,6 @@ import {
   CardHeader,
   Dialog,
   DialogContent,
-  AppBar,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Slide,
-  Toolbar
 } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -131,31 +123,18 @@ function SimpleDialog(props) {
       </>
     )
   }
+
   return (
     <Dialog
       maxWidth='lg'
       open={open} onClose={onClose}>
       <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
         <div>
-          <img src={selectedCertifiate.imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+          <img src={selectedCertifiate.ipfsLink.replace("ipfs://", "https://ipfs.io/ipfs/")} alt="Image" style={{ maxWidth: "100%", maxHeight: "100%" }} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
-          <p style={{ fontWeight: 'bold' }}>CODE:</p>
-          <p>{selectedCertifiate.certificateCode}</p>
-          <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
-          <p>{selectedCertifiate.certificateName}</p>
-          <p style={{ fontWeight: 'bold' }}>CERTIFICATE TYPE:</p>
-          <p>{selectedCertifiate.certificateType}</p>
-          <p style={{ fontWeight: 'bold' }}>MODE OF STUDY:</p>
-          <p>{selectedCertifiate.modeOfStudy}</p>
-          <p style={{ fontWeight: 'bold' }}>CLASSIFICATION:</p>
-          <p>{selectedCertifiate.classification}</p>
-          <p style={{ fontWeight: 'bold' }}>YEAR OF GRADUATION:</p>
-          <p>{selectedCertifiate.yearOfGraduation}</p>
-          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
-          <p>{selectedCertifiate.signedDate}</p>
-          <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
-          <p style={{ borderBottom: '1px solid #000' }}>{selectedCertifiate.receivedDoB}</p>
+          <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>CERTIFICATE CODE:</p>
+          <p style={{ borderBottom: '1px solid #000' }}>{selectedCertifiate.certificateCode}</p>
           <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
           <p style={{ marginTop: '0px' }}>{selectedCertifiate.receivedIdentityNumber}</p>
           <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
@@ -304,6 +283,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           "mediaType": "image/jpg",
           "receivedName": certificate.receivedName,
           "yearOfGraduation": certificate.yearOfGraduation,
+          "receivedIdentityNumber": certificate.receivedIdentityNumber,
         };
         const asset1: Mint = {
           assetName: certificate.certificateType + certificate.certificateCode,
@@ -356,24 +336,8 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     catch (error) {
       alert('Loi');
     }
-    function handleBan(certificateId) {
-      fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(certificateId)
-      })
-        .then(() => {
-          // Xử lý phản hồi ở đây
-          alert("Ban thành công!");
-        })
-        .catch(() => {
-          // Xử lý lỗi ở đây
-          alert("Ban thất bại!")
-        });
-    }
+
+
   }
 
   function textToHex(text) {
@@ -387,61 +351,80 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     return hex;
   }
 
-  async function handleSend(certificate) {
-      let myPromise = new Promise<void>(async function (myResolve, myReject) {
-        const wallet = await BrowserWallet.enable('eternl');
-        // prepare forgingScript
-        const usedAddress = await wallet.getUsedAddresses();
-        const policyId = await wallet.getPolicyIds();
-        const tx = new Transaction({ initiator: wallet });
-        // define asset#1 metadata
-        const assetName = textToHex(certificate.certificateType + certificate.certificateCode);
-        const asset1: Asset = {
-          unit: policyId[0] + assetName,
-          quantity: '1',
-        };
-        console.log(asset1);
-
-        tx.sendAssets(
-          certificate.receivedAddressWallet,
-          [asset1],
-        );
-        const unsignedTx = await tx.build();
-        const signedTx = await wallet.signTx(unsignedTx);
-        const txHash = await wallet.submitTx(signedTx);
-        console.log("txHash");
-        console.log(txHash);
-        myResolve(); // when successful
-        myReject();  // when error
-      });
-
-
-      // "Consuming Code" (Must wait for a fulfilled Promise)
-      myPromise.then(
-        function () {
-          /* code if successful */
-          fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(certificate.certificateID)
-          })
-            .then(() => {
-              // Xử lý phản hồi ở đây
-              alert("Gửi thành công!");
-            })
-            .catch(error => {
-              // Xử lý lỗi ở đây
-              console.log(error);
-              alert("Gửi thất bại!")
-            });
-        }
-      ).catch(function () {
-        alert("Gửi thất bại!")
+  function handleBan(certificateId) {
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certificateId)
+    })
+      .then(() => {
+        // Xử lý phản hồi ở đây
+        alert("Ban thành công!");
       })
-    
+      .catch(() => {
+        // Xử lý lỗi ở đây
+        alert("Ban thất bại!")
+      });
+  }
+
+  async function handleSend(certificate) {
+    let myPromise = new Promise<void>(async function (myResolve, myReject) {
+      const wallet = await BrowserWallet.enable('eternl');
+      // prepare forgingScript
+      const usedAddress = await wallet.getUsedAddresses();
+      const policyId = await wallet.getPolicyIds();
+      const tx = new Transaction({ initiator: wallet });
+      // define asset#1 metadata
+      const assetName = textToHex(certificate.certificateType + certificate.certificateCode);
+      const asset1: Asset = {
+        unit: policyId[0] + assetName,
+        quantity: '1',
+      };
+      console.log(asset1);
+
+      tx.sendAssets(
+        certificate.receivedAddressWallet,
+        [asset1],
+      );
+      const unsignedTx = await tx.build();
+      const signedTx = await wallet.signTx(unsignedTx);
+      const txHash = await wallet.submitTx(signedTx);
+      console.log("txHash");
+      console.log(txHash);
+      myResolve(); // when successful
+      myReject();  // when error
+    });
+
+
+    // "Consuming Code" (Must wait for a fulfilled Promise)
+    myPromise.then(
+      function () {
+        /* code if successful */
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(certificate.certificateID)
+        })
+          .then(() => {
+            // Xử lý phản hồi ở đây
+            alert("Gửi thành công!");
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây
+            console.log(error);
+            alert("Gửi thất bại!")
+          });
+      }
+    ).catch(function () {
+      alert("Gửi thất bại!")
+    })
+
   }
 
   return (
