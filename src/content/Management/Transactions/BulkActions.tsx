@@ -120,6 +120,7 @@ function BulkActions(props) {
           "mediaType": "image/jpg",
           "receivedName": certificates[index].receivedName,
           "yearOfGraduation": "" + certificates[index].yearOfGraduation,
+          "identity": certificates[index].receivedIdentityNumber
         };
 
         const asset1: Mint = {

@@ -266,7 +266,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     selectedCertifiates.length === paginatedCryptoOrders.length;
   const theme = useTheme();
 
-  function handleSign(certificate) {
+  function handleSign(certificate : Certificate) {
     try {
       let myPromise = new Promise<void>(async function (myResolve, myReject) {
         const wallet = await BrowserWallet.enable('eternl');
@@ -283,7 +283,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           "mediaType": "image/jpg",
           "receivedName": certificate.receivedName,
           "yearOfGraduation": certificate.yearOfGraduation,
-          "receivedIdentityNumber": certificate.receivedIdentityNumber,
+          "identity": certificate.receivedIdentityNumber
         };
         const asset1: Mint = {
           assetName: certificate.certificateType + certificate.certificateCode,
