@@ -19,5 +19,7 @@ export interface Certificate {
   receivedName: string,
   signedDate: string,
   contactStatus: ContactStatus,
-  certificateStatus: CertificateStatus
+  certificateStatus: CertificateStatus,
+  oganizationName: string,
+  receivedDate: string
 }

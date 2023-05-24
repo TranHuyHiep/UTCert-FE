@@ -210,22 +210,22 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
 
   };
 
-  const handleSelectAllCryptoOrders = (
+  const handleSelectAllCertificateOrders = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
     setSelectedCertificates(
       event.target.checked
-        ? paginatedCryptoOrders.map((certificate) => certificate.certificateID)
+        ? paginatedCertificateOrders.map((certificate) => certificate.certificateID)
         : []
     );
     setSelectedCertificatesInformation(
       event.target.checked
-        ? paginatedCryptoOrders
+        ? paginatedCertificateOrders
         : []
     );
   };
 
-  const handleSelectOneCryptoOrder = (
+  const handleSelectOneCertificateOrder = (
     _event: ChangeEvent<HTMLInputElement>,
     certificateId: string,
     certificate: Certificate
@@ -243,6 +243,10 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       setSelectedCertificates((prevSelected) =>
         prevSelected.filter((id) => id !== certificateId)
       );
+
+      setSelectedCertificatesInformation((prevSelected) =>
+        prevSelected.filter((cert) => cert.certificateID !== certificateId)
+      );
     }
   };
 
@@ -255,16 +259,16 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   };
 
   const filteredCertificates = applyFilters(certificates, filters);
-  const paginatedCryptoOrders = applyPagination(
+  const paginatedCertificateOrders = applyPagination(
     filteredCertificates,
     page,
     limit
   );
-  const selectedSomeCryptoOrders =
+  const selectedSomeCertificateOrders =
     selectedCertifiates.length > 0 &&
-    selectedCertifiates.length < paginatedCryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCertifiates.length === paginatedCryptoOrders.length;
+    selectedCertifiates.length < paginatedCertificateOrders.length;
+  const selectedAllCertificateOrders =
+    selectedCertifiates.length === paginatedCertificateOrders.length;
   const theme = useTheme();
 
   function handleSign(certificate: Certificate) {
@@ -490,9 +494,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllCryptoOrders}
+                  checked={selectedAllCertificateOrders}
+                  indeterminate={selectedSomeCertificateOrders}
+                  onChange={handleSelectAllCertificateOrders}
                 />
               </TableCell>
               <TableCell>Code</TableCell>
@@ -505,28 +509,28 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((certificate) => {
-              const isCryptoOrderSelected = selectedCertifiates.includes(
+            {paginatedCertificateOrders.map((certificate) => {
+              const isCertificateOrderSelected = selectedCertifiates.includes(
                 certificate.certificateID
               );
               return (
                 <TableRow
                   hover
                   key={certificate.certificateID}
-                  selected={isCryptoOrderSelected}
+                  selected={isCertificateOrderSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCryptoOrderSelected}
+                      checked={isCertificateOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(
+                        handleSelectOneCertificateOrder(
                           event,
                           certificate.certificateID,
                           certificate
                         )
                       }
-                      value={isCryptoOrderSelected}
+                      value={isCertificateOrderSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -565,7 +569,6 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                       {certificate.receivedName}
                     </Typography>
                   </TableCell>
-
                   <TableCell align="right">
                     <Typography
                       variant="body1"

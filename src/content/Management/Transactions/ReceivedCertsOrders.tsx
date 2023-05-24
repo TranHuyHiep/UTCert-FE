@@ -1,10 +1,7 @@
 import { Card } from '@mui/material';
 import ReceivedCertsOrdersTable from './ReceivedCertsOrdersTable';
-import { subDays } from 'date-fns';
 import { useState, useEffect  } from 'react';
-import GetCookie from '@/hooks/getCookie';
 import axios from 'axios';
-import { CryptoOrder } from '@/models/crypto_order';
 
 function ReceivedCertsOrders() {
   const [receivedCerts, setReceivedCerts] = useState([]);
@@ -31,7 +28,7 @@ function ReceivedCertsOrders() {
   
   return (
     <Card>
-      <ReceivedCertsOrdersTable cryptoOrders={receivedCerts} />
+      <ReceivedCertsOrdersTable certificates={receivedCerts} />
     </Card>
   );
 }

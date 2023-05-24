@@ -1,16 +1,12 @@
 import { FC, ChangeEvent, useState } from 'react';
-import { format } from 'date-fns';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
-  Tooltip,
   Divider,
   Box,
   FormControl,
   InputLabel,
   Card,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -22,27 +18,61 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  Tooltip,
+  IconButton,
+  Dialog,
+  DialogContent
 } from '@mui/material';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Label from '@/components/Label';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 import {
   Certificate,
   CertificateStatus,
-  ContactStatus
 } from '@/models/certificate';
 
 interface ReceivedCertsOrdersTableProps {
   className?: string;
-  cryptoOrders: Certificate[];
+  certificates: Certificate[];
 }
 
 interface Filters {
   status?: CertificateStatus;
 }
+
+// modal view cert
+function SimpleDialog(props) {
+  const { open, onClose, selectedCertifiate } = props;
+  if (selectedCertifiate == undefined) {
+    return (
+      <>
+      </>
+    )
+  }
+
+  return (
+    <Dialog
+      maxWidth='lg'
+      open={open} onClose={onClose}>
+      <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
+        <div>
+          <img src={selectedCertifiate.imageLink} alt="Image" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
+          <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>CERTIFICATE CODE:</p>
+          <p style={{ borderBottom: '1px solid #000' }}>{selectedCertifiate.certificateCode}</p>
+          <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
+          <p style={{ marginTop: '0px' }}>{selectedCertifiate.receivedIdentityNumber}</p>
+          <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
+          <p>{selectedCertifiate.receivedName}</p>
+        </div>
+
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
   const map = {
@@ -64,13 +94,13 @@ const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
 };
 
 const applyFilters = (
-  cryptoOrders: Certificate[],
+  certificates: Certificate[],
   filters: Filters
 ): Certificate[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
+  return certificates.filter((certificate) => {
     let matches = true;
 
-    if (filters.status && cryptoOrder.certificateStatus !== filters.status) {
+    if (filters.status && certificate.certificateStatus !== filters.status) {
       matches = false;
     }
 
@@ -79,20 +109,22 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  cryptoOrders: Certificate[],
+  certificates: Certificate[],
   page: number,
   limit: number
 ): Certificate[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
+  return certificates.slice(page * limit, page * limit + limit);
 };
 
 const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
-  cryptoOrders
+  certificates
 }) => {
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
-    []
-  );
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
+  const [open, setOpen] = useState(false);
+  const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
+  const [selectedCertifiate, setSelectedCertificate] = useState<Certificate>();
+  const [selectedCertifiatesInformation, setSelectedCertificatesInformation] = useState<Certificate[]>([]);
+
+  const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
@@ -131,28 +163,42 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
     }));
   };
 
-  const handleSelectAllCryptoOrders = (
+  const handleSelectAllCertificateOrders = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedCryptoOrders(
+    setSelectedCertificates(
       event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.certificateID)
+        ? certificates.map((certificate) => certificate.certificateID)
+        : []
+    );
+    setSelectedCertificatesInformation(
+      event.target.checked
+        ? certificates
         : []
     );
   };
 
-  const handleSelectOneCryptoOrder = (
+  const handleSelectOneCertificateOrder = (
     _event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
+    certificateId: string,
+    certificate: Certificate
   ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
+    if (!selectedCertifiates.includes(certificateId)) {
+      setSelectedCertificates((prevSelected) => [
         ...prevSelected,
-        cryptoOrderId
+        certificateId
       ]);
+      setSelectedCertificatesInformation((prevSelectedInformation) => [
+        ...prevSelectedInformation,
+        certificate
+      ])
     } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
+      setSelectedCertificates((prevSelected) =>
+        prevSelected.filter((id) => id !== certificateId)
+      );
+
+      setSelectedCertificatesInformation((prevSelected) =>
+        prevSelected.filter((cert) => cert.certificateID !== certificateId)
       );
     }
   };
@@ -165,24 +211,36 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
+  const filteredCertificateOrders = applyFilters(certificates, filters);
+  const paginatedCertificateOrders = applyPagination(
+    filteredCertificateOrders,
     page,
     limit
   );
-  const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
+  const selectedSomeCertificateOrders =
+    selectedCertifiates.length > 0 &&
+    selectedCertifiates.length < certificates.length;
+  const selectedAllCertificateOrders =
+    selectedCertifiates.length === certificates.length;
   const theme = useTheme();
+
+  const handleClickOpen = (certificate) => {
+    setSelectedCertificate(certificate);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   return (
     <Card>
       {selectedBulkActions && (
         <Box flex={1} p={2}>
-          <BulkActions />
+          <BulkActions
+            certificates={selectedCertifiatesInformation}
+          />
         </Box>
       )}
       {!selectedBulkActions && (
@@ -217,42 +275,42 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllCryptoOrders}
+                  checked={selectedAllCertificateOrders}
+                  indeterminate={selectedSomeCertificateOrders}
+                  onChange={handleSelectAllCertificateOrders}
                 />
               </TableCell>
               <TableCell>Code</TableCell>
               <TableCell>Certificate name</TableCell>
+              <TableCell>Graduation year</TableCell>
               <TableCell>Organization name</TableCell>
-              <TableCell>Mode of study</TableCell>
-              <TableCell>Classification</TableCell>
-              <TableCell>Year Of Graduation</TableCell>
-              <TableCell>Date signed</TableCell>
+              <TableCell>Received date</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.certificateID
+            {paginatedCertificateOrders.map((certificate) => {
+              const isCertificateOrderSelected = selectedCertifiates.includes(
+                certificate.certificateID
               );
               return (
                 <TableRow
                   hover
-                  key={cryptoOrder.certificateID}
-                  selected={isCryptoOrderSelected}
+                  key={certificate.certificateID}
+                  selected={isCertificateOrderSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCryptoOrderSelected}
+                      checked={isCertificateOrderSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(
+                        handleSelectOneCertificateOrder(
                           event,
-                          cryptoOrder.certificateID
+                          certificate.certificateID,
+                          certificate
                         )
                       }
-                      value={isCryptoOrderSelected}
+                      value={isCertificateOrderSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -263,7 +321,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.certificateCode}
+                      {certificate.certificateCode}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -271,20 +329,26 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
+                      maxWidth={200}
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.certificateType}
+                      {certificate.certificateName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {certificate.classification}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="right">
                     <Typography
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
+                      align='center'
                       gutterBottom
+                      noWrap
                     >
-                      {cryptoOrder.oganizationName}
+                      {certificate.yearOfGraduation}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -296,18 +360,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.modeOfStudy}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.classification}
+                      {certificate.oganizationName}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -319,19 +372,23 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
                       noWrap
                       align='center'
                     >
-                      {cryptoOrder.yearOfGraduation}
+                      {new Date(certificate.receivedDate).toLocaleDateString('en-GB')}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.receivedDate}
-                    </Typography>
+                  <TableCell>
+                    <Tooltip title="View" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': { background: theme.colors.info.lighter },
+                          color: theme.palette.info.main
+                        }}
+                        color="inherit"
+                        size="small"
+                        onClick={() => handleClickOpen(certificate)}
+                      >
+                        <VisibilityIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -342,7 +399,7 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCryptoOrders.length}
+          count={filteredCertificateOrders.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -350,16 +407,23 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
+      <SimpleDialog
+        fullWidth={'md'}
+        maxWidth={'800md'}
+        open={open}
+        onClose={handleClose}
+        selectedCertifiate={selectedCertifiate}
+      />
     </Card>
   );
 };
 
 ReceivedCertsOrdersTable.propTypes = {
-  cryptoOrders: PropTypes.array.isRequired
+  certificates: PropTypes.array.isRequired
 };
 
 ReceivedCertsOrdersTable.defaultProps = {
-  cryptoOrders: []
+  certificates: []
 };
 
 export default ReceivedCertsOrdersTable;
