@@ -6,7 +6,6 @@ import {
   FormControl,
   InputLabel,
   Card,
-  Checkbox,
   IconButton,
   Table,
   TableBody,
@@ -27,6 +26,7 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 import { Contact, ContactStatus } from '@/models/contact';
+import GetCookie from '@/hooks/getCookie';
 interface ContactsOrdersTableProps {
   className?: string;
   contactOrders: Contact[];
@@ -38,11 +38,11 @@ interface Filters {
 
 const getStatusLabel = (contactStatus: ContactStatus): JSX.Element => {
   const map = {
-    1 : {
+    1: {
       text: 'Pending',
       color: 'primary'
     },
-    2 : {
+    2: {
       text: 'Connected',
       color: 'success'
     }
@@ -55,10 +55,10 @@ const applyFilters = (
   contactOrders: Contact[],
   filters: Filters
 ): Contact[] => {
-  return contactOrders.filter((contactOrders) => {
+  return contactOrders.filter((contactOrder) => {
     let matches = true;
-
-    if (filters.status && contactOrders.contactStatus !== filters.status) {
+    
+    if (filters.status && contactOrder.contactStatus != filters.status) {
       matches = false;
     }
 
@@ -93,16 +93,12 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
       name: 'All'
     },
     {
-      id: '2',
-      name: 'Sent'
-    },
-    {
-      id: 'pending',
+      id: '1',
       name: 'Pending'
     },
     {
-      id: 'failed',
-      name: 'Failed'
+      id: '2',
+      name: 'Connected'
     }
   ];
 
@@ -119,31 +115,31 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
     }));
   };
 
-  const handleSelectAllContactOrders = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedContactOrders(
-      event.target.checked
-        ? contactOrders.map((contactOrder) => contactOrder.contactId)
-        : []
-    );
-  };
+  // const handleSelectAllContactOrders = (
+  //   event: ChangeEvent<HTMLInputElement>
+  // ): void => {
+  //   setSelectedContactOrders(
+  //     event.target.checked
+  //       ? contactOrders.map((contactOrder) => contactOrder.contactID)
+  //       : []
+  //   );
+  // };
 
-  const handleSelectOneContactOrder = (
-    _event: ChangeEvent<HTMLInputElement>,
-    contactOrderId: string
-  ): void => {
-    if (!selectedContactOrders.includes(contactOrderId)) {
-      setSelectedContactOrders((prevSelected) => [
-        ...prevSelected,
-        contactOrderId
-      ]);
-    } else {
-      setSelectedContactOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== contactOrderId)
-      );
-    }
-  };
+  // const handleSelectOneContactOrder = (
+  //   _event: ChangeEvent<HTMLInputElement>,
+  //   contactOrderId: string
+  // ): void => {
+  //   if (!selectedContactOrders.includes(contactOrderId)) {
+  //     setSelectedContactOrders((prevSelected) => [
+  //       ...prevSelected,
+  //       contactOrderId
+  //     ]);
+  //   } else {
+  //     setSelectedContactOrders((prevSelected) =>
+  //       prevSelected.filter((id) => id !== contactOrderId)
+  //     );
+  //   }
+  // };
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -154,17 +150,63 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
   };
 
   const filteredContactOrders = applyFilters(contactOrders, filters);
+  
   const paginatedContactOrders = applyPagination(
     filteredContactOrders,
     page,
     limit
   );
-  const selectedSomeContactOrders =
-    selectedContactOrders.length > 0 &&
-    selectedContactOrders.length < contactOrders.length;
-  const selectedAllContactOrders =
-    selectedContactOrders.length === contactOrders.length;
+  // const selectedSomeContactOrders =
+  //   selectedContactOrders.length > 0 &&
+  //   selectedContactOrders.length < contactOrders.length;
+  // const selectedAllContactOrders =
+  //   selectedContactOrders.length === contactOrders.length;
   const theme = useTheme();
+
+  function handleDelete(contactId) {
+    console.log(contactId);
+    const apiUrl = 'http://tamperproofcerts.somee.com/api/v1/Contact';
+    
+    fetch(apiUrl, {
+      method: 'DELETE',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(contactId)
+    })
+      .then(response => response.json())
+      .then(() => {
+        alert("Delete Successful!")
+        // Xử lý dữ liệu trả về nếu cần
+      })
+      .catch(() => {
+        alert("Delete Error!")
+        // Xử lý lỗi nếu có
+      });
+  }
+
+  function handleAccept(contactId) {
+    const apiUrl = 'http://tamperproofcerts.somee.com/api/v1/Contact/accept';
+
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(contactId)
+    })
+      .then(response => response.json())
+      .then(() => {
+        alert("Accept Successful!")
+        // Xử lý dữ liệu trả về nếu cần
+      })
+      .catch(() => {
+        alert("Accept Error!")
+        // Xử lý lỗi nếu có
+      });
+  }
 
   return (
     <Card>
@@ -212,12 +254,12 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
           <TableBody>
             {paginatedContactOrders.map((contactOrder) => {
               const isContactOrderSelected = selectedContactOrders.includes(
-                contactOrder.contactId
+                contactOrder.contactID
               );
               return (
                 <TableRow
                   hover
-                  key={contactOrder.contactId}
+                  key={contactOrder.contactID}
                   selected={isContactOrderSelected}
                 >
                   <TableCell>
@@ -265,23 +307,24 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {contactOrder.contactStatus == 1 && 
-                    <Tooltip title="Accept" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <HandshakeIcon fontSize="medium" />
-                      </IconButton>
-                    </Tooltip>
+                    {contactOrder.contactStatus == 1 && contactOrder.receivedID == GetCookie('stakeId') &&
+                      <Tooltip title="Accept" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': {
+                              background: theme.colors.primary.lighter
+                            },
+                            color: theme.palette.primary.main
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => handleAccept(contactOrder.contactID)}
+                        >
+                          <HandshakeIcon fontSize="medium" />
+                        </IconButton>
+                      </Tooltip>
                     }
-                    <Tooltip title="Delete" arrow>
+                    {contactOrder.contactStatus == 1 && <Tooltip title="Delete" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
@@ -289,10 +332,11 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => handleDelete(contactOrder.contactID)}
                       >
                         <DeleteTwoToneIcon fontSize="medium" />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip>}
                   </TableCell>
                 </TableRow>
               );
