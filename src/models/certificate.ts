@@ -1,4 +1,4 @@
-export type CertificateStatus = 1 | 2 | 3 | 4;
+export type CertificateStatus = 1 | 2 | 3 | 4 | 0;
 export type ContactStatus = '1' | '2';
 
 export interface Certificate {

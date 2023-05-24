@@ -34,6 +34,7 @@ import {
   CertificateStatus,
   ContactStatus
 } from '@/models/certificate';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BulkActions from './BulkActions';
@@ -266,7 +267,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     selectedCertifiates.length === paginatedCryptoOrders.length;
   const theme = useTheme();
 
-  function handleSign(certificate : Certificate) {
+  function handleSign(certificate: Certificate) {
     try {
       let myPromise = new Promise<void>(async function (myResolve, myReject) {
         const wallet = await BrowserWallet.enable('eternl');
@@ -370,6 +371,27 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       });
   }
 
+  function handleDelete(certificateId) {
+    var certs = []
+    certs.push(certificateId)
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/delete-multiple', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certs)
+    })
+      .then(() => {
+        // Xử lý phản hồi ở đây
+        alert("Delete Successful!");
+      })
+      .catch(() => {
+        // Xử lý lỗi ở đây
+        alert("Delete Error!")
+      });
+  }
+
   async function handleSend(certificate) {
     let myPromise = new Promise<void>(async function (myResolve, myReject) {
       const wallet = await BrowserWallet.enable('eternl');
@@ -383,7 +405,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         unit: policyId[0] + assetName,
         quantity: '1',
       };
-      console.log(asset1);
+      console.log(certificate.receivedAddressWallet);
 
       tx.sendAssets(
         certificate.receivedAddressWallet,
@@ -413,16 +435,16 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         })
           .then(() => {
             // Xử lý phản hồi ở đây
-            alert("Gửi thành công!");
+            alert("Send successful!");
           })
           .catch(error => {
             // Xử lý lỗi ở đây
             console.log(error);
-            alert("Gửi thất bại!")
+            alert("Send error!")
           });
       }
     ).catch(function () {
-      alert("Gửi thất bại!")
+      alert("Send error!")
     })
 
   }
@@ -563,21 +585,38 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                   </TableCell>
                   <TableCell align="right">
                     {certificate.certificateStatus == 1 ? (
-                      <Tooltip title="Sign" arrow>
-                        <IconButton
-                          sx={{
-                            '&:hover': {
-                              background: theme.colors.primary.lighter
-                            },
-                            color: theme.palette.primary.main
-                          }}
-                          color="inherit"
-                          size="small"
-                          onClick={() => handleSign(certificate)}
-                        >
-                          <EditTwoToneIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
+                      <>
+                        <Tooltip title="Sign" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': {
+                                background: theme.colors.primary.lighter
+                              },
+                              color: theme.palette.primary.main
+                            }}
+                            color="inherit"
+                            size="small"
+                            onClick={() => handleSign(certificate)}
+                          >
+                            <EditTwoToneIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': {
+                                background: theme.colors.primary.lighter
+                              },
+                              color: theme.palette.error.main
+                            }}
+                            color="error"
+                            size="small"
+                            onClick={() => handleDelete(certificate.certificateID)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </>
                     ) : (
                       certificate.certificateStatus == 2 ? (
                         <Tooltip title="Send" arrow>
