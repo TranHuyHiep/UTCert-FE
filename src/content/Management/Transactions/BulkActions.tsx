@@ -99,7 +99,6 @@ function BulkActions(props) {
   useEffect(() => {
     var certificates = [];
     Object.keys(props).map((key) => (certificates = props[key]));
-    console.log(certificates);
 
     // Hành động cập nhật status ở đây
     if (certificates.length > 0) {
