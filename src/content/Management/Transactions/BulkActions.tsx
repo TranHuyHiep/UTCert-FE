@@ -99,7 +99,7 @@ function BulkActions(props) {
   useEffect(() => {
     var certificates = [];
     Object.keys(props).map((key) => (certificates = props[key]));
-
+    setSelectedCertificates(certificates);
     // Hành động cập nhật status ở đây
     if (certificates.length > 0) {
       var temp = certificates[0].certificateStatus;
@@ -351,7 +351,7 @@ function BulkActions(props) {
       <SimpleDialog
         open={open}
         onClose={handleClose}
-        images={selectedCertificates}
+        certificates={selectedCertificates}
       />
     </>
   );
