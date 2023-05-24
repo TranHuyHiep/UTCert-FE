@@ -25,7 +25,7 @@ function ContactOrders() {
     };
 
     fetchData();
-  }, []);
+  });
   
   return (
     <Card>
