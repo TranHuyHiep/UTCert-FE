@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Box,
@@ -8,10 +8,11 @@ import {
   DialogContent
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import CreateIcon from '@mui/icons-material/Create';
-import { AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
-import { Certificate } from '@/models/certificate';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Asset, AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
+import { Certificate, CertificateStatus } from '@/models/certificate';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -36,50 +37,48 @@ const ButtonView = styled(Button)(
 );
 
 function SimpleDialog(props) {
-  const { open, onClose, images } = props;
+  const { open, onClose, certificates } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrevClick = () => {
-    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
+    setCurrentIndex((currentIndex - 1 + certificates.length) % certificates.length);
   };
 
   const handleNextClick = () => {
-    setCurrentIndex((currentIndex + 1) % images.length);
+    setCurrentIndex((currentIndex + 1) % certificates.length);
   };
 
-  if (!images || images.length === 0) {
+  if (!certificates || certificates.length === 0) {
     return null;
   }
-  
-  console.log(images);
-  
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth='lg'>
       <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
         <div>
-          <img src={images[currentIndex].imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+          <img src={certificates[currentIndex].imageLink} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background'}}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
           <p style={{ fontWeight: 'bold' }}>CODE:</p>
-          <p>{images[currentIndex].certificateCode}</p>
+          <p>{certificates[currentIndex].certificateCode}</p>
           <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
-          <p>{images[currentIndex].certificateName}</p>
+          <p>{certificates[currentIndex].certificateName}</p>
           <p style={{ fontWeight: 'bold' }}>CERTIFICATE TYPE:</p>
-          <p>{images[currentIndex].certificateType}</p>
+          <p>{certificates[currentIndex].certificateType}</p>
           <p style={{ fontWeight: 'bold' }}>MODE OF STUDY:</p>
-          <p>{images[currentIndex].modeOfStudy}</p>
+          <p>{certificates[currentIndex].modeOfStudy}</p>
           <p style={{ fontWeight: 'bold' }}>CLASSIFICATION:</p>
-          <p>{images[currentIndex].classification}</p>
+          <p>{certificates[currentIndex].classification}</p>
           <p style={{ fontWeight: 'bold' }}>YEAR OF GRADUATION:</p>
-          <p>{images[currentIndex].yearOfGraduation}</p>
+          <p>{certificates[currentIndex].yearOfGraduation}</p>
           <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
-          <p>{images[currentIndex].signedDate}</p>
+          <p>{certificates[currentIndex].signedDate}</p>
           <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
-          <p style={{ borderBottom: '1px solid #000' }}>{images[currentIndex].receivedDoB}</p>
+          <p style={{ borderBottom: '1px solid #000' }}>{certificates[currentIndex].receivedDoB}</p>
           <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
-          <p style={{ marginTop: '0px' }}>{images[currentIndex].receivedIdentityNumber}</p>
+          <p style={{ marginTop: '0px' }}>{certificates[currentIndex].receivedIdentityNumber}</p>
           <p style={{ fontWeight: 'bold' }}>RECEIVED NAME:</p>
-          <p>{images[currentIndex].receivedName}</p>
+          <p>{certificates[currentIndex].receivedName}</p>
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
@@ -94,10 +93,28 @@ function SimpleDialog(props) {
 
 function BulkActions(props) {
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedCertifiates, setSelectedCertificates] = useState([]);
+  const [selectedCertificates, setSelectedCertificates] = useState<Certificate[]>([]);
+  const [status, setStatus] = useState<CertificateStatus>();
 
-  var certificatesId: string[] = [];
-  async function SendAllCertificateSelected(certs) {
+  useEffect(() => {
+    var certificates = [];
+    Object.keys(props).map((key) => (certificates = props[key]));
+
+    // Hành động cập nhật status ở đây
+    if (certificates.length > 0) {
+      var temp = certificates[0].certificateStatus;
+      for (let index = 1; index < certificates.length; index++) {
+        if (temp != certificates[index].certificateStatus) {
+          temp = 0;
+          break;
+        }
+      }
+      setStatus(temp);
+    }
+  }, [props]);
+
+  async function SignAllCertificateSelected(certs) {
+    var certificatesId: string[] = [];
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
 
@@ -139,8 +156,80 @@ function BulkActions(props) {
       const unsignedTx = await tx.build();
       const signedTx = await wallet.signTx(unsignedTx);
       const txHash = await wallet.submitTx(signedTx);
-      console.log("txHash");
-      console.log(txHash);
+      myResolve(); // when successful
+      myReject();  // when error
+    });
+
+
+    // "Consuming Code" (Must wait for a fulfilled Promise)
+    myPromise.then(
+      function () {
+        /* code if successful */
+        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign-multiple', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(certificatesId)
+        })
+          .then(response => {
+            // Xử lý phản hồi ở đây
+            alert("Sign successful!");
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây
+            console.log(error);
+            alert("Sign error!")
+          });
+      }
+    ).catch(function () {
+      alert("Sign error!")
+    })
+  }
+
+  function textToHex(text) {
+    let hex = '';
+
+    for (let i = 0; i < text.length; i++) {
+      let charCode = text.charCodeAt(i).toString(16);
+      hex += ('00' + charCode).slice(-2); // Ensure leading zero for single digit
+    }
+
+    return hex;
+  }
+
+  async function SendAllCertificateSelected(certs) {
+    var certificatesId: string[] = [];
+    let certificates: Certificate[];
+    Object.keys(certs).map((key) => (certificates = props[key]));
+
+    const wallet = await BrowserWallet.enable('eternl');
+    let myPromise = new Promise<void>(async function (myResolve, myReject) {
+      const wallet = await BrowserWallet.enable('eternl');
+      // prepare forgingScript
+      const usedAddress = await wallet.getUsedAddresses();
+      const policyId = await wallet.getPolicyIds();
+      const tx = new Transaction({ initiator: wallet });
+      // define asset#1 metadata
+
+      for (let i = 0; i < certificates.length; i++) {
+        certificatesId.push(certificates[i].certificateID)
+        const assetName = textToHex(certificates[i].certificateType + certificates[i].certificateCode);
+        console.log(certificates[i].receivedAddressWallet);
+        console.log(policyId[0] + assetName);
+        const asset1: Asset = {
+          unit: policyId[0] + assetName,
+          quantity: '1',
+        };
+        tx.sendAssets(
+          certificates[i].receivedAddressWallet,
+          [asset1],
+        );
+      }
+      const unsignedTx = await tx.build();
+      const signedTx = await wallet.signTx(unsignedTx);
+      const txHash = await wallet.submitTx(signedTx);
       myResolve(); // when successful
       myReject();  // when error
     });
@@ -158,19 +247,47 @@ function BulkActions(props) {
           },
           body: JSON.stringify(certificatesId)
         })
-          .then(response => {
+          .then(() => {
             // Xử lý phản hồi ở đây
-            alert("Gửi thành công!");
+            alert("Send successful!");
           })
           .catch(error => {
             // Xử lý lỗi ở đây
             console.log(error);
-            alert("Gửi thất bại!")
+            alert("Send error!")
           });
       }
     ).catch(function () {
-      alert("Gửi thất bại!")
+      alert("Send error!")
     })
+
+  }
+
+
+  function DeleteAllCertificateSelected(certs) {
+    var certificatesId: string[] = [];
+    let certificates: Certificate[];
+    Object.keys(certs).map((key) => (certificates = props[key]));
+
+    for (let index = 0; index < certificates.length; index++) {
+      certificatesId.push(certificates[index].certificateID)
+    }
+    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/delete-multiple', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(certificatesId)
+    })
+      .then(() => {
+        // Xử lý phản hồi ở đây
+        alert("Delete Successful!");
+      })
+      .catch(() => {
+        // Xử lý lỗi ở đây
+        alert("Delete Error!")
+      });
   }
 
   function ViewAllCertificateSelected(certs) {
@@ -195,14 +312,31 @@ function BulkActions(props) {
           <Typography variant="h5" color="text.secondary">
             Bulk actions:
           </Typography>
-          <ButtonError
-            sx={{ ml: 1 }}
-            startIcon={<CreateIcon />}
-            variant="contained"
-            onClick={() => (SendAllCertificateSelected(props))}
-          >
-            Send
-          </ButtonError>
+          {status == 1 ?
+            <ButtonView
+              sx={{ ml: 1 }}
+              startIcon={<EditTwoToneIcon />}
+              variant="contained"
+              onClick={() => (SignAllCertificateSelected(props))}
+            >
+              Sign
+            </ButtonView>
+            : (status == 2 ? <ButtonView
+              sx={{ ml: 1 }}
+              startIcon={<SendIcon />}
+              variant="contained"
+              onClick={() => (SendAllCertificateSelected(props))}
+            >
+              Send
+            </ButtonView> : (status == 3 ? <ButtonError
+              sx={{ ml: 1 }}
+              startIcon={<DeleteIcon />}
+              variant="contained"
+              onClick={() => (DeleteAllCertificateSelected(props))}
+            >
+              Delete
+            </ButtonError> : <></>
+            ))}
           <ButtonView
             sx={{ ml: 1 }}
             startIcon={<VisibilityIcon />}
@@ -217,7 +351,7 @@ function BulkActions(props) {
       <SimpleDialog
         open={open}
         onClose={handleClose}
-        images={selectedCertifiates}
+        images={selectedCertificates}
       />
     </>
   );
