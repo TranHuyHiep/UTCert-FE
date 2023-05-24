@@ -1,5 +1,7 @@
 import { Button, Container, Dialog, DialogContent, Grid, Input } from "@mui/material";
 import { useState } from "react";
+import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import React from "react";
 
 function hexToText(hexString) {
     var text = '';
@@ -56,6 +58,27 @@ function SimpleDialog(props) {
         </Dialog>
     );
 }
+
+function MyApp() {
+    const { enqueueSnackbar } = useSnackbar();
+  
+    const handleClick = () => {
+      enqueueSnackbar('Not found certificates.', { variant: "error"});
+    };
+  
+    const handleClickVariant = (variant: VariantType) => () => {
+      // variant could be success, error, warning, info, or default
+      enqueueSnackbar('This is a success message!', { variant });
+    };
+  
+    return (
+      <React.Fragment>
+        <Button onClick={handleClick}>Show snackbar</Button>
+        <Button onClick={handleClickVariant('success')}>Show success snackbar</Button>
+      </React.Fragment>
+    );
+  }
+
 function Search() {
     const [open, setOpen] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState("");
@@ -122,6 +145,9 @@ function Search() {
                 onClose={handleClose}
                 certificates={certificates}
             />
+            <SnackbarProvider maxSnack={5}>
+                <MyApp/>
+            </SnackbarProvider>
         </Container>
     );
 }
