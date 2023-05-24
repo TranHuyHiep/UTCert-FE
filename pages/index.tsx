@@ -20,6 +20,7 @@ import Head from 'next/head';
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import Search from 'src/content/Overview/Search';
+import QRCodePage from './qr-code';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -135,6 +136,7 @@ function Overview() {
           </Container>
         </HeaderWrapper>
         <Search></Search>
+        <QRCodePage></QRCodePage>
         <SimpleDialog
           open={open}
           onClose={handleClose}
