@@ -621,7 +621,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                         </Tooltip>
                       </>
                     ) : (
-                      certificate.certificateStatus == 2 ? ( certificate.contactStatus == 2 ?
+                      certificate.certificateStatus == 2 ? ( certificate.contactStatus == '2' ?
                         <Tooltip title="Send" arrow>
                           <IconButton
                             sx={{

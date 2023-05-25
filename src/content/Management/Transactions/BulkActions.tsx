@@ -5,7 +5,10 @@ import {
   Button,
   Typography,
   Dialog,
-  DialogContent
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -14,6 +17,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Asset, AssetMetadata, BrowserWallet, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import { Certificate, CertificateStatus } from '@/models/certificate';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import QRCode from 'react-qr-code';
+import { createStringLiteral } from 'typescript';
+import { Certificate } from 'crypto';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -35,6 +42,18 @@ const ButtonView = styled(Button)(
      }
     `
 );
+
+const ButtonGen = styled(Button)(
+  ({ theme }) => `
+     background: ${theme.colors.secondary.light};
+     color: ${theme.palette.secondary.contrastText};
+
+     &:hover {
+        background: ${theme.colors.secondary.dark};
+     }
+    `
+);
+
 
 function SimpleDialog(props) {
   const { open, onClose, certificates } = props;
@@ -61,18 +80,8 @@ function SimpleDialog(props) {
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
           <p style={{ fontWeight: 'bold' }}>CODE:</p>
           <p>{certificates[currentIndex].certificateCode}</p>
-          <p style={{ fontWeight: 'bold' }}>CERTIFICATE NAME:</p>
-          <p>{certificates[currentIndex].certificateName}</p>
-          <p style={{ fontWeight: 'bold' }}>CERTIFICATE TYPE:</p>
-          <p>{certificates[currentIndex].certificateType}</p>
-          <p style={{ fontWeight: 'bold' }}>MODE OF STUDY:</p>
-          <p>{certificates[currentIndex].modeOfStudy}</p>
-          <p style={{ fontWeight: 'bold' }}>CLASSIFICATION:</p>
-          <p>{certificates[currentIndex].classification}</p>
-          <p style={{ fontWeight: 'bold' }}>YEAR OF GRADUATION:</p>
-          <p>{certificates[currentIndex].yearOfGraduation}</p>
-          <p style={{ fontWeight: 'bold' }}>DATE SIGNED:</p>
-          <p>{certificates[currentIndex].signedDate}</p>
+          <p style={{ fontWeight: 'bold' }}>ORGANIZATION :</p>
+          <p>{certificates[currentIndex].oganizationName}</p>
           <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
           <p style={{ borderBottom: '1px solid #000' }}>{certificates[currentIndex].receivedDoB}</p>
           <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
@@ -93,8 +102,10 @@ function SimpleDialog(props) {
 
 function BulkActions(props) {
   const [open, setOpen] = useState<boolean>(false);
+  const [openQr, setOpenQr] = useState<boolean>(false);
   const [selectedCertificates, setSelectedCertificates] = useState<Certificate[]>([]);
   const [status, setStatus] = useState<CertificateStatus>();
+  const [stringQr, setStringQr] = useState('');
 
   useEffect(() => {
     var certificates = [];
@@ -294,6 +305,10 @@ function BulkActions(props) {
     handleClickOpen(certs)
   }
 
+  function GenQrAllCertificateSelected(certs) {
+    handleClickOpenQr(certs)
+  }
+
   const handleClickOpen = (certs) => {
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
@@ -304,6 +319,26 @@ function BulkActions(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // event of Generate Qrcode
+  const handleClickOpenQr = (certs) => {
+    let temp : string = '' 
+    let certificates: Certificate[];
+
+    console.log(certs);
+    
+    Object.keys(certs).map((key) => (certificates = props[key]));
+
+    certificates.map(certificate => (temp += certificate.certificateID))
+    setStringQr(temp);
+    setOpenQr(true);
+  };
+
+  const handleCloseQr = () => {
+    setOpenQr(false);
+  };
+
+
 
   return (
     <>
@@ -335,8 +370,15 @@ function BulkActions(props) {
               onClick={() => (DeleteAllCertificateSelected(props))}
             >
               Delete
-            </ButtonError> : <></>
-            ))}
+            </ButtonError> : (!status && status != 0 ? <ButtonGen
+            sx={{ ml: 1 }}
+            startIcon={<QrCodeScannerIcon />}
+            variant="contained"
+            onClick={() => (GenQrAllCertificateSelected(props))}
+          >
+            Generate QR
+          </ButtonGen>
+            : <></>)))}
           <ButtonView
             sx={{ ml: 1 }}
             startIcon={<VisibilityIcon />}
@@ -353,6 +395,30 @@ function BulkActions(props) {
         onClose={handleClose}
         certificates={selectedCertificates}
       />
+
+      <Dialog
+        open={openQr}
+        onClose={handleCloseQr}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Your certifiates code here"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <QRCode
+              size={200}
+              bgColor="white"
+              fgColor="black"
+              value={stringQr}
+            />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseQr}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
