@@ -8,8 +8,8 @@ export default function QRCodePage() {
         size={200}
         bgColor="white"
         fgColor="black"
-        value="abc"
-      />
+        value="bcd"
+      />  
     </div>
   );
 }
