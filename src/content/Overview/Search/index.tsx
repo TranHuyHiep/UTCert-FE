@@ -2,6 +2,7 @@ import { Button, Container, Dialog, DialogContent, Grid, Input } from "@mui/mate
 import { useState } from "react";
 import { SnackbarProvider, enqueueSnackbar, useSnackbar } from 'notistack';
 import React from "react";
+import { Console } from "console";
 
 function hexToText(hexString) {
     var text = '';
@@ -13,6 +14,15 @@ function hexToText(hexString) {
     return text;
 }
 
+function textToHex(text) {
+    var result = '';
+    for (var i = 0; i < text.length; i++) {
+        var charCode = text.charCodeAt(i);
+        var hexValue = charCode.toString(16);
+        result += hexValue.padStart(2, '0');
+    }
+    return result;
+}
 
 // modal view cert
 function SimpleDialog(props) {
@@ -31,23 +41,21 @@ function SimpleDialog(props) {
         return null;
     }
 
-    console.log(certificates);
-
     return (
         <Dialog open={open} onClose={onClose} maxWidth='lg'>
             <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
                 <div>
-                    <img src={certificates.onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                    <img src={certificates[currentIndex].onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
                     <p style={{ fontWeight: 'bold' }}>Code:</p>
-                    <p>{hexToText(certificates.asset_name)}</p>
+                    <p>{hexToText(certificates[currentIndex].asset_name)}</p>
                     <p style={{ fontWeight: 'bold' }}>PolicyId:</p>
-                    <p style={{ marginTop: '0px', overflowX: 'auto', whiteSpace: 'nowrap' }}>{certificates.policy_id}</p>
+                    <p style={{ marginTop: '0px', overflowX: 'auto', whiteSpace: 'nowrap' }}>{certificates[currentIndex].policy_id}</p>
                     <p style={{ fontWeight: 'bold' }}>Received Identity:</p>
-                    <p>......</p>
+                    <p>{certificates[currentIndex].onchain_metadata.identity || '.....'}</p>
                     <p style={{ fontWeight: 'bold' }}>Received name:</p>
-                    <p>{certificates.onchain_metadata.receivedName}</p>
+                    <p>{certificates[currentIndex].onchain_metadata.receivedName}</p>
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
@@ -58,6 +66,7 @@ function SimpleDialog(props) {
         </Dialog>
     );
 }
+
 function Search() {
     return (
         <SnackbarProvider maxSnack={5}>
@@ -66,10 +75,21 @@ function Search() {
     );
 }
 
+function compareLastDigits(str, arr) {
+    var lastDigits = str.slice(-12); // Lấy 12 số cuối trong chuỗi str
+    for (var i = 0; i < arr.length; i++) {
+        var lastDigitsArr = arr[i].slice(-12); // Lấy 12 số cuối trong mỗi phần tử mảng arr
+        if (lastDigits === lastDigitsArr) {
+            return true; // Trả về true nếu có số cuối trùng nhau
+        }
+    }
+    return false; // Trả về false nếu không có số cuối trùng nhau
+}
+
 const App = () => {
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const [certificates, setCertificates] = useState('');
+    const [certificates, setCertificates] = useState([]);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -77,37 +97,82 @@ const App = () => {
         setInputValue(event.target.value);
     };
 
-    const handleClickOpen = () => {
-        const url =
-            'https://cardano-preprod.blockfrost.io/api/v0/assets/' + inputValue;
+    function decryptVigenere(ciphertext: string, key: string): string {
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_,0123456789';
+        const ciphertextUpper = ciphertext.toUpperCase();
+        const keyUpper = key.toUpperCase();
+        let plaintext = '';
+
+        for (let i = 0; i < ciphertext.length; i++) {
+            const ciphertextChar = ciphertextUpper[i];
+            const keyChar = keyUpper[i % key.length];
+
+            if (alphabet.includes(ciphertextChar)) {
+                const ciphertextIndex = alphabet.indexOf(ciphertextChar);
+                const keyIndex = alphabet.indexOf(keyChar);
+                const decryptedIndex = (ciphertextIndex - keyIndex + alphabet.length) % alphabet.length;
+                const decryptedChar = alphabet[decryptedIndex];
+                plaintext += decryptedChar;
+            } else {
+                plaintext += ciphertextChar;
+            }
+        }
+
+        return plaintext;
+    }
+
+    const handleClickOpen = async () => {
+        const temp = decryptVigenere(inputValue, 'KEYWORD').toLowerCase().split(',')
+        let asssetIds = [];
+        for (let index = 1; index < temp.length; index++) {
+            asssetIds.push(textToHex(temp[index]))
+        }
         const projectId = 'preproddZ8hPQ8b90t4TcBfnnnx7CPIJ4omEG1H';
 
-        fetch(url, {
+        // all asset of stakeId
+        await fetch('https://cardano-preprod.blockfrost.io/api/v0/accounts/' + temp[0] + '/addresses/assets', {
             headers: {
                 project_id: projectId,
             },
         })
             .then((response) => response.json())
+
             .then((data) => {
-                if (data.status_code === 400 || data.status_code === 404) {
-                    enqueueSnackbar('Not found', { variant: 'error' });
+                if (data.status_code) {
+                    enqueueSnackbar("Certificate not found!", { variant: 'error' })
                 } else {
-                    setCertificates(data);
-                    setOpen(true);
+                    let result = [];
+                    let promises = data.map(units => {
+                        if (compareLastDigits(units.unit, asssetIds)) {
+                            return fetch('https://cardano-preprod.blockfrost.io/api/v0/assets/' + units.unit, {
+                                headers: {
+                                    project_id: projectId,
+                                },
+                            })
+                                .then(response1 => response1.json());
+                        }
+                    });
+
+                    Promise.all(promises)
+                        .then(data1 => {
+                            result = data1.filter(Boolean); // Loại bỏ các giá trị null hoặc undefined từ mảng data1
+                            setCertificates(result)
+
+                            setOpen(true);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 }
             })
-            .catch((error) => {
-                console.error('Error:', error);
-                enqueueSnackbar('An error occurred', { variant: 'error' });
-            });
     };
 
     const handleClose = () => {
         setOpen(false);
     };
     return (
-      <div>
-        <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
+        <div>
+            <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
                 <h1 style={{ color: 'white' }}>YOU CAN FIND CERTS IN HERE!</h1>
                 <Grid
                     justifyContent="center"
@@ -154,9 +219,9 @@ const App = () => {
                     certificates={certificates}
                 />
             </Container>
-        <SnackbarProvider />
-      </div>
+            <SnackbarProvider />
+        </div>
     )
-  }
+}
 
 export default Search;

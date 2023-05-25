@@ -8,7 +8,8 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -19,8 +20,8 @@ import { Certificate, CertificateStatus } from '@/models/certificate';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QRCode from 'react-qr-code';
-import { createStringLiteral } from 'typescript';
-import { Certificate } from 'crypto';
+import GetCookie from '@/hooks/getCookie';
+import { log } from 'console';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -320,17 +321,48 @@ function BulkActions(props) {
     setOpen(false);
   };
 
+  // Vigenère encode
+  function encryptVigenere(plaintext: string, key: string): string {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_,0123456789';
+    const plaintextUpper = plaintext.toUpperCase();
+    const keyUpper = key.toUpperCase();
+    let ciphertext = '';
+  
+    for (let i = 0; i < plaintext.length; i++) {
+      const plaintextChar = plaintextUpper[i];
+      const keyChar = keyUpper[i % key.length];
+  
+      if (alphabet.includes(plaintextChar)) {
+        const plaintextIndex = alphabet.indexOf(plaintextChar);
+        const keyIndex = alphabet.indexOf(keyChar);
+        const encryptedIndex = (plaintextIndex + keyIndex) % alphabet.length;
+        const encryptedChar = alphabet[encryptedIndex];
+        ciphertext += encryptedChar;
+      } else {
+        ciphertext += plaintextChar;
+      }
+    }
+  
+    return ciphertext;
+  }
+  
+  
+  
+  
+  
   // event of Generate Qrcode
   const handleClickOpenQr = (certs) => {
-    let temp : string = '' 
+    let temp: string = GetCookie('stakeId')
     let certificates: Certificate[];
 
     console.log(certs);
-    
-    Object.keys(certs).map((key) => (certificates = props[key]));
 
-    certificates.map(certificate => (temp += certificate.certificateID))
+    Object.keys(certs).map((key) => (certificates = props[key]));
+    certificates.map(certificate => (temp += ',' + certificate.certificateCode))
+
+    temp = encryptVigenere(temp, 'KEYWORD')
     setStringQr(temp);
+
     setOpenQr(true);
   };
 
@@ -371,14 +403,14 @@ function BulkActions(props) {
             >
               Delete
             </ButtonError> : (!status && status != 0 ? <ButtonGen
-            sx={{ ml: 1 }}
-            startIcon={<QrCodeScannerIcon />}
-            variant="contained"
-            onClick={() => (GenQrAllCertificateSelected(props))}
-          >
-            Generate QR
-          </ButtonGen>
-            : <></>)))}
+              sx={{ ml: 1 }}
+              startIcon={<QrCodeScannerIcon />}
+              variant="contained"
+              onClick={() => (GenQrAllCertificateSelected(props))}
+            >
+              Generate QR
+            </ButtonGen>
+              : <></>)))}
           <ButtonView
             sx={{ ml: 1 }}
             startIcon={<VisibilityIcon />}
@@ -406,12 +438,22 @@ function BulkActions(props) {
           {"Your certifiates code here"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <QRCode
-              size={200}
-              bgColor="white"
-              fgColor="black"
-              value={stringQr}
+          <DialogContentText id="alert-dialog-description" style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ marginBottom: "10px" }}>
+              <QRCode
+                size={300}
+                bgColor="white"
+                fgColor="black"
+                value={stringQr}
+              />
+            </div>
+            <TextField
+              id="outlined-read-only-input"
+              label="QR Code"
+              defaultValue={stringQr}
+              InputProps={{
+                readOnly: true,
+              }}
             />
           </DialogContentText>
         </DialogContent>

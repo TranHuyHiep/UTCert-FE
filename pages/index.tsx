@@ -136,7 +136,6 @@ function Overview() {
           </Container>
         </HeaderWrapper>
         <Search></Search>
-        <QRCodePage></QRCodePage>
         <SimpleDialog
           open={open}
           onClose={handleClose}
