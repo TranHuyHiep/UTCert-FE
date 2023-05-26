@@ -6,13 +6,9 @@ import { Grid, Container, Typography } from '@mui/material';
 
 import ProfileCover from '@/content/Management/Users/details/ProfileCover';
 import RecentActivity from '@/content/Management/Users/details/RecentActivity';
-import Feed from '@/content/Management/Users/details/Feed';
-import PopularTags from '@/content/Management/Users/details/PopularTags';
-import MyCards from '@/content/Management/Users/details/MyCards';
-import Addresses from '@/content/Management/Users/details/Addresses';
+import { useEffect, useState } from 'react';
 import GetCookie from '@/hooks/getCookie';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 function ManagementUserProfile() {
   // const user = {

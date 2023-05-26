@@ -8,7 +8,6 @@ import {
   useTheme
 } from '@mui/material';
 import Link from 'src/components/Link';
-import LogoUTC from 'public/icon-256x256.png'
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
         color: ${theme.palette.text.primary};

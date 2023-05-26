@@ -400,7 +400,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     let myPromise = new Promise<void>(async function (myResolve, myReject) {
       const wallet = await BrowserWallet.enable('eternl');
       // prepare forgingScript
-      const usedAddress = await wallet.getUsedAddresses();
+      await wallet.getUsedAddresses();
       const policyId = await wallet.getPolicyIds();
       const tx = new Transaction({ initiator: wallet });
       // define asset#1 metadata

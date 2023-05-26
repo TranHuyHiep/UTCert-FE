@@ -1,9 +1,8 @@
 import { Button, Container, Dialog, DialogContent, Grid, Input } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SnackbarProvider, enqueueSnackbar, useSnackbar } from 'notistack';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import React from "react";
 import { useRouter } from "next/router";
-import { Console, log } from "console";
 
 function hexToText(hexString) {
     var text = '';
@@ -101,12 +100,12 @@ const App = () => {
 
     useEffect(() => {
         const { q } = router.query;
-
         test()
         async function test () {
             if (isInitialized) {
                 if (q) {
-                    await setInputValue(q);
+                    let temp = q.toString();
+                    await setInputValue(temp);
                     handleClickOpen(q);
                 }
             } else {

@@ -25,7 +25,6 @@ import {
   DialogContent
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Label from '@/components/Label';
 import BulkActions from './BulkActions';
 import {
   Certificate,
@@ -74,24 +73,24 @@ function SimpleDialog(props) {
 }
 
 
-const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
-  const map = {
-    '0': {
-      text: 'Draft',
-      color: 'secondary'
-    },
-    '1': {
-      text: 'Signed',
-      color: 'primary'
-    },
-    '2': {
-      text: 'Sent',
-      color: 'success'
-    }
-  };
-  const { text, color }: any = map[certificateStatus];
-  return <Label color={color}>{text}</Label>;
-};
+// const getStatusLabel = (certificateStatus: CertificateStatus): JSX.Element => {
+//   const map = {
+//     '0': {
+//       text: 'Draft',
+//       color: 'secondary'
+//     },
+//     '1': {
+//       text: 'Signed',
+//       color: 'primary'
+//     },
+//     '2': {
+//       text: 'Sent',
+//       color: 'success'
+//     }
+//   };
+//   const { text, color }: any = map[certificateStatus];
+//   return <Label color={color}>{text}</Label>;
+// };
 
 const applyFilters = (
   certificates: Certificate[],

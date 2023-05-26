@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Snackbar, Stack, Typography, styled } from '@mui/material';
+import {Button, Container, Grid, Snackbar, Stack} from '@mui/material';
 
 import { useState } from 'react';
 import { useWallet } from '@meshsdk/react';
@@ -23,7 +23,7 @@ function Hero() {
     setOpen(true);
   };
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -40,7 +40,7 @@ function Hero() {
       setLoading(true);
       const _assets = await wallet.getAssets();
       const stakeId = await wallet.getRewardAddresses();
-      const myWallet = await wallet.getUsedAddresses();
+      await wallet.getUsedAddresses();
       SetCookie('stakeId', stakeId);
       setAssets(_assets);
       setLoading(false);

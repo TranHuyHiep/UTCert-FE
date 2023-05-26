@@ -1,11 +1,11 @@
 {
-  "name": "tokyo-free-white-nextjs-admin-dashboard",
+  "name": "UTCert",
   "version": "1.0.0",
-  "title": "Tokyo Free White NextJS Typescript Admin Dashboard",
-  "description": "High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes",
+  "title": "UTCert",
+  "description": "TAMPER-PROOF CERTIFICATE BASED ON CARDANO BLOCKCHAIN",
   "author": {
-    "name": "BloomUI.com",
-    "url": "https://bloomui.com"
+    "name": "UTC",
+    "url": "https://www.utc.edu.vn/"
   },
   "private": false,
   "dependencies": {

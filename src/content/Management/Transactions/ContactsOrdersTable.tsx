@@ -77,7 +77,7 @@ const applyPagination = (
 const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
   contactOrders
 }) => {
-  const [selectedContactOrders, setSelectedContactOrders] = useState<string[]>(
+  const [selectedContactOrders] = useState<string[]>(
     []
   );
   const selectedBulkActions = selectedContactOrders.length > 0;

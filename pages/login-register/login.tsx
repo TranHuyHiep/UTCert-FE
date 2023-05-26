@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import PageTitle from '@/components/PageTitle';
-import { useState } from 'react';
 
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 import {
@@ -17,14 +16,7 @@ import Footer from '@/components/Footer';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
 function Login() {
-  const [value, setValue] = useState(30);
-
-  const handleChange2 = (_event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <>
