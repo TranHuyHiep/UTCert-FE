@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import bg from '../public/background.jpg'
 
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 import PropTypes from 'prop-types';
 import Link from 'src/components/Link';
@@ -20,6 +20,7 @@ import Head from 'next/head';
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import Search from 'src/content/Overview/Search';
+import { useRouter } from 'next/router';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -81,6 +82,7 @@ SimpleDialog.propTypes = {
 function Overview() {
 
   const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -93,16 +95,16 @@ function Overview() {
   return (
     <>
       <OverviewWrapper style={{
-      backgroundImage: `url(${bg.src})`,
-      width: '100%',
-      height: '100%',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: `url(${bg.src})`,
+        width: '100%',
+        height: '100%',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <Head>
           <title>UTCert</title>
         </Head>
-        <HeaderWrapper style={{backgroundColor: 'rgba(0, 0, 0, 20%)', boxShadow: 'none'}}>
+        <HeaderWrapper style={{ backgroundColor: 'rgba(0, 0, 0, 20%)', boxShadow: 'none' }}>
           <Container maxWidth="lg">
             <Box display="flex" alignItems="center">
               <Logo />
@@ -111,7 +113,7 @@ function Overview() {
                 alignItems="center"
                 justifyContent="space-between"
                 flex={1}
-              > 
+              >
                 <Box />
                 <Box>
                   <Button
