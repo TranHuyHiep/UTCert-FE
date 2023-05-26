@@ -361,7 +361,7 @@ function BulkActions(props) {
     certificates.map(certificate => (temp += ',' + certificate.certificateCode))
 
     temp = encryptVigenere(temp, 'KEYWORD')
-    setStringQr(temp);
+    setStringQr('http://localhost:3000/?q=' + temp);
 
     setOpenQr(true);
   };

@@ -1,8 +1,9 @@
 import { Button, Container, Dialog, DialogContent, Grid, Input } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SnackbarProvider, enqueueSnackbar, useSnackbar } from 'notistack';
 import React from "react";
-import { Console } from "console";
+import { useRouter } from "next/router";
+import { Console, log } from "console";
 
 function hexToText(hexString) {
     var text = '';
@@ -87,15 +88,35 @@ function compareLastDigits(str, arr) {
 }
 
 const App = () => {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [certificates, setCertificates] = useState([]);
-
+    const [isInitialized, setIsInitialized] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
+
+    useEffect(() => {
+        const { q } = router.query;
+
+        test()
+        async function test () {
+            if (isInitialized) {
+                if (q) {
+                    await setInputValue(q);
+                    handleClickOpen(q);
+                }
+            } else {
+                setIsInitialized(true);
+            }
+        }
+        
+        
+
+    }, [router.query, isInitialized]);
 
     function decryptVigenere(ciphertext: string, key: string): string {
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_,0123456789';
@@ -121,8 +142,13 @@ const App = () => {
         return plaintext;
     }
 
-    const handleClickOpen = async () => {
-        const temp = decryptVigenere(inputValue, 'KEYWORD').toLowerCase().split(',')
+    const handleClickOpen = async (query) => {
+        let timkiem = inputValue;
+        if(query.length) {
+            timkiem = query
+        }
+        
+        const temp = decryptVigenere(timkiem, 'KEYWORD').toLowerCase().split(',')
         let asssetIds = [];
         for (let index = 1; index < temp.length; index++) {
             asssetIds.push(textToHex(temp[index]))
