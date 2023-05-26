@@ -9,7 +9,7 @@ import {
   List,
   ListItem,
 } from '@mui/material';
-import bg from '../public/background.png'
+// import bg from '@/public/background.jpg'
 
 import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
@@ -82,7 +82,7 @@ function Overview() {
   return (
     <>
       <OverviewWrapper style={{
-        backgroundImage: `url(${bg.src})`,
+        backgroundImage: `url(https://res.cloudinary.com/dgkr0cmla/image/upload/v1685119889/background_r0uspa.jpg)`,
         width: '100%',
         height: '100%',
         backgroundSize: 'cover',

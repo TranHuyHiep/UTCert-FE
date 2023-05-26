@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import bg from '../../public/background.png'
+// import bg from '@/public/background.jpg'
 import {
   Card,
   Text,
@@ -89,7 +89,7 @@ function Register() {
   return (
     <>
       <div style={{
-        backgroundImage: `url(${bg.src})`,
+        backgroundImage: `url(https://res.cloudinary.com/dgkr0cmla/image/upload/v1685119889/background_r0uspa.jpg)`,
         width: '100%',
         height: '100%',
         backgroundSize: 'cover',
