@@ -16,9 +16,6 @@ import PropTypes from 'prop-types';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddIcon from '@mui/icons-material/Add';
 import GetCookie from '@/hooks/getCookie';
-import axios from 'axios';
-
-
 
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;

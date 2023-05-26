@@ -9,9 +9,9 @@ import {
   List,
   ListItem,
 } from '@mui/material';
-import bg from '../public/background.jpg'
+import bg from '../public/background.png'
 
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 import PropTypes from 'prop-types';
 import Link from 'src/components/Link';
@@ -20,7 +20,6 @@ import Head from 'next/head';
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import Search from 'src/content/Overview/Search';
-import { useRouter } from 'next/router';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -50,17 +49,6 @@ function SimpleDialog(props) {
     onClose(selectedValue);
   };
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    handleListItemClick('addCerts', selectedFile);
-  };
-
-  const handleListItemClick = async (destination, selectedFile) => {
-    if (destination === 'addCerts') {
-
-    }
-  };
-
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle></DialogTitle>
@@ -76,13 +64,12 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  // selectedValue: PropTypes.string.isRequireds
+  selectedValue: PropTypes.string.isRequired
 };
 
 function Overview() {
 
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);

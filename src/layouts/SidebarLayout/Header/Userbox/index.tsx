@@ -82,7 +82,7 @@ function HeaderUserbox() {
     ).then(response => {
       setUser(response.data);
       setIsLoading(false); // set isLoading to false when the response is received
-    }).catch(error => {
+    }).catch(() => {
       setIsLoading(false); // set isLoading to false when there's an error
     });
   }, []);
@@ -100,13 +100,7 @@ function HeaderUserbox() {
   const handleClose = (): void => {
     setOpen(false);
   };
-  const formatUsername = (username) => {
-    const words = username.split(" ");
-    const formattedWords = words.map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    });
-    return formattedWords.join(" ");
-  };
+  
   const truncateString = (str, maxLength) => {
     return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
   }

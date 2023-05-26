@@ -9,9 +9,6 @@ import {
   styled
 } from '@mui/material';
 
-import ShoppingBagTwoToneIcon from '@mui/icons-material/ShoppingBagTwoTone';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import StarTwoToneIcon from '@mui/icons-material/StarTwoTone';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `

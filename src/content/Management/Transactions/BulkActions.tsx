@@ -21,7 +21,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QRCode from 'react-qr-code';
 import GetCookie from '@/hooks/getCookie';
-import { log } from 'console';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -167,7 +166,7 @@ function BulkActions(props) {
       }
       const unsignedTx = await tx.build();
       const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
+      await wallet.submitTx(signedTx);
       myResolve(); // when successful
       myReject();  // when error
     });
@@ -185,7 +184,7 @@ function BulkActions(props) {
           },
           body: JSON.stringify(certificatesId)
         })
-          .then(response => {
+          .then(() => {
             // Xử lý phản hồi ở đây
             alert("Sign successful!");
           })
@@ -216,11 +215,10 @@ function BulkActions(props) {
     let certificates: Certificate[];
     Object.keys(certs).map((key) => (certificates = props[key]));
 
-    const wallet = await BrowserWallet.enable('eternl');
     let myPromise = new Promise<void>(async function (myResolve, myReject) {
       const wallet = await BrowserWallet.enable('eternl');
       // prepare forgingScript
-      const usedAddress = await wallet.getUsedAddresses();
+      await wallet.getUsedAddresses();
       const policyId = await wallet.getPolicyIds();
       const tx = new Transaction({ initiator: wallet });
       // define asset#1 metadata
@@ -241,7 +239,7 @@ function BulkActions(props) {
       }
       const unsignedTx = await tx.build();
       const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
+      await wallet.submitTx(signedTx);
       myResolve(); // when successful
       myReject();  // when error
     });

@@ -1,12 +1,10 @@
 import {
-  Button,
   Card,
   Box,
   Grid,
   Typography,
   useTheme,
   styled,
-  Avatar,
   Divider,
   alpha,
   ListItem,
@@ -21,15 +19,15 @@ import GetCookie from '@/hooks/getCookie';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const AvatarSuccess = styled(Avatar)(
-  ({ theme }) => `
-      background-color: ${theme.colors.success.main};
-      color: ${theme.palette.success.contrastText};
-      width: ${theme.spacing(8)};
-      height: ${theme.spacing(8)};
-      box-shadow: ${theme.colors.shadows.success};
-`
-);
+// const AvatarSuccess = styled(Avatar)(
+//   ({ theme }) => `
+//       background-color: ${theme.colors.success.main};
+//       color: ${theme.palette.success.contrastText};
+//       width: ${theme.spacing(8)};
+//       height: ${theme.spacing(8)};
+//       box-shadow: ${theme.colors.shadows.success};
+// `
+// );
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
   ({ theme }) => `

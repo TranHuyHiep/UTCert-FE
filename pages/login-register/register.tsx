@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import bg from '../../public/background.jpg'
+import bg from '../../public/background.png'
 import {
   Card,
   Text,
@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react';
 
 import { CardContent, Checkbox, Box, FormControlLabel, Button } from '@mui/material';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import GetCookie from '@/hooks/getCookie';
@@ -75,7 +75,7 @@ function Register() {
         formData.append('UserName', nameValue);
         formData.append('Logo', fileValue);
 
-        const response = await axios.post(url, formData);
+        await axios.post(url, formData);
         alert('Register Account Successfully!')
         window.location.href = '/dashboards/home'
       } catch (error) {

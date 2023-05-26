@@ -1,12 +1,9 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import PageHeader from '@/content/Management/Transactions/PageHeader';
-import PageTitleWrapper from '@/components/PageTitleWrapper';
-import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 
-import IssuedCertsOrders from '@/content/Management/Transactions/IssuedCertsOrders';
 import ContactOrders from '@/content/Management/Transactions/ContactOrders';
+import { Container, Grid } from '@mui/material';
 
 function ApplicationsTransactions() {
   return (
