@@ -21,6 +21,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QRCode from 'react-qr-code';
 import GetCookie from '@/hooks/getCookie';
+import { API_URL } from '@/constants/appConstants';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -185,7 +186,7 @@ function BulkActions(props) {
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign-multiple', {
+        fetch(API_URL + '/Certificate/issued/sign-multiple', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -258,7 +259,7 @@ function BulkActions(props) {
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send-multiple', {
+        fetch(API_URL + '/Certificate/issued/send-multiple', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -291,7 +292,7 @@ function BulkActions(props) {
     for (let index = 0; index < certificates.length; index++) {
       certificatesId.push(certificates[index].certificateID)
     }
-    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/delete-multiple', {
+    fetch(API_URL + '/Certificate/issued/delete-multiple', {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',

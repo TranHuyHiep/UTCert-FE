@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddIcon from '@mui/icons-material/Add';
 import GetCookie from '@/hooks/getCookie';
+import { API_CREATE_URL } from '@/constants/appConstants';
 
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
@@ -39,7 +40,7 @@ function SimpleDialog(props) {
           formData.append('UserID', GetCookie('stakeId'));
           formData.append('fileCSV', selectedFile, selectedFile.name);
           
-          const response = await fetch('https://localhost:44325/api/v1/Certificate/issuer', {
+          const response = await fetch(API_CREATE_URL + '/Certificate/issuer', {
             method: 'POST',
             body: formData,
             headers: {

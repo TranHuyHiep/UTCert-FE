@@ -27,6 +27,7 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
 import { Contact, ContactStatus } from '@/models/contact';
 import GetCookie from '@/hooks/getCookie';
+import { API_URL } from '@/constants/appConstants';
 interface ContactsOrdersTableProps {
   className?: string;
   contactOrders: Contact[];
@@ -165,7 +166,7 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
 
   function handleDelete(contactId) {
     console.log(contactId);
-    const apiUrl = 'http://tamperproofcerts.somee.com/api/v1/Contact';
+    const apiUrl = API_URL + '/Contact';
     
     fetch(apiUrl, {
       method: 'DELETE',
@@ -187,7 +188,7 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
   }
 
   function handleAccept(contactId) {
-    const apiUrl = 'http://tamperproofcerts.somee.com/api/v1/Contact/accept';
+    const apiUrl = API_URL + '/Contact/accept';
 
     fetch(apiUrl, {
       method: 'POST',

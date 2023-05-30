@@ -7,6 +7,7 @@ import SetCookie from '@/hooks/setCookie';
 import GetCookie from '@/hooks/getCookie';
 import React from 'react';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { API_URL } from '@/constants/appConstants';
 
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -45,7 +46,7 @@ function Hero() {
       setAssets(_assets);
       setLoading(false);
 
-      fetch('http://tamperproofcerts.somee.com/api/v1/Home', {
+      fetch(API_URL + '/Home', {
         method: 'POST',
         headers: {
           'Accept': '*/*',

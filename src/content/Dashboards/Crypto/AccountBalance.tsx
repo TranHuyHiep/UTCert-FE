@@ -18,6 +18,7 @@ import type { ApexOptions } from 'apexcharts';
 import GetCookie from '@/hooks/getCookie';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '@/constants/appConstants';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
   ({ theme }) => `
@@ -49,7 +50,7 @@ function AccountBalance() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {
