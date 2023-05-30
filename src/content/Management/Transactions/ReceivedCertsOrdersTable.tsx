@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Divider,
   Box,
-  FormControl,
-  InputLabel,
   Card,
   Checkbox,
   Table,
@@ -14,11 +12,8 @@ import {
   TablePagination,
   TableRow,
   TableContainer,
-  Select,
-  MenuItem,
   Typography,
   useTheme,
-  CardHeader,
   Tooltip,
   IconButton,
   Dialog,
@@ -126,41 +121,9 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
   const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-  const [filters, setFilters] = useState<Filters>({
+  const [filters] = useState<Filters>({
     status: null
   });
-
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: '2',
-      name: 'Sent'
-    },
-    {
-      id: 'pending',
-      name: 'Pending'
-    },
-    {
-      id: 'failed',
-      name: 'Failed'
-    }
-  ];
-
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
-
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
-  };
 
   const handleSelectAllCertificateOrders = (
     event: ChangeEvent<HTMLInputElement>
@@ -243,28 +206,29 @@ const ReceivedCertsOrdersTable: FC<ReceivedCertsOrdersTableProps> = ({
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={filters.status || 'all'}
-                  onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
-                >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          }
-          title="Received Certs"
-        />
+        <></>
+        // <CardHeader
+        //   action={
+        //     <Box width={150}>
+        //       <FormControl fullWidth variant="outlined">
+        //         <InputLabel>Status</InputLabel>
+        //         <Select
+        //           value={filters.status || 'all'}
+        //           onChange={handleStatusChange}
+        //           label="Status"
+        //           autoWidth
+        //         >
+        //           {statusOptions.map((statusOption) => (
+        //             <MenuItem key={statusOption.id} value={statusOption.id}>
+        //               {statusOption.name}
+        //             </MenuItem>
+        //           ))}
+        //         </Select>
+        //       </FormControl>
+        //     </Box>
+        //   }
+        //   title="Received Certs"
+        // />
       )}
       <Divider />
       <TableContainer>

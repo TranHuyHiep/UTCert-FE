@@ -81,7 +81,7 @@ function SimpleDialog(props) {
           <p style={{ fontWeight: 'bold' }}>CODE:</p>
           <p>{certificates[currentIndex].certificateCode}</p>
           <p style={{ fontWeight: 'bold' }}>ORGANIZATION :</p>
-          <p>{certificates[currentIndex].oganizationName}</p>
+          <p>{certificates[currentIndex].organizationName}</p>
           <p style={{ fontWeight: 'bold', borderBottom: '1px solid #000', paddingBottom: '5px' }}>DATE RECEIVED:</p>
           <p style={{ borderBottom: '1px solid #000' }}>{certificates[currentIndex].receivedDoB}</p>
           <p style={{ fontWeight: 'bold', marginTop: '0px' }}>RECEIVED IDENTITY:</p>
@@ -113,11 +113,20 @@ function BulkActions(props) {
     setSelectedCertificates(certificates);
     // Hành động cập nhật status ở đây
     if (certificates.length > 0) {
+      console.log(certificates)
       var temp = certificates[0].certificateStatus;
       for (let index = 1; index < certificates.length; index++) {
         if (temp != certificates[index].certificateStatus) {
           temp = 0;
           break;
+        }
+      }
+      if(temp == 2) {
+        for (let index = 0; index < certificates.length; index++) {
+          if (certificates[index].contactStatus == 1) {
+            temp = 0;
+            break;
+          }
         }
       }
       setStatus(temp);
@@ -359,7 +368,7 @@ function BulkActions(props) {
     certificates.map(certificate => (temp += ',' + certificate.certificateCode))
 
     temp = encryptVigenere(temp, 'KEYWORD')
-    setStringQr('http://localhost:3000/?q=' + temp);
+    setStringQr('https://utcert.vercel.app/?q=' + temp);
 
     setOpenQr(true);
   };

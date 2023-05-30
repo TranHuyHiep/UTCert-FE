@@ -106,10 +106,6 @@ function PageHeader() {
     setOpen(false);
   };
 
-  const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
@@ -117,7 +113,7 @@ function PageHeader() {
           Create Certificates
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, do you want issued certs?
+          Do you want issued certs?
         </Typography>
       </Grid>
       <Grid item>
