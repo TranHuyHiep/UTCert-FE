@@ -73,7 +73,7 @@ function HeaderUserbox() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.post(API_URL + '/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {
