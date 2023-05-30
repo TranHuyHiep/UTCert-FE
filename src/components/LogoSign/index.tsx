@@ -40,12 +40,13 @@ function Logo() {
     <TooltipWrapper
       title="UTCert"
       arrow
+      style={{width: logo.width/4}}
     >
       <LogoWrapper href="/">
           <Image
             src={logo.src}
-            width={logo.width}
-            height={logo.height}
+            width={logo.width/4}
+            height={logo.height/4}
             alt="Picture of the author"
           />
       </LogoWrapper>
