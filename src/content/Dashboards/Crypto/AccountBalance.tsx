@@ -18,16 +18,7 @@ import type { ApexOptions } from 'apexcharts';
 import GetCookie from '@/hooks/getCookie';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-// const AvatarSuccess = styled(Avatar)(
-//   ({ theme }) => `
-//       background-color: ${theme.colors.success.main};
-//       color: ${theme.palette.success.contrastText};
-//       width: ${theme.spacing(8)};
-//       height: ${theme.spacing(8)};
-//       box-shadow: ${theme.colors.shadows.success};
-// `
-// );
+import { API_URL } from '@/constants/appConstants';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
   ({ theme }) => `
@@ -59,7 +50,7 @@ function AccountBalance() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {

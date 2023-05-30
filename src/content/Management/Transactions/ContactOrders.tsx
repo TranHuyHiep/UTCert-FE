@@ -3,6 +3,7 @@ import { useState, useEffect  } from 'react';
 import GetCookie from '@/hooks/getCookie';
 import axios from 'axios';
 import ContactsOrdersTable from './ContactsOrdersTable';
+import { API_URL } from '@/constants/appConstants';
 
 function ContactOrders() {
   const [contacts, setContacts] = useState([]);
@@ -10,7 +11,7 @@ function ContactOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'http://tamperproofcerts.somee.com/api/v1/Contact';
+        const url = API_URL + '/Contact';
         const payload = GetCookie("stakeId");
         const headers = {
           Accept: '*/*',

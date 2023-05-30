@@ -18,7 +18,7 @@ import {
   Typography
 } from '@mui/material';
 
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
+// import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import { styled, useTheme } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
@@ -27,6 +27,8 @@ import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import axios from 'axios';
 import GetCookie from '@/hooks/getCookie';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import RemoveCookie from '@/hooks/RemoveCookie';
+import { API_URL } from '@/constants/appConstants';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -71,7 +73,7 @@ function HeaderUserbox() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {
@@ -100,9 +102,14 @@ function HeaderUserbox() {
   const handleClose = (): void => {
     setOpen(false);
   };
-  
+
   const truncateString = (str, maxLength) => {
     return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
+  }
+
+  const logout = () => {
+    RemoveCookie("stakeId");
+    window.location.href = '/';
   }
 
   return (
@@ -185,22 +192,22 @@ function HeaderUserbox() {
               <ListItemText primary="My Profile" />
             </ListItem>
           </NextLink>
-          <NextLink href="/applications/messenger" passHref>
+          {/* <NextLink href="/applications/messenger" passHref>
             <ListItem button>
               <InboxTwoToneIcon fontSize="small" />
               <ListItemText primary="Messenger" />
             </ListItem>
-          </NextLink>
-          <NextLink href="/management/profile/settings" passHref>
+          </NextLink> */}
+          <NextLink href="/management/IssuedCerts" passHref>
             <ListItem button>
               <AccountTreeTwoToneIcon fontSize="small" />
-              <ListItemText primary="Account Settings" />
+              <ListItemText primary="Manage Certs" />
             </ListItem>
           </NextLink>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth href="/">
+          <Button color="primary" fullWidth onClick={logout}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>
@@ -211,3 +218,4 @@ function HeaderUserbox() {
 }
 
 export default HeaderUserbox;
+

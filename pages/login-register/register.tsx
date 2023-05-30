@@ -20,6 +20,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { API_URL } from '@/constants/appConstants';
 
 const ButtonUploadWrapper = styled(Box)(
   ({ theme }) => `
@@ -68,7 +69,7 @@ function Register() {
     }
     if (checkbox.checked) {
       try {
-        const url = 'http://tamperproofcerts.somee.com/api/v1/Home/add-user';
+        const url = API_URL + '/Home/add-user';
 
         const formData = new FormData();
         formData.append('UserID', GetCookie('stakeId'));

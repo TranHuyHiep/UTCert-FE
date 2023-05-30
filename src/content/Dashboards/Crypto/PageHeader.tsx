@@ -3,12 +3,13 @@ import { useTheme } from '@mui/material/styles';
 import GetCookie from '@/hooks/getCookie';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '@/constants/appConstants';
 function PageHeader() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {

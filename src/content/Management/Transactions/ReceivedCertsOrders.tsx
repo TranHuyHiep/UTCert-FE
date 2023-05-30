@@ -3,6 +3,7 @@ import ReceivedCertsOrdersTable from './ReceivedCertsOrdersTable';
 import { useState, useEffect  } from 'react';
 import axios from 'axios';
 import GetCookie from '@/hooks/getCookie';
+import { API_URL } from '@/constants/appConstants';
 
 function ReceivedCertsOrders() {
   const [receivedCerts, setReceivedCerts] = useState([]);
@@ -10,7 +11,7 @@ function ReceivedCertsOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = 'http://tamperproofcerts.somee.com/api/v1/Certificate/certificate-received';
+        const url = API_URL + '/Certificate/certificate-received';
         const payload = GetCookie('stakeId');
         const headers = {
           Accept: '*/*',

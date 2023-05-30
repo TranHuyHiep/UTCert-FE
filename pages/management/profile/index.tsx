@@ -9,6 +9,7 @@ import RecentActivity from '@/content/Management/Users/details/RecentActivity';
 import { useEffect, useState } from 'react';
 import GetCookie from '@/hooks/getCookie';
 import axios from 'axios';
+import { API_URL } from '@/constants/appConstants';
 
 function ManagementUserProfile() {
   // const user = {
@@ -27,7 +28,7 @@ function ManagementUserProfile() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.post('http://tamperproofcerts.somee.com/api/v1/Home',
+    axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
         headers: {

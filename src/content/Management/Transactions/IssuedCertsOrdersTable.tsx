@@ -41,6 +41,7 @@ import BulkActions from './BulkActions';
 import BlockIcon from '@mui/icons-material/Block';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import React from 'react';
+import { API_URL } from '@/constants/appConstants';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -317,7 +318,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
       myPromise.then(
         function () {
           /* code if successful */
-          fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/sign', {
+          fetch(API_URL + '/Certificate/issued/sign', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -357,7 +358,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   }
 
   function handleBan(certificateId) {
-    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/ban', {
+    fetch(API_URL + '/Certificate/issued/ban', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -378,7 +379,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   function handleDelete(certificateId) {
     var certs = []
     certs.push(certificateId)
-    fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/delete-multiple', {
+    fetch(API_URL + '/Certificate/issued/delete-multiple', {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -429,7 +430,7 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     myPromise.then(
       function () {
         /* code if successful */
-        fetch('http://tamperproofcerts.somee.com/api/v1/Certificate/issued/send', {
+        fetch(API_URL + '/Certificate/issued/send', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
