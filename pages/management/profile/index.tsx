@@ -2,7 +2,7 @@ import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import Footer from '@/components/Footer';
 
-import { Grid, Container, Typography, Skeleton, CircularProgress } from '@mui/material';
+import { Grid, Container, Skeleton } from '@mui/material';
 
 import ProfileCover from '@/content/Management/Users/details/ProfileCover';
 import RecentActivity from '@/content/Management/Users/details/RecentActivity';
