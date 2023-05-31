@@ -10,7 +10,8 @@ import {
   ListItem,
   ListItemText,
   List,
-  ListItemAvatar
+  ListItemAvatar,
+  Skeleton
 } from '@mui/material';
 import Text from 'src/components/Text';
 import { Chart } from 'src/components/Chart';
@@ -68,7 +69,9 @@ function AccountBalance() {
   }, []);
   if (isLoading) {
     return (
-      <Typography>Loading...</Typography>
+      <>
+        <Skeleton animation="wave" variant="rectangular" width={1100} height={300} />
+      </>
     );
   }
   const theme = useTheme();
@@ -269,7 +272,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.pending}
                         </Typography>
-                        <Text color="error">{((data.pending/data.total)*100).toFixed(2)}%</Text>
+                        <Text color="error">{((data.pending / data.total) * 100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
@@ -292,7 +295,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.connected}
                         </Typography>
-                        <Text color="success">{((data.connected/data.total)*100).toFixed(2)}%</Text>
+                        <Text color="success">{((data.connected / data.total) * 100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                   </List>
@@ -354,9 +357,9 @@ function AccountBalance() {
                       />
                       <Box>
                         <Typography align="right" variant="h4" noWrap>
-                          {(data.draft+data.signed+data.sent+data.banned)}
+                          {(data.draft + data.signed + data.sent + data.banned)}
                         </Typography>
-                        <Text color="error">{((data.draft+data.signed+data.sent+data.banned)/(data.draft+data.signed+data.sent+data.banned + data.received)*100).toFixed(2)}%</Text>
+                        <Text color="error">{((data.draft + data.signed + data.sent + data.banned) / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
@@ -379,7 +382,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.received}
                         </Typography>
-                        <Text color="success">{(data.received/(data.draft+data.signed+data.sent+data.banned + data.received)*100).toFixed(2)}%</Text>
+                        <Text color="success">{(data.received / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2)}%</Text>
                       </Box>
                     </ListItem>
                   </List>

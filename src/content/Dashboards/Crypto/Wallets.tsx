@@ -6,7 +6,8 @@ import {
   Typography,
   Avatar,
   alpha,
-  styled
+  styled,
+  Skeleton
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -55,18 +56,18 @@ const AvatarWrapper = styled(Avatar)(
 //         height: 100%;
 //         color: ${theme.colors.primary.main};
 //         transition: ${theme.transitions.create(['all'])};
-        
+
 //         .MuiCardActionArea-root {
 //           height: 100%;
 //           justify-content: center;
 //           align-items: center;
 //           display: flex;
 //         }
-        
+
 //         .MuiTouchRipple-root {
 //           opacity: .2;
 //         }
-        
+
 //         &:hover {
 //           border-color: ${theme.colors.alpha.black[70]};
 //         }
@@ -98,7 +99,9 @@ function Wallets() {
 
   if (isLoading) {
     return (
-      <Typography>Loading...</Typography>
+      <>
+          <Skeleton animation="wave" variant="rectangular" width={800} height={200} />
+      </>
     );
   }
 

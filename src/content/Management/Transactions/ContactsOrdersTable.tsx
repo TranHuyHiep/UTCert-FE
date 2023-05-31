@@ -95,7 +95,6 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
     status: null
   });
   const [selectedId, setSelectedId] = useState('');
-  const [notify, setNotify] = useState({ isOpen: false, message: '', type: '', vertical: '', horizontal: '' });
   const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {

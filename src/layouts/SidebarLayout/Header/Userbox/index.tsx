@@ -14,6 +14,7 @@ import {
   ListItem,
   ListItemText,
   Popover,
+  Skeleton,
   Tooltip,
   Typography
 } from '@mui/material';
@@ -89,12 +90,6 @@ function HeaderUserbox() {
     });
   }, []);
 
-  if (isLoading) {
-    return (
-      <Typography>Loading...</Typography>
-    );
-  }
-
   const handleOpen = (): void => {
     setOpen(true);
   };
@@ -115,31 +110,37 @@ function HeaderUserbox() {
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.username} src={user.logo} />
+        {isLoading ?
+          <>
+            <Skeleton animation="wave" variant="circular" width={50} height={50} />
+            <Skeleton animation="wave" variant="rectangular" width={200} height={50} />
+          </>
+          : <Avatar variant="rounded" alt={user.username} src={user.logo} />}
         <Hidden mdDown>
-          <UserBoxText>
-            <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{truncateString(user.username, 25)}</UserBoxLabel>
-            <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
-              {user.isVerified === 1 ? (
-                <Tooltip title="Account is Verified" arrow>
-                  <IconButton
-                    sx={{
-                      '&:hover': {
-                        background: theme.colors.primary.lighter
-                      },
-                      color: theme.palette.primary.main
-                    }}
-                    color="inherit"
-                    size="small"
-                  >
-                    <VerifiedIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <div>Account isn't Verified</div>
-              )}
-            </UserBoxDescription>
-          </UserBoxText>
+          {isLoading ? <> </> :
+            <UserBoxText>
+              <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{truncateString(user.username, 25)}</UserBoxLabel>
+              <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
+                {user.isVerified === 1 ? (
+                  <Tooltip title="Account is Verified" arrow>
+                    <IconButton
+                      sx={{
+                        '&:hover': {
+                          background: theme.colors.primary.lighter
+                        },
+                        color: theme.palette.primary.main
+                      }}
+                      color="inherit"
+                      size="small"
+                    >
+                      <VerifiedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <div>Account isn't Verified</div>
+                )}
+              </UserBoxDescription>
+            </UserBoxText>}
         </Hidden>
         <Hidden smDown>
           <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
@@ -159,29 +160,33 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user.username} src={user.logo} />
+          {isLoading ? <Skeleton animation="wave" variant="circular" width={50} height={50} /> :
+            <Avatar variant="rounded" alt={user.username} src={user.logo} />}
           <UserBoxText>
-            <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{user.username}</UserBoxLabel>
-            <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
-              {user.isVerified === 1 ? (
-                <Tooltip title="Account is Verified" arrow>
-                  <IconButton
-                    sx={{
-                      '&:hover': {
-                        background: theme.colors.primary.lighter
-                      },
-                      color: theme.palette.primary.main
-                    }}
-                    color="inherit"
-                    size="small"
-                  >
-                    <VerifiedIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <div>Account isn't Verified</div>
-              )}
-            </UserBoxDescription>
+            {isLoading ? <Skeleton animation="wave" variant='rectangular' width={200} height={50} /> :
+              <>
+                <UserBoxLabel variant="body1" style={{ display: 'inline' }}>{user.username}</UserBoxLabel>
+                <UserBoxDescription variant="body2" style={{ display: 'inline' }}>
+                  {user.isVerified === 1 ? (
+                    <Tooltip title="Account is Verified" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="small"
+                      >
+                        <VerifiedIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <div>Account isn't Verified</div>
+                  )}
+                </UserBoxDescription>
+              </>}
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />

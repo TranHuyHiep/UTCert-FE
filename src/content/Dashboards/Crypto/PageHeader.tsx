@@ -1,9 +1,10 @@
-import { Typography, Avatar, Grid } from '@mui/material';
+import { Typography, Avatar, Grid, Skeleton, Card, CardHeader, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import GetCookie from '@/hooks/getCookie';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/constants/appConstants';
+import loading from '@nextui-org/react/types/loading';
 function PageHeader() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +33,12 @@ function PageHeader() {
   // render a loading message while the API is being called
   if (isLoading) {
     return (
-      <Typography>Loading...</Typography>
+      <>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 9fr' }}>
+          <Skeleton animation="wave" variant="circular" width={90} height={90} />
+          <Skeleton animation="wave" variant="rectangular" width={1000} height={90} />
+        </div>
+      </>
     );
   }
 

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import Footer from '@/components/Footer';
 
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Skeleton, CircularProgress } from '@mui/material';
 
 import ProfileCover from '@/content/Management/Users/details/ProfileCover';
 import RecentActivity from '@/content/Management/Users/details/RecentActivity';
@@ -50,7 +50,7 @@ function ManagementUserProfile() {
           let stakeId = GetCookie('stakeId');
           setUser(prevState => ({
             ...prevState,
-            stakeId 
+            stakeId
           }));
           setData(response2);
 
@@ -84,16 +84,6 @@ function ManagementUserProfile() {
 
   }, []);
 
-
-  // render a loading message while the API is being called
-  if (isLoading) {
-    return (
-      <Typography>Loading...</Typography>
-    );
-  }
-
-  console.log(user);
-
   return (
     <>
       <Head>
@@ -108,10 +98,17 @@ function ManagementUserProfile() {
           spacing={3}
         >
           <Grid item xs={12} md={8}>
-            <ProfileCover user={user} />
+            {isLoading ?
+              <>
+                <Skeleton variant="rectangular" width={800} height={500} />
+              </>
+              : <ProfileCover user={user} />}
           </Grid>
           <Grid item xs={12} md={4}>
-            <RecentActivity data={data} />
+            {isLoading ?
+              <Skeleton variant="rectangular" width={400} height={200} />
+              : <RecentActivity data={data} />}
+
           </Grid>
           {/* <Grid item xs={12} md={8}>
             <Feed />
