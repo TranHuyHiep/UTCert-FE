@@ -1,4 +1,4 @@
-import { Button, Container, Dialog, DialogContent, Grid, Input } from "@mui/material";
+import { Button, Container, Dialog, DialogContent, Grid, Input, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import React from "react";
@@ -28,6 +28,22 @@ function textToHex(text) {
 function SimpleDialog(props) {
     const { open, onClose, certificates } = props;
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [inputValue, setInputValue] = useState('');
+    const [isValid, setIsValid] = useState(true);
+
+    const handleInputChange = (event) => {
+        const inputValue = event.target.value;
+        setInputValue(inputValue);
+
+        // Kiểm tra giá trị nhập vào so với giá trị trong p tag
+        const policyId = certificates[currentIndex].policy_id;
+        if (inputValue === policyId) {
+            setIsValid(true);
+        } else {
+            setIsValid(false);
+        }
+    };
+
 
     const handlePrevClick = () => {
         setCurrentIndex((currentIndex - 1 + certificates.length) % certificates.length);
@@ -51,13 +67,21 @@ function SimpleDialog(props) {
                     <p style={{ fontWeight: 'bold' }}>Code:</p>
                     <p>{hexToText(certificates[currentIndex].asset_name)}</p>
                     <p style={{ fontWeight: 'bold' }}>PolicyId:</p>
-                    <p style={{ marginTop: '0px', overflowX: 'auto', whiteSpace: 'nowrap' }}>{certificates[currentIndex].policy_id}</p>
+                    <p style={{ marginTop: '0px', overflowX: 'auto', whiteSpace: 'nowrap', width: '300px' }}>{certificates[currentIndex].policy_id}</p>
                     <p style={{ fontWeight: 'bold' }}>Received Identity:</p>
                     <p>{certificates[currentIndex].onchain_metadata.identity || '.....'}</p>
                     <p style={{ fontWeight: 'bold' }}>Received name:</p>
                     <p>{certificates[currentIndex].onchain_metadata.receivedName}</p>
+                    <TextField
+                        id="outlined-input"
+                        label="Check PolicyId"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        error={!isValid}
+                        helperText={!isValid ? 'PolicyId is not correct!' : 'PolicyId is correct!'}
+                        style={{ gridColumn: 'span 2'}}
+                    />
                 </div>
-
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                     <Button onClick={handlePrevClick}>Prev</Button>
                     <Button onClick={handleNextClick}>Next</Button>
@@ -101,7 +125,7 @@ const App = () => {
     useEffect(() => {
         const { q } = router.query;
         test()
-        async function test () {
+        async function test() {
             if (isInitialized) {
                 if (q) {
                     let temp = q.toString();
@@ -112,8 +136,8 @@ const App = () => {
                 setIsInitialized(true);
             }
         }
-        
-        
+
+
 
     }, [router.query, isInitialized]);
 
@@ -143,10 +167,10 @@ const App = () => {
 
     const handleClickOpen = async (query) => {
         let timkiem = inputValue;
-        if(query.length) {
+        if (query.length) {
             timkiem = query
         }
-        
+
         const temp = decryptVigenere(timkiem, 'KEYWORD').toLowerCase().split(',')
         let asssetIds = [];
         for (let index = 1; index < temp.length; index++) {
