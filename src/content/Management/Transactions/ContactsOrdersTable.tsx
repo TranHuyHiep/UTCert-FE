@@ -173,9 +173,10 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
         // Xử lý dữ liệu trả về nếu cần
       })
       .catch(() => {
-        enqueueSnackbar('Delete Error!', { variant: 'error'});
+        enqueueSnackbar('Delete Error!', { variant: 'error' });
         // Xử lý lỗi nếu có
       });
+    setOpen(false);
   }
 
   function handleAccept(contactId) {

@@ -25,6 +25,10 @@ import {
   CardHeader,
   Dialog,
   DialogContent,
+  Button,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -42,6 +46,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import { AssetMetadata, ForgeScript, Mint, Transaction } from '@meshsdk/core';
 import React from 'react';
 import { API_URL } from '@/constants/appConstants';
+import { enqueueSnackbar } from 'notistack';
 interface IssuedCertsOrdersTableProps {
   className?: string;
   certificates: Certificate[];
@@ -156,6 +161,9 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   const [selectedCertifiates, setSelectedCertificates] = useState<string[]>([]);
   const [selectedCertifiate, setSelectedCertificate] = useState<Certificate>();
   const [selectedCertifiatesInformation, setSelectedCertificatesInformation] = useState<Certificate[]>([]);
+  const [selectDeleteCertificateId, setSelectDeleteCertificateId] = useState('');
+  const [openDelete, setOpenDelete] = useState(false)
+
 
   const selectedBulkActions = selectedCertifiates.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -328,19 +336,15 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
           })
             .then(() => {
               // Xử lý phản hồi ở đây
-              alert("Ký thành công!");
+              enqueueSnackbar('Sign Successful!', { variant: 'success' });
             })
-            .catch(() => {
-              // Xử lý lỗi ở đây
-              alert("Ký thất bại!")
-            });
         }
       ).catch(function () {
-        alert("Gửi thất bại!")
+        enqueueSnackbar('Sign Error!', { variant: 'error' });
       })
     }
     catch (error) {
-      alert('Loi');
+      enqueueSnackbar('Sign Error!', { variant: 'error' });
     }
 
 
@@ -358,22 +362,33 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
   }
 
   function handleBan(certificateId) {
-    fetch(API_URL + '/Certificate/issued/ban', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(certificateId)
-    })
-      .then(() => {
-        // Xử lý phản hồi ở đây
-        alert("Ban thành công!");
-      })
-      .catch(() => {
-        // Xử lý lỗi ở đây
-        alert("Ban thất bại!")
-      });
+    enqueueSnackbar('Ban Error!', { variant: 'error' });
+    console.log(certificateId)
+    // fetch(API_URL + '/Certificate/issued/ban', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(certificateId)
+    // })
+    //   .then(() => {
+    //     // Xử lý phản hồi ở đây
+    //     enqueueSnackbar('Ban Successful!', { variant: 'success' });
+    //   })
+    //   .catch(() => {
+    //     // Xử lý lỗi ở đây
+    //     enqueueSnackbar('Ban Error!', { variant: 'error' });
+    //   });
+  }
+
+  function handleSelectDelete(certificateId) {
+    setSelectDeleteCertificateId(certificateId);
+    setOpenDelete(true);
+  }
+
+  function handleCloseDelete() {
+    setOpenDelete(false);
   }
 
   function handleDelete(certificateId) {
@@ -389,12 +404,13 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
     })
       .then(() => {
         // Xử lý phản hồi ở đây
-        alert("Delete Successful!");
+        enqueueSnackbar('Delete Successful!', { variant: 'success' });
       })
       .catch(() => {
         // Xử lý lỗi ở đây
-        alert("Delete Error!")
+        enqueueSnackbar('Delete Error!', { variant: 'error' });
       });
+    setOpenDelete(false);
   }
 
   async function handleSend(certificate) {
@@ -440,16 +456,16 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         })
           .then(() => {
             // Xử lý phản hồi ở đây
-            alert("Send successful!");
+            enqueueSnackbar('Send Successful!', { variant: 'success' });
           })
           .catch(error => {
             // Xử lý lỗi ở đây
-            console.log(error);
-            alert("Send error!")
+            console.log(error)
+            enqueueSnackbar('Send Error!', { variant: 'error' });
           });
       }
     ).catch(function () {
-      alert("Send error!")
+      enqueueSnackbar('Send Error!', { variant: 'error' });
     })
 
   }
@@ -615,14 +631,14 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
                             }}
                             color="error"
                             size="small"
-                            onClick={() => handleDelete(certificate.certificateID)}
+                            onClick={() => handleSelectDelete(certificate.certificateID)}
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       </>
                     ) : (
-                      certificate.certificateStatus == 2 ? ( certificate.contactStatus == '2' ?
+                      certificate.certificateStatus == 2 ? (certificate.contactStatus == '2' ?
                         <Tooltip title="Send" arrow>
                           <IconButton
                             sx={{
@@ -698,7 +714,28 @@ const IssuedCertsOrdersTable: FC<IssuedCertsOrdersTableProps> = ({
         onClose={handleClose}
         selectedCertifiate={selectedCertifiate}
       />
-    </Card>
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure to delete this certificate?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You can't undo this operation
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete}>Disagree</Button>
+          <Button onClick={() => handleDelete(selectDeleteCertificateId)} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Card >
   );
 };
 

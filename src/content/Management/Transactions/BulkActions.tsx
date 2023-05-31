@@ -22,6 +22,7 @@ import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QRCode from 'react-qr-code';
 import GetCookie from '@/hooks/getCookie';
 import { API_URL } from '@/constants/appConstants';
+import { enqueueSnackbar } from 'notistack';
 const ButtonError = styled(Button)(
   ({ theme }) => `
      background: ${theme.colors.error.main};
@@ -107,6 +108,11 @@ function BulkActions(props) {
   const [selectedCertificates, setSelectedCertificates] = useState<Certificate[]>([]);
   const [status, setStatus] = useState<CertificateStatus>();
   const [stringQr, setStringQr] = useState('');
+  const [openDelete, setOpenDelete] = useState(false)
+
+  function handleCloseDelete() {
+    setOpenDelete(false);
+  }
 
   useEffect(() => {
     var certificates = [];
@@ -122,7 +128,7 @@ function BulkActions(props) {
           break;
         }
       }
-      if(temp == 2) {
+      if (temp == 2) {
         for (let index = 0; index < certificates.length; index++) {
           if (certificates[index].contactStatus == 1) {
             temp = 0;
@@ -196,16 +202,16 @@ function BulkActions(props) {
         })
           .then(() => {
             // Xử lý phản hồi ở đây
-            alert("Sign successful!");
+            enqueueSnackbar('Sign Successful!', { variant: 'success' });
           })
           .catch(error => {
             // Xử lý lỗi ở đây
             console.log(error);
-            alert("Sign error!")
+            enqueueSnackbar('Sign Error!', { variant: 'error' });
           });
       }
     ).catch(function () {
-      alert("Sign error!")
+      enqueueSnackbar('Sign Error!', { variant: 'error' });
     })
   }
 
@@ -269,20 +275,22 @@ function BulkActions(props) {
         })
           .then(() => {
             // Xử lý phản hồi ở đây
-            alert("Send successful!");
+            enqueueSnackbar('Send Successful!', { variant: 'success' });
           })
-          .catch(error => {
+          .catch(() => {
             // Xử lý lỗi ở đây
-            console.log(error);
-            alert("Send error!")
+            enqueueSnackbar('Send Error!', { variant: 'error' });
           });
       }
     ).catch(function () {
-      alert("Send error!")
+      enqueueSnackbar('Send Error!', { variant: 'error' });
     })
 
   }
 
+  function handleDelete() {
+    setOpenDelete(true);
+  }
 
   function DeleteAllCertificateSelected(certs) {
     var certificatesId: string[] = [];
@@ -302,12 +310,13 @@ function BulkActions(props) {
     })
       .then(() => {
         // Xử lý phản hồi ở đây
-        alert("Delete Successful!");
+        enqueueSnackbar('Delete Successful!', { variant: 'success' });
       })
       .catch(() => {
         // Xử lý lỗi ở đây
-        alert("Delete Error!")
+        enqueueSnackbar('Delete Error!', { variant: 'error' });
       });
+    setOpenDelete(false);
   }
 
   function ViewAllCertificateSelected(certs) {
@@ -335,11 +344,11 @@ function BulkActions(props) {
     const plaintextUpper = plaintext.toUpperCase();
     const keyUpper = key.toUpperCase();
     let ciphertext = '';
-  
+
     for (let i = 0; i < plaintext.length; i++) {
       const plaintextChar = plaintextUpper[i];
       const keyChar = keyUpper[i % key.length];
-  
+
       if (alphabet.includes(plaintextChar)) {
         const plaintextIndex = alphabet.indexOf(plaintextChar);
         const keyIndex = alphabet.indexOf(keyChar);
@@ -350,14 +359,14 @@ function BulkActions(props) {
         ciphertext += plaintextChar;
       }
     }
-  
+
     return ciphertext;
   }
-  
-  
-  
-  
-  
+
+
+
+
+
   // event of Generate Qrcode
   const handleClickOpenQr = (certs) => {
     let temp: string = GetCookie('stakeId')
@@ -388,14 +397,24 @@ function BulkActions(props) {
             Bulk actions:
           </Typography>
           {status == 1 ?
-            <ButtonView
-              sx={{ ml: 1 }}
-              startIcon={<EditTwoToneIcon />}
-              variant="contained"
-              onClick={() => (SignAllCertificateSelected(props))}
-            >
-              Sign
-            </ButtonView>
+            <>
+              <ButtonView
+                sx={{ ml: 1 }}
+                startIcon={<EditTwoToneIcon />}
+                variant="contained"
+                onClick={() => (SignAllCertificateSelected(props))}
+              >
+                Sign
+              </ButtonView>
+              <ButtonError
+                sx={{ ml: 1 }}
+                startIcon={<DeleteIcon />}
+                variant="contained"
+                onClick={handleDelete}
+              >
+                Delete
+              </ButtonError>
+            </>
             : (status == 2 ? <ButtonView
               sx={{ ml: 1 }}
               startIcon={<SendIcon />}
@@ -403,22 +422,16 @@ function BulkActions(props) {
               onClick={() => (SendAllCertificateSelected(props))}
             >
               Send
-            </ButtonView> : (status == 3 ? <ButtonError
-              sx={{ ml: 1 }}
-              startIcon={<DeleteIcon />}
-              variant="contained"
-              onClick={() => (DeleteAllCertificateSelected(props))}
-            >
-              Delete
-            </ButtonError> : (!status && status != 0 ? <ButtonGen
-              sx={{ ml: 1 }}
-              startIcon={<QrCodeScannerIcon />}
-              variant="contained"
-              onClick={() => (GenQrAllCertificateSelected(props))}
-            >
-              Generate QR
-            </ButtonGen>
-              : <></>)))}
+            </ButtonView> : (status == 3 ?
+              <></> : (!status && status != 0 ? <ButtonGen
+                sx={{ ml: 1 }}
+                startIcon={<QrCodeScannerIcon />}
+                variant="contained"
+                onClick={() => (GenQrAllCertificateSelected(props))}
+              >
+                Generate QR
+              </ButtonGen>
+                : <></>)))}
           <ButtonView
             sx={{ ml: 1 }}
             startIcon={<VisibilityIcon />}
@@ -467,6 +480,28 @@ function BulkActions(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseQr}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure to delete this certificate?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You can't undo this operation
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete}>Disagree</Button>
+          <Button onClick={() => DeleteAllCertificateSelected(props)} autoFocus>
+            Agree
+          </Button>
         </DialogActions>
       </Dialog>
     </>

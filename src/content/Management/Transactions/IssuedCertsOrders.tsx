@@ -4,7 +4,6 @@ import { useState, useEffect  } from 'react';
 import axios from 'axios';
 import GetCookie from '@/hooks/getCookie';
 import { API_URL } from '@/constants/appConstants';
-import { SnackbarProvider } from 'notistack';
 
 function IssuedCertsOrders() {
   const [issuedCert, setIssuedCert] = useState([]);
@@ -32,9 +31,6 @@ function IssuedCertsOrders() {
   return (
     <Card>
       <IssuedCertsOrdersTable certificates={issuedCert} />
-      <SnackbarProvider  
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        />
     </Card>
   );
 }

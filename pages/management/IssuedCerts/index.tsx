@@ -6,6 +6,7 @@ import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 
 import IssuedCertsOrders from '@/content/Management/Transactions/IssuedCertsOrders';
+import { SnackbarProvider } from 'notistack';
 
 function ApplicationsTransactions() {
   return (
@@ -29,6 +30,9 @@ function ApplicationsTransactions() {
           </Grid>
         </Grid>
       </Container>
+      <SnackbarProvider  
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        />
       <Footer />
     </>
   );

@@ -17,6 +17,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddIcon from '@mui/icons-material/Add';
 import GetCookie from '@/hooks/getCookie';
 import { API_CREATE_URL } from '@/constants/appConstants';
+import { enqueueSnackbar } from 'notistack';
 
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
@@ -49,15 +50,15 @@ function SimpleDialog(props) {
           });
       
           if (response.ok) {
-            console.log('File uploaded successfully');
+            enqueueSnackbar('File uploaded successfully!', { variant: 'success' });
           } else {
-            console.error('Error uploading file');
+            enqueueSnackbar('Error uploading file!', { variant: 'error'});
           }
         } catch (error) {
-          console.error('Error uploading file', error);
+          enqueueSnackbar('Error uploading file!', { variant: 'error'});
         }
       } else {
-        console.error('No file selected');
+        enqueueSnackbar('Error uploading file!', { variant: 'error'});
       }
     }
   };
