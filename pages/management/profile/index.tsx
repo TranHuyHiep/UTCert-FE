@@ -12,22 +12,12 @@ import axios from 'axios';
 import { API_URL } from '@/constants/appConstants';
 
 function ManagementUserProfile() {
-  // const user = {
-  //   savedCards: 7,
-  //   name: 'Catherine Pike',
-  //   coverImg: '/static/images/placeholders/covers/5.jpg',
-  //   avatar: '/static/images/avatars/4.jpg',
-  //   description:
-  //     "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage",
-  //   jobtitle: 'Web Developer',
-  //   location: 'Barcelona, Spain',
-  //   followers: '465'
-  // };
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    
     axios.post(API_URL + '/Home',
       GetCookie("stakeId"),
       {
@@ -62,12 +52,14 @@ function ManagementUserProfile() {
           })
             .then(response3 => response3.json())
             .then(response3 => {
-              console.log(response3[0]);
-              let address = response3[0]["address"];
-              setUser(prevState => ({
-                ...prevState,
-                address
-              }));
+              if (!response3.status_code) {
+                console.log(response3[0]);
+                let address = response3[0]["address"];
+                setUser(prevState => ({
+                  ...prevState,
+                  address
+                }));
+              }
               setIsLoading(false); // set isLoading to false when the response is received
             })
             .catch(error => {

@@ -13,6 +13,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
+import { BrowserWallet } from '@meshsdk/core';
+import { useState } from 'react';
 
 const Input = styled('input')({
   display: 'none'
@@ -77,6 +79,14 @@ const CardCoverAction = styled(Box)(
 );
 
 const ProfileCover = ({ user }) => {
+  const [address, setAddress] = useState('');
+  async function getAddress() {
+    const wallet = await BrowserWallet.enable('eternl');
+    const unusedAddresses = await wallet.getUnusedAddresses();
+    setAddress(unusedAddresses[0])
+  }
+  getAddress();
+  
   return (
     <>
       <CardCover>
@@ -128,7 +138,7 @@ const ProfileCover = ({ user }) => {
         <Typography gutterBottom variant="h5" style={{paddingTop: '10px'}}>
           Your address:
         </Typography>
-        <Typography variant="subtitle2">{user.address}</Typography>
+        <Typography variant="subtitle2">{user.address ? user.address : address}</Typography>
         <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
           {/* {user.jobtitle} | {user.location} | {user.followers} followers */}
         </Typography>

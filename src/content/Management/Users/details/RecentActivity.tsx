@@ -41,8 +41,10 @@ function RecentActivity({ data }) {
               >
                 Total tAda
               </Typography>
+              {data.controlled_amount ? 
               <Typography variant="h2">{Number(data.controlled_amount.toString().substring(0, data.controlled_amount.toString().length - 6)).toLocaleString()}</Typography>
-            </Box>
+              : <Typography variant="h2">0</Typography>}
+              </Box>
           </Box>
         </Box>
       </Box>

@@ -104,7 +104,6 @@ function Overview() {
                 <Box />
                 <Box>
                   <Button
-                    sx={{ mt: { xs: 2, md: 0 } }}
                     variant="contained"
                     onClick={handleClickOpen}
                   >
@@ -123,7 +122,7 @@ function Overview() {
             </Box>
           </Container>
         </HeaderWrapper>
-        <Search></Search>
+        <Search />
         <SimpleDialog
           open={open}
           onClose={handleClose}

@@ -272,7 +272,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.pending}
                         </Typography>
-                        <Text color="error">{((data.pending / data.total) * 100).toFixed(2)}%</Text>
+                        <Text color="error">{data.total != 0 ? ((data.pending / data.total) * 100).toFixed(2) : 0}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
@@ -295,7 +295,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.connected}
                         </Typography>
-                        <Text color="success">{((data.connected / data.total) * 100).toFixed(2)}%</Text>
+                        <Text color="success">{ data.total != 0 ? ((data.connected / data.total) * 100).toFixed(2) : 0}%</Text>
                       </Box>
                     </ListItem>
                   </List>
@@ -359,7 +359,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {(data.draft + data.signed + data.sent + data.banned)}
                         </Typography>
-                        <Text color="error">{((data.draft + data.signed + data.sent + data.banned) / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2)}%</Text>
+                        <Text color="error">{ data.total != 0 ? ((data.draft + data.signed + data.sent + data.banned) / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2) : 0}%</Text>
                       </Box>
                     </ListItem>
                     <ListItem disableGutters>
@@ -382,7 +382,7 @@ function AccountBalance() {
                         <Typography align="right" variant="h4" noWrap>
                           {data.received}
                         </Typography>
-                        <Text color="success">{(data.received / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2)}%</Text>
+                        <Text color="success">{data.total != 0 ? (data.received / (data.draft + data.signed + data.sent + data.banned + data.received) * 100).toFixed(2) : 0}%</Text>
                       </Box>
                     </ListItem>
                   </List>

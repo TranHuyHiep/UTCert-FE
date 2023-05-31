@@ -59,15 +59,15 @@ function SimpleDialog(props) {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth='lg'>
-            <DialogContent style={{ display: 'grid', gridTemplateColumns: '6fr 4fr', alignItems: 'center' }}>
+            <DialogContent style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', alignItems: 'center' }}>
                 <div>
-                    <img src={certificates[currentIndex].onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")} alt="Ảnh" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                    <img src={certificates[currentIndex].onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")} alt="Ảnh" style={{ minWidth: "100%", minHeight: "100%" }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
                     <p style={{ fontWeight: 'bold' }}>Code:</p>
                     <p>{hexToText(certificates[currentIndex].asset_name)}</p>
                     <p style={{ fontWeight: 'bold' }}>PolicyId:</p>
-                    <p style={{ marginTop: '0px', overflowX: 'auto', whiteSpace: 'nowrap', width: '300px' }}>{certificates[currentIndex].policy_id}</p>
+                    <p>{certificates[currentIndex].policy_id.substring(0, 5) + '.....' + certificates[currentIndex].policy_id.substring(certificates[currentIndex].policy_id.length - 10)}</p>
                     <p style={{ fontWeight: 'bold' }}>Received Identity:</p>
                     <p>{certificates[currentIndex].onchain_metadata.identity || '.....'}</p>
                     <p style={{ fontWeight: 'bold' }}>Received name:</p>
@@ -80,6 +80,7 @@ function SimpleDialog(props) {
                         error={!isValid}
                         helperText={!isValid ? 'PolicyId is not correct!' : 'PolicyId is correct!'}
                         style={{ gridColumn: 'span 2'}}
+                        color='success'
                     />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
@@ -231,7 +232,7 @@ const App = () => {
                         background: 'rgba(255, 255, 255, 0.2)',
                         padding: '30px',
                         marginTop: '10px',
-                        width: '800px',
+                        width: '90%',
                         margin: '0 auto',
                     }}
                 >
@@ -241,7 +242,7 @@ const App = () => {
                         placeholder="Certificate URL"
                         type="text"
                         style={{
-                            width: '550px',
+                            width: '80%',
                             fontSize: '20px',
                             backgroundColor: 'white',
                             height: '40px',
