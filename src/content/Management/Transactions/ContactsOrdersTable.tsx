@@ -18,7 +18,13 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
 
 import Label from '@/components/Label';
@@ -28,6 +34,7 @@ import BulkActions from './BulkActions';
 import { Contact, ContactStatus } from '@/models/contact';
 import GetCookie from '@/hooks/getCookie';
 import { API_URL } from '@/constants/appConstants';
+import { enqueueSnackbar } from 'notistack';
 interface ContactsOrdersTableProps {
   className?: string;
   contactOrders: Contact[];
@@ -58,7 +65,7 @@ const applyFilters = (
 ): Contact[] => {
   return contactOrders.filter((contactOrder) => {
     let matches = true;
-    
+
     if (filters.status && contactOrder.contactStatus != filters.status) {
       matches = false;
     }
@@ -87,6 +94,18 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
+  const [selectedId, setSelectedId] = useState('');
+  const [notify, setNotify] = useState({ isOpen: false, message: '', type: '', vertical: '', horizontal: '' });
+  const [open, setOpen] = useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   const statusOptions = [
     {
@@ -116,32 +135,6 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
     }));
   };
 
-  // const handleSelectAllContactOrders = (
-  //   event: ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   setSelectedContactOrders(
-  //     event.target.checked
-  //       ? contactOrders.map((contactOrder) => contactOrder.contactID)
-  //       : []
-  //   );
-  // };
-
-  // const handleSelectOneContactOrder = (
-  //   _event: ChangeEvent<HTMLInputElement>,
-  //   contactOrderId: string
-  // ): void => {
-  //   if (!selectedContactOrders.includes(contactOrderId)) {
-  //     setSelectedContactOrders((prevSelected) => [
-  //       ...prevSelected,
-  //       contactOrderId
-  //     ]);
-  //   } else {
-  //     setSelectedContactOrders((prevSelected) =>
-  //       prevSelected.filter((id) => id !== contactOrderId)
-  //     );
-  //   }
-  // };
-
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
   };
@@ -151,23 +144,22 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
   };
 
   const filteredContactOrders = applyFilters(contactOrders, filters);
-  
+
   const paginatedContactOrders = applyPagination(
     filteredContactOrders,
     page,
     limit
   );
-  // const selectedSomeContactOrders =
-  //   selectedContactOrders.length > 0 &&
-  //   selectedContactOrders.length < contactOrders.length;
-  // const selectedAllContactOrders =
-  //   selectedContactOrders.length === contactOrders.length;
   const theme = useTheme();
 
+  function handleSelectDelete(contactId) {
+    setSelectedId(contactId);
+    handleClickOpen();
+  }
+
   function handleDelete(contactId) {
-    console.log(contactId);
     const apiUrl = API_URL + '/Contact';
-    
+
     fetch(apiUrl, {
       method: 'DELETE',
       headers: {
@@ -178,11 +170,11 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
     })
       .then(response => response.json())
       .then(() => {
-        alert("Delete Successful!")
+        enqueueSnackbar('Delete Successful!', { variant: 'success' });
         // Xử lý dữ liệu trả về nếu cần
       })
       .catch(() => {
-        alert("Delete Error!")
+        enqueueSnackbar('Delete Error!', { variant: 'error'});
         // Xử lý lỗi nếu có
       });
   }
@@ -200,12 +192,11 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
     })
       .then(response => response.json())
       .then(() => {
-        alert("Accept Successful!")
+        enqueueSnackbar('Accept Successful!', { variant: 'success' });
         // Xử lý dữ liệu trả về nếu cần
       })
       .catch(() => {
-        alert("Accept Error!")
-        // Xử lý lỗi nếu có
+        enqueueSnackbar('Accept Fail!', { variant: 'error' });
       });
   }
 
@@ -333,7 +324,7 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
                         }}
                         color="inherit"
                         size="small"
-                        onClick={() => handleDelete(contactOrder.contactID)}
+                        onClick={() => handleSelectDelete(contactOrder.contactID)}
                       >
                         <DeleteTwoToneIcon fontSize="medium" />
                       </IconButton>
@@ -356,16 +347,29 @@ const ContactsOrdersTable: FC<ContactsOrdersTableProps> = ({
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure to delete friend?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You can't undo this operation
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={() => handleDelete(selectedId)} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };
-
-// ReceivedCertsOrdersTable.propTypes = {
-//   cryptoOrders: PropTypes.array.isRequired
-// };
-
-// ReceivedCertsOrdersTable.defaultProps = {
-//   cryptoOrders: []
-// };
 
 export default ContactsOrdersTable;
