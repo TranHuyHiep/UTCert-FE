@@ -71,7 +71,7 @@ function SimpleDialog(props) {
                         }}
                     />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'Background' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'white' }}>
                     <p style={{ fontWeight: 'bold' }}>Code:</p>
                     <p>{hexToText(certificates[currentIndex].asset_name)}</p>
                     <p style={{ fontWeight: 'bold' }}>AssetId:</p>
