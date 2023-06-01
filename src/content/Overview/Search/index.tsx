@@ -60,71 +60,108 @@ function SimpleDialog(props) {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth='lg'>
-            <DialogContent style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', alignItems: 'center' }}>
-                <div>
-                    <img
-                        src={certificates[currentIndex].onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")}
-                        alt="Ảnh"
-                        style={{
-                            width: "70vh",
-                            height: "100%",
-                        }}
-                    />
+            <DialogContent >
+                <div className="container">
+                    <div className="image-container">
+                        <img className="image-show"
+                            src={certificates[currentIndex].onchain_metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                            alt="Ảnh"
+                        />
+                    </div>
+                    <div className="content-container" style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'white' }}>
+                        <p style={{ fontWeight: 'bold' }}>Code:</p>
+                        <p>{hexToText(certificates[currentIndex].asset_name)}</p>
+                        <p style={{ fontWeight: 'bold' }}>AssetId:</p>
+                        <a
+                            href={`https://preprod.cexplorer.io/asset/${certificates[currentIndex].asset}`}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                textDecoration: 'none',
+                                color: 'black',
+                            }}
+                            target="_blank" rel="noopener noreferrer"
+                        >
+                            <span style={{ marginRight: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {certificates[currentIndex].asset.substring(0, 7) + '.....' + certificates[currentIndex].asset.substring(certificates[currentIndex].asset.length - 5)}
+                            </span>
+                            <ChevronRight style={{ fontSize: '20px' }} />
+                        </a>
+                        <p style={{ fontWeight: 'bold' }}>PolicyId:</p>
+                        <a
+                            href={`https://preprod.cexplorer.io/policy/${certificates[currentIndex].policy_id}`}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                textDecoration: 'none',
+                                color: 'black',
+                            }}
+                            target="_blank" rel="noopener noreferrer"
+                        >
+                            <span style={{ marginRight: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {certificates[currentIndex].policy_id.substring(0, 7) + '.....' + certificates[currentIndex].policy_id.substring(certificates[currentIndex].policy_id.length - 5)}
+                            </span>
+                            <ChevronRight style={{ fontSize: '20px' }} />
+                        </a>
+                        <p style={{ fontWeight: 'bold' }}>Received Identity:</p>
+                        <p>{certificates[currentIndex].onchain_metadata.identity || '.....'}</p>
+                        <p style={{ fontWeight: 'bold' }}>Received name:</p>
+                        <p>{certificates[currentIndex].onchain_metadata.receivedName}</p>
+                        <TextField
+                            id="outlined-input"
+                            label="Check PolicyId"
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            error={!isValid}
+                            helperText={!isValid ? 'PolicyId is not correct!' : 'PolicyId is correct!'}
+                            style={{ gridColumn: 'span 2' }}
+                            color='success'
+                        />
+                    </div>
+                    <div className="button-container" style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+                        <Button onClick={handlePrevClick}>Prev</Button>
+                        <Button onClick={handleNextClick}>Next</Button>
+                    </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr', marginLeft: '30px', fontSize: '15px', gap: '5px', backgroundColor: 'white' }}>
-                    <p style={{ fontWeight: 'bold' }}>Code:</p>
-                    <p>{hexToText(certificates[currentIndex].asset_name)}</p>
-                    <p style={{ fontWeight: 'bold' }}>AssetId:</p>
-                    <a
-                        href={`https://preprod.cexplorer.io/asset/${certificates[currentIndex].asset}`}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            textDecoration: 'none',
-                            color: 'black',
-                        }}
-                        target="_blank" rel="noopener noreferrer"
-                    >
-                        <span style={{ marginRight: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {certificates[currentIndex].asset.substring(0, 7) + '.....' + certificates[currentIndex].asset.substring(certificates[currentIndex].asset.length - 5)}
-                        </span>
-                        <ChevronRight style={{ fontSize: '20px' }} />
-                    </a>
-                    <p style={{ fontWeight: 'bold' }}>PolicyId:</p>
-                    <a
-                        href={`https://preprod.cexplorer.io/policy/${certificates[currentIndex].policy_id}`}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            textDecoration: 'none',
-                            color: 'black',
-                        }}
-                        target="_blank" rel="noopener noreferrer"
-                    >
-                        <span style={{ marginRight: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {certificates[currentIndex].policy_id.substring(0, 7) + '.....' + certificates[currentIndex].policy_id.substring(certificates[currentIndex].policy_id.length - 5)}
-                        </span>
-                        <ChevronRight style={{ fontSize: '20px' }} />
-                    </a>
-                    <p style={{ fontWeight: 'bold' }}>Received Identity:</p>
-                    <p>{certificates[currentIndex].onchain_metadata.identity || '.....'}</p>
-                    <p style={{ fontWeight: 'bold' }}>Received name:</p>
-                    <p>{certificates[currentIndex].onchain_metadata.receivedName}</p>
-                    <TextField
-                        id="outlined-input"
-                        label="Check PolicyId"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        error={!isValid}
-                        helperText={!isValid ? 'PolicyId is not correct!' : 'PolicyId is correct!'}
-                        style={{ gridColumn: 'span 2' }}
-                        color='success'
-                    />
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-                    <Button onClick={handlePrevClick}>Prev</Button>
-                    <Button onClick={handleNextClick}>Next</Button>
-                </div>
+                <style jsx>
+                    {`
+                    .container {
+                        display: grid;
+                        grid-template-columns: 7fr 3fr;
+                        align-items: center;
+                      }
+              
+                      .content-container {
+                        margin-left: 30px;
+                        font-size: 15px;
+                        gap: 5px;
+                        background-color: white;
+                      }
+              
+                      .button-container {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 10px;
+                      }
+
+                      .image-show {
+                        width: 90vh; /* Điều chỉnh chiều rộng cho màn hình điện thoại */
+                        height: 100%; /* Đặt chiều cao tự động */
+                    }
+
+                    /* Responsive styles */
+                    @media (max-width: 768px) {
+                        .container {
+                            grid-template-columns: 1fr; /* Chuyển sang hiển thị dạng hàng dọc */
+                        }
+
+                        .image-show {
+                            width: 40vh; /* Điều chỉnh chiều rộng cho màn hình điện thoại */
+                            height: 100%; /* Đặt chiều cao tự động */
+                        }
+                    }
+                    `}
+                </style>
             </DialogContent>
         </Dialog>
     );
