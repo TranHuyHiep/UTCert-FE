@@ -143,7 +143,7 @@ function Wallets() {
                   {data.draft}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  {data.total != 0 ? (data.draft / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
+                  {(data.draft + data.signed + data.sent + data.banned) != 0 ? (data.draft / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
                 </Typography>
               </Box>
             </CardContent>
@@ -174,7 +174,7 @@ function Wallets() {
                   {data.signed}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  {data.total != 0 ? (data.signed / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
+                  {(data.draft + data.signed + data.sent + data.banned) != 0 ? (data.signed / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
                 </Typography>
               </Box>
             </CardContent>
@@ -205,7 +205,7 @@ function Wallets() {
                   {data.sent}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  {data.total != 0 ? (data.sent / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
+                  {(data.draft + data.signed + data.sent + data.banned) != 0 ? (data.sent / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
                 </Typography>
               </Box>
             </CardContent>
@@ -236,7 +236,7 @@ function Wallets() {
                   {data.banned}
                 </Typography>
                 <Typography variant="subtitle2" noWrap>
-                  {data.total != 0 ? (data.banned / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
+                  {(data.draft + data.signed + data.sent + data.banned) != 0 ? (data.banned / (data.draft + data.signed + data.sent + data.banned) * 100).toFixed(2) : 0}%
                 </Typography>
               </Box>
             </CardContent>
