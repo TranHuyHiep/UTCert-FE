@@ -20,10 +20,12 @@ import { API_CREATE_URL } from '@/constants/appConstants';
 import { enqueueSnackbar } from 'notistack';
 
 function SimpleDialog(props) {
-  const { onClose, selectedValue, open } = props;
+  const { open } = props;
+  const [isOpen, setIsOpen] = useState(open);
 
   const handleClose = () => {
-    onClose(selectedValue);
+    console.log(isOpen);
+    setIsOpen(false);
   };
 
   const handleFileChange = (event) => {
@@ -34,8 +36,6 @@ function SimpleDialog(props) {
   const handleListItemClick = async (destination, selectedFile) => {
     if (destination === 'addCerts') {
       if (selectedFile) {
-        console.log(selectedFile);
-
         try {
           const formData = new FormData();
           formData.append('UserID', GetCookie('stakeId'));
@@ -51,14 +51,18 @@ function SimpleDialog(props) {
       
           if (response.ok) {
             enqueueSnackbar('File uploaded successfully!', { variant: 'success' });
+            handleClose();
           } else {
             enqueueSnackbar('Error uploading file!', { variant: 'error'});
+            handleClose();
           }
         } catch (error) {
           enqueueSnackbar('Error uploading file!', { variant: 'error'});
+          handleClose();
         }
       } else {
         enqueueSnackbar('Error uploading file!', { variant: 'error'});
+        handleClose();
       }
     }
   };
