@@ -20,12 +20,10 @@ import { API_CREATE_URL } from '@/constants/appConstants';
 import { enqueueSnackbar } from 'notistack';
 
 function SimpleDialog(props) {
-  const { open } = props;
-  const [isOpen, setIsOpen] = useState(open);
+  const { onClose, open } = props;
 
   const handleClose = () => {
-    console.log(isOpen);
-    setIsOpen(false);
+    onClose(); // Call the onClose function provided in the props
   };
 
   const handleFileChange = (event) => {
