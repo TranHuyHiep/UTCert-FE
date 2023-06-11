@@ -5,29 +5,25 @@ import styles from "styles/Features.module.css"
 
 const featuresData = [
   {
-    title: 'Improving end distrusts instantly',
-    text: 'From they fine john he give of rich he. They age and draw mrs like. Improving end distrusts may instantly was household applauded.',
+    title: 'Issuer',
+    text: 'The organization that create digital certificate and issues it to the holder. Simple, secure creating certificate, reduce cost and time.',
   },
   {
-    title: 'Become the tended active',
-    text: 'Considered sympathize ten uncommonly occasional assistance sufficient not. Letter of on become he tended active enable to.',
+    title: 'Holder',
+    text: 'A user who receives the digital certificates. Easily manage certificates and attach them to profile or CV.',
   },
   {
-    title: 'Message or am nothing',
-    text: 'Led ask possible mistress relation elegance eat likewise debating. By message or am nothing amongst chiefly address.',
-  },
-  {
-    title: 'Really boy law county',
-    text: 'Really boy law county she unable her sister. Feet you off its like like six. Among sex are leave law built now. In built table in an rapid blush..',
-  },
+    title: 'Verifier',
+    text: `A party that checks if the certificates are authentic. Quickly validate candidate's certificates.`,
+  }
 ];
 
 const Features = () => {
   return (
     <div className={`${styles.utcert__features} ${styles.section__padding}`} id="features">
       <div className={styles.utcert__featuresHeading}>
-        <h1 className={styles.gradient__text}>The Future is Now and You Just Need to Realize It. Step into Future Today. & Make it Happen.</h1>
-        <p>Request Early Access to Get Started</p>
+        <h1 className={styles.gradient__text}>Driving collaboration, efficiency, and impact through three key roles.</h1>
+        <p>Everything at one.</p>
       </div>
       <div className={styles.utcert__featuresContainer}>
         {featuresData.map((item, index) => (

@@ -1,0 +1,144 @@
+.utcert__blog {
+    display: flex;
+    flex-direction: column;
+}
+
+.utcert__blogHeading {
+    width: 100%;
+    text-align: left;
+
+    margin-bottom: 5rem;
+}
+
+.utcert__blogHeading h1 {
+    font-size: 62px;
+    line-height: 75px;
+    font-family: var(--font-family);
+    font-weight: 800;
+}
+
+.utcert__blogContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.utcert__blogContainer_groupA {
+    flex: 0.75;
+    margin-right: 2rem;
+}
+
+.utcert__blogContainer_groupB {
+    flex: 1;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2rem;
+}
+
+@media screen and (max-width: 990px) {
+    .utcert__blogContainer {
+        flex-direction: column-reverse;
+    }
+
+
+    .utcert__blogContainer_groupA {
+        margin: 2rem 0;
+    }
+
+    .utcert__blogContainer_groupA .utcert__blogContainer_article {
+        width: 48%;
+    }
+
+    .utcert__blogContainer_groupA .utcert__blogContainer_articleImage {
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .utcert__blogContainer_groupB {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .utcert__blogContainer_groupA .utcert__blogContainer_article {
+        width: 100%;
+    }
+
+    .utcert__blogHeading h1 {
+        font-size: 46px;
+        line-height: 52px;
+    }
+}
+
+
+.gradient__text {
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section__padding {
+    padding: 4rem 6rem;
+}
+
+.section__margin {
+    margin: 4rem 6rem;
+}
+
+.scale-up-center {
+    -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+
+@-webkit-keyframes scale-up-center {
+    0% {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes scale-up-center {
+    0% {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .section__padding {
+        padding: 4rem;
+    }
+
+    .section__margin {
+        margin: 4rem;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section__padding {
+        padding: 4rem 2rem;
+    }
+
+    .section__margin {
+        margin: 4rem 2rem;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .utcert__blogHeading h1 {
+        font-size: 34px;
+        line-height: 42px;
+    }
+
+}

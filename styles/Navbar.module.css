@@ -49,8 +49,8 @@
     cursor: pointer;
 }
 
-.utcert__navbarSign button,
-.utcert__navbarMenu_container button {
+.utcert__navbarSign a,
+.utcert__navbarMenu_container a {
     padding: 0.5rem 1rem;
     color: #fff;
     background: #FF4820;
@@ -97,7 +97,7 @@
     margin: 1rem 0;
 }
 
-.utcert__navbarMenu_container-links-sign {
+.utcert__navbarMenu_containerLinksSign {
     display: none;
 }
 
@@ -130,7 +130,7 @@
         top: 20px;
     }
 
-    .utcert__navbarMenu_container-links-sign {
+    .utcert__navbarMenu_containerLinksSign {
         display: block;
     }
 }
