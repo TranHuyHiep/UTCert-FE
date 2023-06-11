@@ -1,0 +1,136 @@
+.utcert__navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 2rem 6rem;
+}
+
+.utcert__navbarLinks {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.utcert__navbarLinks_logo {
+    margin-right: 2rem;
+}
+
+.utcert__navbarLinks_logo img {
+    /* width: 62.56px;
+    height: 16.02px; */
+    width: 100px;
+    height: auto;
+}
+
+.utcert__navbarLinks_container {
+    display: flex;
+    flex-direction: row;
+}
+
+.utcert__navbarSign {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.utcert__navbarLinks_container p,
+.utcert__navbarSign p,
+.utcert__navbarMenu_container p {
+    color: #fff;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    text-transform: capitalize;
+
+    margin: 0 1rem;
+    cursor: pointer;
+}
+
+.utcert__navbarSign a,
+.utcert__navbarMenu_container a {
+    padding: 0.5rem 1rem;
+    color: #fff;
+    background: #FF4820;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.utcert__navbarMenu {
+    margin-left: 1rem;
+
+    display: none;
+    position: relative;
+}
+
+.utcert__navbarMenu svg {
+    cursor: pointer;
+}
+
+.utcert__navbarMenu_container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+    
+    text-align: end;
+    background: var(--color-footer);
+    padding: 2rem;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    margin-top: 1rem;
+    min-width: 210px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0,0, 0,0.2);
+}
+
+.utcert__navbarMenu_container p {
+    margin: 1rem 0;
+}
+
+.utcert__navbarMenu_containerLinksSign {
+    display: none;
+}
+
+@media screen and (max-width: 1050px) {
+    .utcert__navbarLinks_container {
+        display: none;
+    }
+
+    .utcert__navbarMenu {
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .utcert__navbar {
+        padding: 2rem 4rem;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .utcert__navbar {
+        padding: 2rem;
+    }
+
+    .utcert__navbarSign {
+        display: none;
+    }
+
+    .utcert__navbarMenu_container {
+        top: 20px;
+    }
+
+    .utcert__navbarMenu_containerLinksSign {
+        display: block;
+    }
+}
