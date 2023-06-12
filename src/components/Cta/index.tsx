@@ -9,7 +9,7 @@ const Cta = () => {
         <h3>Register Today & start exploring the endless possibilities.</h3>
       </div>
       <div className={styles.utcert__ctaBtn}>
-        <button type="button">Get Started</button>
+        <a href='https://cardano.org/'>Get Started</a>
       </div>
     </div>
   )
