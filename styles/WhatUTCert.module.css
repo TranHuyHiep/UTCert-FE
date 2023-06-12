@@ -51,7 +51,7 @@
     line-height: 45px;
     font-weight: 800;
     font-family: var(--font-family);
-    max-width: 510px;
+    max-width: 50%;
 }
 
 .utcert__whatutcertHeading p {
@@ -72,7 +72,7 @@
 }
 
 /* Customizing feature component as per needs */
-.utcert__whatutcertContainer .utcert__featuresContainer__feature {
+.utcert__whatutcertContainer div {
     flex: 1;
     margin: 1rem;
     min-width: 210px;

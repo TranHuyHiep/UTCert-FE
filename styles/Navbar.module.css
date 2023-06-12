@@ -49,6 +49,16 @@
     cursor: pointer;
 }
 
+.utcert__navbarSign p:hover {
+    color: burlywood;
+}
+
+.utcert__navbarSign a:hover {
+    background-color: white;
+    color: black;
+}
+
+
 .utcert__navbarSign a,
 .utcert__navbarMenu_container a {
     padding: 0.5rem 1rem;
@@ -128,6 +138,10 @@
 
     .utcert__navbarMenu_container {
         top: 20px;
+    }
+
+    .utcert__navbarMenu_containerLinks a {
+        background: none;
     }
 
     .utcert__navbarMenu_containerLinksSign {
