@@ -6,6 +6,7 @@ import Header from "@/containers/Header";
 import WhatUTCert from "@/containers/WhatUTCert";
 import styles from "../styles/Overview.module.css";
 import Features from "@/containers/Features";
+import AboutUs from "@/components/AboutUs";
 
 function Overview() {
     return (
@@ -19,6 +20,7 @@ function Overview() {
                 <WhatUTCert />
                 <Features />
                 <Cta />
+                <AboutUs />
                 <Footer />
             </div>
         </>
