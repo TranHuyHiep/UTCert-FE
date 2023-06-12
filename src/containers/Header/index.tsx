@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from "styles/Header.module.css"
-import people from "@/public/assets/people.png";
 import ai from "@/public/assets/ai.png";
 import { ChevronRight } from '@mui/icons-material';
 import { Dialog, DialogContent, TextField, Button } from '@mui/material';
@@ -312,10 +311,10 @@ const Search = () => {
             <button type="button" onClick={handleClickOpen}>Verify</button>
           </div>
 
-          <div className={styles.utcert__headerContent__people}>
+          {/* <div className={styles.utcert__headerContent__people}>
             <img src={people.src} />
             <p>1,600 people requested access a visit in last 24 hours</p>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.utcert__headerImage}>

@@ -60,7 +60,6 @@ const Navbar = () => {
           : <RiMenu3Line color="#fff" size={27} onClick={() => setToggleMenu(true)} />}
         {toggleMenu && (
           <div className={`${styles.utcert__navbarMenu_container} ${styles.scaleUpCenter}`}>
-
             <div className={styles.utcert__navbarMenu_containerLinks}>
               <p><a href="#home">Home</a></p>
               <p><a href="#wutcert">What is UTCert?</a></p>
@@ -69,16 +68,16 @@ const Navbar = () => {
               <p><a href="#aboutus">About Us</a></p>
             </div>
             <div className={styles.utcert__navbarMenu_containerLinksSign}>
-              <p>Sign in</p>
-              <button type="button">Sign up</button>
+              <p onClick={handleClickOpen}>Sign in</p>
+              <a href='https://eternl.io/app/mainnet/welcome'>Sign up</a>
             </div>
           </div>
         )}
       </div>
       <SimpleDialog
-          open={open}
-          onClose={handleClose}
-        />
+        open={open}
+        onClose={handleClose}
+      />
     </div>
   )
 }
