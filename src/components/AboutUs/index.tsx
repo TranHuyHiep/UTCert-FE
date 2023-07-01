@@ -44,6 +44,11 @@ const AboutUs = () => (
                         <h2>Tran Huy Hiep</h2>
                         <p>FRONT-END DEVELOPER</p>
                     </div>
+                    <div className={styles.teamMem}>
+                        <img src="https://res.cloudinary.com/dha9551k2/image/upload/v1688216281/MrMinh_tavqob.jpg" alt="MrMinh" className={styles.img} />
+                        <h2>Le Dinh Minh</h2>
+                        <p>TESTER</p>
+                    </div>
                 </div>
             </div>
         </div>
