@@ -46,6 +46,7 @@ const Navbar = () => {
           <p><a href="#home">Home</a></p>
           <p><a href="#wutcert">What is UTCert?</a></p>
           <p><a href="#features">Features</a></p>
+          <p><a href="#howtouse">How to use?</a></p>
           <p><a href="#possibility">Possibility</a></p>
           <p><a href="#aboutus">About Us</a></p>
         </div>
@@ -64,6 +65,7 @@ const Navbar = () => {
               <p><a href="#home">Home</a></p>
               <p><a href="#wutcert">What is UTCert?</a></p>
               <p><a href="#features">Features</a></p>
+              <p><a href="#howtouse">How to use?</a></p>
               <p><a href="#possibility">Possibility</a></p>
               <p><a href="#aboutus">About Us</a></p>
             </div>

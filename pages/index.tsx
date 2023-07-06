@@ -7,6 +7,7 @@ import WhatUTCert from "@/containers/WhatUTCert";
 import styles from "../styles/Overview.module.css";
 import Features from "@/containers/Features";
 import AboutUs from "@/components/AboutUs";
+import HowToUse from "@/containers/HowToUse";
 
 function Overview() {
     return (
@@ -19,6 +20,7 @@ function Overview() {
                 <Brand />
                 <WhatUTCert />
                 <Features />
+                <HowToUse />
                 <Cta />
                 <AboutUs />
                 <Footer />
