@@ -9,7 +9,7 @@ const HowToUse = () => {
             </div>
             <div className={styles.body}>
                 <div className={styles.wrapper}>
-                    <iframe width="950" height="480" src="https://www.youtube.com/embed/R0wEojMC0qU" title="Demo How To Use UTCert"></iframe>
+                    <iframe width="950" height="480" src="https://www.youtube.com/watch?v=nlOwO1o_LbU&ab_channel=UTCert" title="Demo How To Use UTCert"></iframe>
                 </div>
             </div>
         </>
