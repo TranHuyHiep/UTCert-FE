@@ -17,11 +17,6 @@ const AboutUs = () => (
                         <p>PROJECT ADVISOR</p>
                     </div>
                     <div className={styles.teamMem}>
-                        <img src="https://res.cloudinary.com/dha9551k2/image/upload/v1686590486/MrsKimSao_qz1j4w.jpg" alt="MrsKimSao" className={styles.img} />
-                        <h2>Nguyen Kim Sao</h2>
-                        <p>PROJECT ADVISOR</p>
-                    </div>
-                    <div className={styles.teamMem}>
                         <img src="https://res.cloudinary.com/dha9551k2/image/upload/v1686590477/MrHieu_cpinfz.jpg" alt="Nguyen Van Hieu" className={styles.img} />
                         <h2>Nguyen Van Hieu</h2>
                         <p>PROJECT ADVISOR</p>
