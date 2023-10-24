@@ -37,11 +37,21 @@ const AboutUs = () => (
                     <div className={styles.teamMem}>
                         <img src="https://res.cloudinary.com/dha9551k2/image/upload/v1686590472/MrHiep_fyckdr.jpg" alt="MrsKimSao" className={styles.img} />
                         <h2>Tran Huy Hiep</h2>
-                        <p>FRONT-END DEVELOPER</p>
+                        <p>BLOCKCHAIN DEVELOPER</p>
                     </div>
                     <div className={styles.teamMem}>
                         <img src="https://res.cloudinary.com/dha9551k2/image/upload/v1688216281/MrMinh_tavqob.jpg" alt="MrMinh" className={styles.img} />
                         <h2>Le Dinh Minh</h2>
+                        <p>BACK-END DEVELOPER</p>
+                    </div>
+                    <div className={styles.teamMem}>
+                        <img src="https://res.cloudinary.com/dha9551k2/image/upload/f_auto,q_auto/Lien" alt="MrMinh" className={styles.img} />
+                        <h2>Tran Lam Lien</h2>
+                        <p>TESTER</p>
+                    </div>
+                    <div className={styles.teamMem}>
+                        <img src="https://res.cloudinary.com/dha9551k2/image/upload/f_auto,q_auto/Giang" alt="MrMinh" className={styles.img} />
+                        <h2>Vu Nguyen Truong Giang</h2>
                         <p>TESTER</p>
                     </div>
                 </div>
